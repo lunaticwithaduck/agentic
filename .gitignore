@@ -1,0 +1,31 @@
+# Secrets and credentials
+.env
+.env.*
+*.pem
+*.key
+credentials.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Common language artifacts
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+target/
+dist/
+build/
+*.o
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Local Claude overrides (keep settings.local.json for personal config)
+# .claude/settings.local.json

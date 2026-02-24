@@ -1,0 +1,30 @@
+Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
+
+## Instructions
+
+1. The argument is the task filename: $ARGUMENTS
+2. If no filename is provided:
+   - List all files in `workflows/tasks/`
+   - Ask the user which one to complete
+3. Read the task file from `workflows/tasks/[filename]`
+4. If the file does not exist, show an error and list available tasks
+5. Review the acceptance criteria:
+   - Show all criteria to the user
+   - If any are unchecked, ask: "These criteria are not yet checked. Mark as complete anyway?"
+   - If the user confirms, check all criteria
+6. Update the file content:
+   - Change `status: task` to `status: done`
+   - Add `completed: [today's date YYYY-MM-DD]` to frontmatter
+   - Add an `## Outcome` section at the bottom:
+     ```
+     ## Outcome
+
+     Completed on [date]. [Ask user for a brief summary of what was done]
+     ```
+7. Move the file:
+   - Write the updated content to `workflows/done/[filename]`
+   - Delete the original from `workflows/tasks/[filename]`
+8. Confirm completion with:
+   - Task title
+   - Time from creation to completion (if dates are available)
+   - Suggest: "Use `/status` to see the current pipeline overview."
