@@ -65,13 +65,8 @@
     "toolTriggers": ["Read", "Edit"]
   },
   "git-workflow": {
-    "keywords": ["git workflow", "branching model", "gitflow", "trunk-based", "merge strategy", "rebase", "cherry-pick"],
+    "keywords": ["git workflow", "branching model", "gitflow", "trunk-based", "merge strategy", "rebase", "cherry-pick", "branch name", "branch naming", "create branch", "cleanup branches", "stale branches", "git bisect", "interactive rebase", "merge conflict"],
     "filePatterns": [".git/**", ".github/**"],
-    "toolTriggers": ["Bash"]
-  },
-  "branch-strategy": {
-    "keywords": ["branch", "branching strategy", "feature branch", "release branch", "hotfix branch", "branch naming"],
-    "filePatterns": [".git/**"],
     "toolTriggers": ["Bash"]
   },
   "adr": {
@@ -160,19 +155,9 @@
     "toolTriggers": ["Read", "Bash"]
   },
   "summarize": {
-    "keywords": ["summarize", "summary", "tldr", "tl;dr", "brief", "overview", "key points", "main points"],
+    "keywords": ["summarize", "summary", "tldr", "tl;dr", "brief", "overview", "key points", "main points", "meeting notes", "meeting summary", "action items", "meeting minutes", "standup notes", "weekly summary", "weekly report", "week recap", "activity summary"],
     "filePatterns": ["**/*.md", "**/*.txt", "**/*.pdf"],
-    "toolTriggers": ["Read"]
-  },
-  "meeting-notes": {
-    "keywords": ["meeting notes", "meeting summary", "action items", "minutes", "standup", "retro", "retrospective"],
-    "filePatterns": ["docs/meetings/**", "notes/**", "**/*meeting*"],
-    "toolTriggers": ["Write"]
-  },
-  "weekly-summary": {
-    "keywords": ["weekly summary", "weekly report", "week in review", "weekly update", "status report", "progress report"],
-    "filePatterns": ["docs/reports/**", "docs/weekly/**"],
-    "toolTriggers": ["Write", "Bash"]
+    "toolTriggers": ["Read", "Bash"]
   },
   "de-ai-ify": {
     "keywords": ["de-ai", "humanize", "rewrite", "make natural", "less robotic", "remove ai tone", "sound human", "authentic voice"],
@@ -314,11 +299,6 @@
     "filePatterns": [],
     "toolTriggers": ["Grep", "Read"]
   },
-  "timeline": {
-    "keywords": ["timeline", "estimate", "how long", "time estimate", "effort", "story points", "planning", "roadmap", "schedule"],
-    "filePatterns": [],
-    "toolTriggers": []
-  },
   "onboarding-guide": {
     "keywords": ["onboarding", "getting started", "new developer", "setup guide", "quickstart", "bootstrap", "first time"],
     "filePatterns": ["README.md", "docs/**", "CONTRIBUTING.md"],
@@ -360,8 +340,13 @@
     "toolTriggers": ["Write", "Edit"]
   },
   "mermaid-diagram": {
-    "keywords": ["mermaid", "diagram", "flowchart", "sequence diagram", "class diagram", "er diagram", "state diagram", "visualize"],
+    "keywords": ["mermaid", "diagram", "flowchart", "sequence diagram", "class diagram", "er diagram", "state diagram", "visualize", "timeline", "gantt", "milestones", "roadmap"],
     "filePatterns": [],
     "toolTriggers": ["Write"]
+  },
+  "figma": {
+    "keywords": ["figma", "design to code", "figma link", "figma url", "figma frame", "mockup", "wireframe", "dev mode", "design system", "figma mcp", "from design", "match the design"],
+    "filePatterns": ["figma.config.*", "**/*.figma.*"],
+    "toolTriggers": ["Read", "Write"]
   }
 }

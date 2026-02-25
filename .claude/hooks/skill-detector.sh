@@ -15,19 +15,20 @@ For each skill, determine: Is this skill relevant to what the user is asking?
 Available skills by category:
 
 [CODE QUALITY] code-review, refactor, explain-code, debug, performance-optimization, code-smell-detector
-[GIT & GITHUB] git-commit, review-pr, create-pr, changelog, git-workflow, branch-strategy
+[GIT & GITHUB] git-commit, review-pr, create-pr, changelog, git-workflow
 [ARCHITECTURE] adr, impact-analysis, dependency-graph, scenario-compare, system-design, api-design
 [TESTING] testing, test-writer, test-coverage, e2e-testing, mock-generator
 [DOCUMENTATION] api-docs, readme-generator, technical-writing, code-comments, jsdoc-generator
-[CONTENT] pdf-extract, document-extract, summarize, meeting-notes, weekly-summary, de-ai-ify
+[CONTENT] pdf-extract, document-extract, summarize, de-ai-ify
 [DEVOPS] dockerfile, ci-cd, deployment, monitoring, cost-analysis, infrastructure
 [DATA] database-schema, migration, data-modeling, sql-optimization, seed-generator
 [SECURITY] security-audit, vulnerability-scan, secrets-management, dependency-check
 [FRONTEND] component-design, accessibility-audit, responsive-design, css-review, storybook
 [BACKEND] error-handling, logging-strategy, caching-strategy, middleware-design, rate-limiting
-[META] skill-creator, find-related, timeline, onboarding-guide, technical-proposal, code-walkthrough
+[META] skill-creator, find-related, onboarding-guide, technical-proposal, code-walkthrough
 [WORKFLOW] implementation, workflow-manager
 [UTILITIES] regex-helper, env-setup, error-message-writer, convert-format, cli-builder, mermaid-diagram
+[DESIGN] figma
 
 ACTIVATION RULES:
 1. Identify ALL relevant skills (usually 1-3 per prompt)

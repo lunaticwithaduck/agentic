@@ -56,3 +56,73 @@ Read content (documents, code, conversations, articles) and produce summaries at
 ```
 
 For detailed summaries, use section headings matching the source structure.
+
+---
+
+## Meeting Notes
+
+When the input is meeting notes, a transcript, or a recording summary, use this structured output instead:
+
+```markdown
+# Meeting: [Title or Type — standup / planning / retro / decision / 1:1]
+**Date**: YYYY-MM-DD | **Attendees**: Name1, Name2, Name3
+
+## Discussion
+### [Topic A]
+Factual summary of what was discussed.
+
+## Decisions
+- **[Decision]**: Rationale. *(Decided by: Name)*
+
+## Action Items
+- [ ] [Task] — **Owner**: Name, **Due**: Date
+- [ ] [Task] — **Owner**: Name, **Due**: Date
+
+## Open Questions
+- Question that needs follow-up (owner if known)
+```
+
+Extraction rules:
+- Pull action items even if phrased informally ("John will handle X by Friday")
+- Flag tentative decisions: "Tentative: [decision] — pending [condition]"
+- Move off-topic conversation to Open Questions or omit entirely
+- If no deadline was stated for an action item, write "Due: TBD"
+
+---
+
+## Weekly Activity Summary
+
+When asked for a weekly summary of project activity, run these first:
+
+```bash
+# Commit overview
+git log --since="1 week ago" --oneline --all
+
+# Per-contributor breakdown
+git log --since="1 week ago" --format="%an" | sort | uniq -c | sort -rn
+
+# File change stats
+git log --since="1 week ago" --stat | tail -3
+```
+
+Then output:
+
+```markdown
+# Weekly Summary: [Mon DD] – [Sun DD]
+
+## Highlights
+- [Most impactful change or milestone]
+
+## Changes by Category
+**Features**: [feat commits]
+**Fixes**: [fix commits]
+**Refactoring / Chores**: [other commits]
+
+## Metrics
+| Commits | Files changed | Lines +/- | Contributors |
+|---------|--------------|-----------|--------------|
+| N | N | +N / -N | N |
+
+## Contributors
+- Name: N commits
+```

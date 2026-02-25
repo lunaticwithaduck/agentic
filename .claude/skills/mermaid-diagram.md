@@ -86,3 +86,43 @@ For complex systems, provide multiple diagrams at different levels:
 1. High-level overview (10 nodes or fewer)
 2. Detailed views of specific subsystems
 3. Sequence diagrams for key flows
+
+---
+
+## Timelines & Gantt Charts
+
+When given a list of events or a project schedule, choose between:
+
+- **`timeline`** — milestone events on a single axis, grouped by phase. Best for: "show me what happened when."
+- **`gantt`** — tasks with durations and dependencies. Best for: "show me when work runs in parallel."
+
+### Timeline example
+```mermaid
+timeline
+    title Project Milestones
+    section Q1
+        Kickoff         : 2024-01-08
+        Design complete : 2024-02-20
+    section Q2
+        Beta launch     : 2024-04-01
+        Public launch   : 2024-06-15
+```
+
+### Gantt example
+```mermaid
+gantt
+    title Feature Development
+    dateFormat  YYYY-MM-DD
+    section Backend
+        API design       : done,    api,  2024-01-08, 5d
+        Implementation   : active,  impl, after api,  10d
+        Testing          : crit,          after impl, 5d
+    section Frontend
+        UI mockups       : done,          2024-01-08, 7d
+        Integration      :               after impl, 7d
+```
+
+Pattern detection to include in output:
+- **Gaps**: periods > 2 weeks with no activity — call them out
+- **Clusters**: many events within a short window — label the phase
+- **Critical path**: tasks where delay blocks everything else — mark `crit`

@@ -18,8 +18,10 @@ fi
 
 echo "Select MCP servers to install (enter numbers separated by spaces):"
 echo ""
-echo "  1) context7     - Library documentation lookup"
-echo "  2) filesystem   - Enhanced file access for your project"
+echo "  1) context7        - Library documentation lookup"
+echo "  2) filesystem      - Enhanced file access for your project"
+echo "  3) figma-remote    - Figma design context via OAuth (recommended)"
+echo "  4) figma-desktop   - Figma design context via local desktop app"
 echo "  0) Cancel"
 echo ""
 read -rp "Your selection: " SELECTIONS
@@ -47,6 +49,44 @@ for selection in $SELECTIONS; do
       echo "  Running: claude mcp add filesystem -- npx -y @anthropic/mcp-filesystem $PROJECT_DIR"
       claude mcp add filesystem -- npx -y @anthropic/mcp-filesystem "$PROJECT_DIR"
       echo "  filesystem installed successfully."
+      ;;
+    3)
+      echo ""
+      echo "Installing figma-remote (OAuth)..."
+      echo "  This connects to Figma's hosted MCP endpoint."
+      echo "  After installation you will need to authenticate:"
+      echo "    1. Start Claude Code and run: /mcp"
+      echo "    2. Select 'figma' -> 'Authenticate'"
+      echo "    3. Allow access in the browser dialog"
+      echo ""
+      echo "  Scope options:"
+      echo "    1) project  - Available in this project only (default)"
+      echo "    2) user     - Available in all your projects"
+      read -rp "  Scope [1]: " FIGMA_SCOPE
+      FIGMA_SCOPE="${FIGMA_SCOPE:-1}"
+      if [[ "$FIGMA_SCOPE" == "2" ]]; then
+        SCOPE_FLAG="--scope user"
+        echo "  Running: claude mcp add --scope user --transport http figma https://mcp.figma.com/mcp"
+        claude mcp add --scope user --transport http figma https://mcp.figma.com/mcp
+      else
+        SCOPE_FLAG=""
+        echo "  Running: claude mcp add --transport http figma https://mcp.figma.com/mcp"
+        claude mcp add --transport http figma https://mcp.figma.com/mcp
+      fi
+      echo "  figma-remote registered. Run /mcp in Claude Code to authenticate."
+      ;;
+    4)
+      echo ""
+      echo "Installing figma-desktop (local)..."
+      echo "  Prerequisites:"
+      echo "    - Figma desktop app must be open"
+      echo "    - Open any Design file and enter Dev Mode (Shift+D)"
+      echo "    - Enable 'Desktop MCP server' in the Dev Mode panel"
+      echo ""
+      echo "  The server runs at: http://127.0.0.1:3845/mcp"
+      echo "  Running: claude mcp add --transport http figma-desktop http://127.0.0.1:3845/mcp"
+      claude mcp add --transport http figma-desktop http://127.0.0.1:3845/mcp
+      echo "  figma-desktop registered. Keep the Figma desktop app running while using it."
       ;;
     *)
       echo ""

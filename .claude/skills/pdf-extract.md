@@ -1,56 +1,121 @@
 ---
 name: pdf-extract
-description: Extract and structure content from PDF files into clean markdown
+description: Extract and structure content from PDF files, handling scanned docs, multi-column layouts, and embedded assets
 activation:
-  keywords: ["pdf", "extract pdf", "read pdf", "parse pdf", "pdf to markdown"]
+  keywords: ["pdf", "extract pdf", "read pdf", "parse pdf", "pdf content", "pdf to markdown", "pdf to text"]
   file_patterns: ["**/*.pdf"]
 ---
 
 # PDF Content Extractor
 
 ## Purpose
-Read PDF files and extract their content into well-structured markdown, preserving headings, tables, lists, and document hierarchy.
+Extract structured content from PDF files, handling the full range of PDF types: text-based, scanned/image-only, multi-column, and password-protected.
 
-## Instructions
+## Step 1: Classify the PDF
 
-1. **Read the PDF**:
-   - Use the Read tool to open the PDF file
-   - For large PDFs (10+ pages), process in chunks using the `pages` parameter
-   - Note the total page count and structure
+Before extracting, determine the PDF type:
 
-2. **Identify document structure**:
-   - Detect headings by font size, weight, or formatting cues
-   - Identify body text, captions, footnotes
-   - Locate tables and their boundaries
-   - Find bulleted and numbered lists
-   - Note any multi-column layouts
+| Type | Detection | Approach |
+|------|-----------|----------|
+| **Text-based** | Read tool returns readable text | Direct extraction with structure preservation |
+| **Scanned / image-only** | Read tool returns blank or garbled output | Note limitation; cannot extract without OCR |
+| **Mixed** | Some pages have text, some don't | Extract text pages; flag image-only pages |
+| **Password-protected** | Read tool returns access error | Report; ask user for decrypted copy |
+| **Form PDF** | Contains fillable form fields | Extract field labels and values separately |
 
-3. **Extract and convert**:
-   - Convert headings to appropriate markdown heading levels (H1, H2, H3)
-   - Preserve paragraph breaks
-   - Convert tables to markdown table syntax, aligning columns
-   - Convert lists to markdown bullet or numbered lists
-   - Handle multi-column text by reading left-to-right, top-to-bottom
-   - Preserve emphasis (bold, italic) where detectable
+## Step 2: Extract with Structure
 
-4. **Handle special content**:
-   - Note images with `[Image: description if available]` placeholders
-   - Preserve hyperlinks where detected
-   - Convert footnotes to inline references or a footnotes section
-   - Handle headers and footers (typically exclude page numbers)
+Use the `Read` tool with `pages` parameter for large files (never attempt >20 pages at once):
 
-5. **Clean up**:
-   - Remove artifacts from PDF extraction (stray characters, broken words)
-   - Fix hyphenation at line breaks
-   - Normalize whitespace
-   - Verify table alignment
+```
+Read file.pdf pages="1-10"
+Read file.pdf pages="11-20"
+```
 
-## Output Format
+### Preserve Semantic Structure
 
-Clean markdown with:
-- Document title as H1
-- Logical heading hierarchy
-- Properly formatted tables
-- Preserved lists and emphasis
-- Image placeholders where applicable
-- A note at the top indicating source file and page count
+- **Headings**: Infer from font size cues (ALL CAPS, numbered sections like `1.`, `1.1`, `Chapter X`)
+- **Body text**: Flow paragraphs, joining hyphenated line-breaks (`end-` + newline + `ing` → `ending`)
+- **Lists**: Preserve bullet and numbered list hierarchy
+- **Tables**: Reconstruct as markdown tables; flag if columns are misaligned
+- **Footnotes**: Collect at end of each page under `---`; do not inline mid-paragraph
+- **Page numbers**: Strip `\d+` appearing alone on a line at top/bottom of pages
+- **Headers/footers**: Remove repeated document title, company name, "CONFIDENTIAL" stamps
+
+### Multi-Column Layout Detection
+
+PDFs with two or more columns often extract as interleaved text. Signs:
+- Sentences ending mid-phrase, then unrelated text, then the sentence resumes
+- Short lines alternating between two topics
+
+When detected: re-read in column order (left column fully, then right column). If the Read tool output is inextricably interleaved, flag the affected pages and provide raw text with a note.
+
+## Step 3: Handle Special Content
+
+### Tables
+PDFs rarely export tables cleanly. Reconstruct by:
+1. Identifying header row from ALL CAPS or bold indicators
+2. Aligning columns by consistent whitespace gaps
+3. Outputting as markdown table
+4. If alignment is ambiguous, use a code block with fixed-width formatting
+
+```markdown
+| Column A | Column B | Column C |
+|----------|----------|----------|
+| value    | value    | value    |
+```
+
+### Embedded Images and Figures
+- Note as: `[Figure X: description inferred from surrounding caption]`
+- Do not attempt to describe image content unless it is a diagram with labeled elements
+
+### Mathematical Formulas
+- Preserve as plain text approximation: `E = mc²`, `∑(x_i) / n`
+- Flag complex formulas: `[Formula — LaTeX rendering recommended]`
+
+### Code Blocks
+- Wrap in fenced code blocks with detected language
+- Fix common PDF extraction artifacts: ligatures (`ﬁ` → `fi`), smart quotes (`"` → `"`)
+
+## Step 4: Output Structure
+
+```markdown
+---
+Source: filename.pdf
+Pages: 24
+Type: text-based | scanned | mixed
+Extracted: [today's date]
+Warnings: [list any extraction issues]
+---
+
+# [Document Title]
+
+## [Section 1 heading]
+
+[body text]
+
+## [Section 2 heading]
+...
+```
+
+## Common Extraction Artifacts to Fix
+
+| Artifact | Example | Fix |
+|----------|---------|-----|
+| Hyphenated line break | `impor-\ntant` | `important` |
+| Ligatures | `ﬁle`, `ﬀ` | `file`, `ff` |
+| Curly quotes | `"text"` | `"text"` |
+| Orphaned page numbers | `\n42\n` at page boundary | Remove |
+| Running header bleed | `ACME CORP 2024 Q3 REPORT` mid-paragraph | Remove |
+| Column interleave | Two topics alternating per line | Note and reorder if possible |
+
+## Scanned PDF Limitation
+
+If the PDF is image-only (scanned document):
+
+> **Cannot extract**: This PDF contains scanned images with no embedded text layer. To extract content, run it through an OCR tool first:
+> - Adobe Acrobat: Edit → Make PDF Searchable
+> - CLI: `ocrmypdf input.pdf output.pdf` (installs a text layer)
+> - Online: Adobe online tools, Google Drive (open PDF → auto-OCR)
+>
+> Provide the OCR'd PDF and re-run extraction.

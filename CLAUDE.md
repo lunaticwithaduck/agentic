@@ -25,17 +25,18 @@ relevant skills are activated automatically.
 | Category | Skills |
 |----------|--------|
 | **Code Quality** | `code-review`, `refactor`, `explain-code`, `debug`, `performance-optimization`, `code-smell-detector` |
-| **Git & GitHub** | `git-commit`, `review-pr`, `create-pr`, `changelog`, `git-workflow`, `branch-strategy` |
+| **Git & GitHub** | `git-commit`, `review-pr`, `create-pr`, `changelog`, `git-workflow` |
 | **Architecture** | `adr`, `impact-analysis`, `dependency-graph`, `scenario-compare`, `system-design`, `api-design` |
 | **Testing** | `test-writer`, `test-coverage`, `e2e-testing`, `test-debugging`, `mock-generator` |
 | **Documentation** | `api-docs`, `readme-generator`, `technical-writing`, `code-comments`, `jsdoc-generator` |
-| **Content** | `pdf-extract`, `document-extract`, `summarize`, `meeting-notes`, `weekly-summary`, `de-ai-ify` |
+| **Content** | `pdf-extract`, `document-extract`, `summarize`, `de-ai-ify` |
 | **DevOps** | `dockerfile`, `ci-cd`, `deployment`, `monitoring`, `cost-analysis`, `infrastructure` |
 | **Data** | `database-schema`, `migration`, `data-modeling`, `sql-optimization`, `seed-generator` |
 | **Security** | `security-audit`, `vulnerability-scan`, `secrets-management`, `dependency-check` |
 | **Frontend** | `component-design`, `accessibility-audit`, `responsive-design`, `css-review`, `storybook` |
 | **Backend** | `error-handling`, `logging-strategy`, `caching-strategy`, `middleware-design`, `rate-limiting` |
-| **Meta** | `skill-creator`, `find-related`, `timeline`, `onboarding-guide`, `technical-proposal`, `code-walkthrough` |
+| **Meta** | `skill-creator`, `find-related`, `onboarding-guide`, `technical-proposal`, `code-walkthrough` |
+| **Design** | `figma` |
 
 ### Skill Auto-Detection
 
