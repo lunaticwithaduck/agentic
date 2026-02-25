@@ -36,15 +36,17 @@ relevant skills are activated automatically.
 | **Frontend** | `component-design`, `accessibility-audit`, `responsive-design`, `css-review`, `storybook` |
 | **Backend** | `error-handling`, `logging-strategy`, `caching-strategy`, `middleware-design`, `rate-limiting` |
 | **Meta** | `skill-creator`, `onboarding-guide`, `technical-proposal`, `code-walkthrough` |
+| **Workflow** | `workflow-manager` |
+| **Utilities** | `regex-helper`, `env-setup`, `error-message-writer`, `cli-builder`, `mermaid-diagram` |
 | **Design** | `figma` |
 
 ### Skill Auto-Detection
 
 The hook at `.claude/hooks/skill-detector.sh` runs on every user prompt and injects a skill
 evaluation protocol. Pattern-based trigger rules are defined in `.claude/skills/skill-rules.json`,
-mapping each skill to keywords, file patterns, and tool triggers. This achieves an ~84% activation
-rate using the "forced evaluation" approach -- Claude evaluates all skills against the prompt and
-activates the 1-3 most relevant ones before proceeding.
+mapping each skill to keywords, file patterns, and tool triggers. This achieves ~93% F1 score
+(100% suite pass rate) using the "forced evaluation" approach -- Claude evaluates all skills against
+the prompt and activates the 1-3 most relevant ones before proceeding.
 
 ## Hooks
 
