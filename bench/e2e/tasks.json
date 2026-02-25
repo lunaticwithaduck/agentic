@@ -1,0 +1,62 @@
+[
+  {
+    "id": "eq01",
+    "title": "Write unit tests",
+    "expected_skills": ["testing", "test-writer"],
+    "prompt": "Write unit tests for this Python function:\n\n```python\ndef calculate_discount(price: float, user_type: str, coupon: str = None) -> float:\n    if user_type == \"premium\":\n        discount = 0.2\n    elif user_type == \"member\":\n        discount = 0.1\n    else:\n        discount = 0\n\n    if coupon == \"SAVE10\":\n        discount += 0.1\n\n    return price * (1 - discount)\n```",
+    "rubric": [
+      {"dimension": "Edge case coverage", "description": "Tests boundary conditions, invalid inputs, combined conditions", "weight": 2},
+      {"dimension": "Error and exception handling", "description": "Tests what happens with bad inputs (negative price, unknown user_type, etc.)", "weight": 2},
+      {"dimension": "Test naming and structure", "description": "Tests are clearly named, follow AAA pattern (Arrange/Act/Assert), grouped logically", "weight": 1},
+      {"dimension": "Assertion completeness", "description": "Asserts the right values with appropriate precision, not just that something ran", "weight": 1}
+    ]
+  },
+  {
+    "id": "eq02",
+    "title": "Security review",
+    "expected_skills": ["security-audit", "vulnerability-scan"],
+    "prompt": "Review this Python code for security vulnerabilities:\n\n```python\nfrom flask import Flask, request, session, redirect\nimport sqlite3\n\napp = Flask(__name__)\napp.secret_key = \"dev_secret_key_123\"\n\ndef get_db():\n    return sqlite3.connect('users.db')\n\n@app.route('/login', methods=['POST'])\ndef login():\n    username = request.form['username']\n    password = request.form['password']\n    conn = get_db()\n    query = f\"SELECT * FROM users WHERE username='{username}' AND password='{password}'\"\n    user = conn.execute(query).fetchone()\n    if user:\n        session['user'] = username\n        session['role'] = user[3]\n        return redirect('/dashboard')\n    return 'Login failed', 401\n\n@app.route('/admin')\ndef admin_panel():\n    if session.get('role') == 'admin':\n        return f\"Welcome admin {session['user']}! User count: {get_db().execute('SELECT count(*) FROM users').fetchone()[0]}\"\n    return 'Forbidden', 403\n\n@app.route('/user/<user_id>')\ndef get_user(user_id):\n    conn = get_db()\n    result = conn.execute(f'SELECT name, email FROM users WHERE id = {user_id}').fetchone()\n    return f'<h1>{result[0]}</h1><p>{result[1]}</p>'\n```",
+    "rubric": [
+      {"dimension": "Vulnerability identification", "description": "Correctly identifies SQL injection, hardcoded secret, XSS, session issues", "weight": 3},
+      {"dimension": "Severity assessment", "description": "Correctly ranks severity (critical/high/medium/low) for each issue", "weight": 1},
+      {"dimension": "Remediation specificity", "description": "Provides concrete, actionable fixes with corrected code examples", "weight": 2},
+      {"dimension": "Completeness", "description": "Doesn't miss significant issues; covers all major vulnerability classes present", "weight": 2}
+    ]
+  },
+  {
+    "id": "eq03",
+    "title": "Debug a race condition",
+    "expected_skills": ["debug", "performance-optimization"],
+    "prompt": "I'm getting inconsistent results from this code. Sometimes I get the right count, sometimes not. Help me debug it:\n\n```python\nimport threading\n\nclass Counter:\n    def __init__(self):\n        self.count = 0\n\n    def increment(self):\n        current = self.count\n        # simulate some work\n        current += 1\n        self.count = current\n\ndef run_test():\n    counter = Counter()\n    threads = [threading.Thread(target=counter.increment) for _ in range(1000)]\n    for t in threads: t.start()\n    for t in threads: t.join()\n    print(f\"Expected: 1000, Got: {counter.count}\")\n\nrun_test()\n# Output varies: sometimes 1000, sometimes 987, 994, 1000...\n```",
+    "rubric": [
+      {"dimension": "Root cause identification", "description": "Correctly identifies the race condition (non-atomic read-modify-write)", "weight": 3},
+      {"dimension": "Explanation clarity", "description": "Explains WHY the bug occurs (thread interleaving) in a way a junior dev could understand", "weight": 2},
+      {"dimension": "Fix correctness", "description": "Provides a correct fix (threading.Lock, threading.atomic, queue, etc.)", "weight": 2},
+      {"dimension": "Fix quality", "description": "Fix is idiomatic Python, not overcomplicated, handles edge cases", "weight": 1}
+    ]
+  },
+  {
+    "id": "eq04",
+    "title": "Refactor messy code",
+    "expected_skills": ["refactor", "code-smell-detector"],
+    "prompt": "Refactor this code to improve readability without changing its behavior:\n\n```python\ndef p(d):\n    r = []\n    for x in d:\n        if x['s'] == 1:\n            if x['p'] > 100:\n                r.append({'id': x['id'], 'price': x['p'] * 0.9, 'status': 'active', 'cat': x['c']})\n            else:\n                r.append({'id': x['id'], 'price': x['p'], 'status': 'active', 'cat': x['c']})\n        elif x['s'] == 2:\n            r.append({'id': x['id'], 'price': x['p'] * 0.5, 'status': 'sale', 'cat': x['c']})\n        elif x['s'] == 0:\n            pass\n    return r\n\ndef g(items, cat=None, mn=None, mx=None):\n    res = p(items)\n    if cat:\n        res = [i for i in res if i['cat'] == cat]\n    if mn is not None:\n        res = [i for i in res if i['price'] >= mn]\n    if mx is not None:\n        res = [i for i in res if i['price'] <= mx]\n    return sorted(res, key=lambda x: x['price'])\n```",
+    "rubric": [
+      {"dimension": "Readability improvement", "description": "Names are descriptive, logic is clear, magic numbers/strings are named constants", "weight": 3},
+      {"dimension": "Behavior preservation", "description": "Refactored code is functionally equivalent — same inputs produce same outputs", "weight": 3},
+      {"dimension": "Code organization", "description": "Appropriate use of helper functions, constants, type hints, docstrings", "weight": 1},
+      {"dimension": "Explanation", "description": "Explains what the original code was doing and what was changed, helping the reader learn", "weight": 1}
+    ]
+  },
+  {
+    "id": "eq05",
+    "title": "Architecture decision: caching strategy",
+    "expected_skills": ["system-design", "caching-strategy"],
+    "prompt": "I'm building a REST API that serves user profile data. Each profile fetch requires 3 database queries (user, preferences, activity summary) that together take ~200ms. We have 50k active users, and popular profiles can get 1000 req/min. I need to add caching. What strategy do you recommend and how should I implement it?",
+    "rubric": [
+      {"dimension": "Strategy recommendation", "description": "Recommends a concrete, appropriate strategy (Redis/Memcached, TTL values, cache key design) with reasoning", "weight": 3},
+      {"dimension": "Trade-off analysis", "description": "Addresses cache invalidation, consistency trade-offs, cold start, memory limits", "weight": 2},
+      {"dimension": "Implementation guidance", "description": "Provides actionable implementation steps, not just theory", "weight": 2},
+      {"dimension": "Scalability considerations", "description": "Addresses the 50k users / 1000 req/min scale specifically", "weight": 1}
+    ]
+  }
+]

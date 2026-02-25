@@ -1,0 +1,828 @@
+[
+  {
+    "id": "sd001",
+    "prompt": "Can you review this pull request diff and tell me what could be improved?",
+    "expected": [
+      "code-review"
+    ],
+    "notes": "Explicit review request on code changes"
+  },
+  {
+    "id": "sd002",
+    "prompt": "Look at my authentication module and give me feedback on the overall code quality.",
+    "expected": [
+      "code-review",
+      "security-audit"
+    ],
+    "notes": "Code review + security overlap since auth is involved"
+  },
+  {
+    "id": "sd003",
+    "prompt": "This function is 300 lines long. Can you help me clean it up and extract smaller pieces?",
+    "expected": [
+      "refactor"
+    ],
+    "notes": "Classic refactor / extract-method request"
+  },
+  {
+    "id": "sd004",
+    "prompt": "I want to apply the DRY principle across these utility files. There's a lot of repetition.",
+    "expected": [
+      "refactor"
+    ],
+    "notes": "DRY keyword maps directly to refactor"
+  },
+  {
+    "id": "sd005",
+    "prompt": "What does this `reduce` chain actually do? Walk me through it step by step.",
+    "expected": [
+      "explain-code"
+    ],
+    "notes": "Step-by-step explanation request"
+  },
+  {
+    "id": "sd006",
+    "prompt": "I keep getting a TypeError: Cannot read properties of undefined. Here's the stack trace.",
+    "expected": [
+      "debug"
+    ],
+    "notes": "Exception + stack trace = debug"
+  },
+  {
+    "id": "sd007",
+    "prompt": "My API response times jumped from 50ms to 800ms after last week's deploy. What should I look at?",
+    "expected": [
+      "performance-optimization"
+    ],
+    "notes": "Latency regression is a clear performance signal"
+  },
+  {
+    "id": "sd008",
+    "prompt": "Can you look at this codebase for code smells, high coupling, and areas with too much technical debt?",
+    "expected": [
+      "code-smell-detector"
+    ],
+    "notes": "Multiple code-smell keywords in one prompt"
+  },
+  {
+    "id": "sd009",
+    "prompt": "Profile this Python script and find the bottlenecks that are slowing it down.",
+    "expected": [
+      "performance-optimization"
+    ],
+    "notes": "Profile + bottleneck = performance-optimization"
+  },
+  {
+    "id": "sd010",
+    "prompt": "Write a conventional commit message for the changes I just made to the user settings page.",
+    "expected": [
+      "git-commit"
+    ],
+    "notes": "Explicit commit message request"
+  },
+  {
+    "id": "sd011",
+    "prompt": "Can you review PR #142 and flag any issues before I merge it?",
+    "expected": [
+      "review-pr"
+    ],
+    "notes": "PR review with a PR number"
+  },
+  {
+    "id": "sd012",
+    "prompt": "I'm ready to open a pull request for the new payments feature. Help me write a good description.",
+    "expected": [
+      "create-pr"
+    ],
+    "notes": "Open PR + description = create-pr"
+  },
+  {
+    "id": "sd013",
+    "prompt": "Generate release notes for everything that changed in v2.4.0.",
+    "expected": [
+      "changelog"
+    ],
+    "notes": "Release notes / changelog request"
+  },
+  {
+    "id": "sd014",
+    "prompt": "We have merge conflicts between the feature branch and main. How should I resolve them?",
+    "expected": [
+      "git-workflow"
+    ],
+    "notes": "Merge conflict = git-workflow"
+  },
+  {
+    "id": "sd015",
+    "prompt": "What's a good branching strategy for a team of 8 engineers shipping every Friday?",
+    "expected": [
+      "git-workflow"
+    ],
+    "notes": "Branching strategy question"
+  },
+  {
+    "id": "sd016",
+    "prompt": "Help me set up gitflow for this repository, including branch naming conventions.",
+    "expected": [
+      "git-workflow"
+    ],
+    "notes": "Gitflow + branch naming = git-workflow"
+  },
+  {
+    "id": "sd017",
+    "prompt": "Write an architecture decision record for why we chose PostgreSQL over MongoDB.",
+    "expected": [
+      "adr"
+    ],
+    "notes": "Explicit ADR request"
+  },
+  {
+    "id": "sd018",
+    "prompt": "If I change the User model's primary key from int to UUID, what will break downstream?",
+    "expected": [
+      "impact-analysis"
+    ],
+    "notes": "Downstream impact + 'what will break' = impact-analysis"
+  },
+  {
+    "id": "sd019",
+    "prompt": "Show me which modules import from the `utils/auth.ts` file and map out the dependency graph.",
+    "expected": [
+      "dependency-graph",
+      "find-related"
+    ],
+    "notes": "Import graph + who imports = dependency-graph overlapping with find-related"
+  },
+  {
+    "id": "sd020",
+    "prompt": "Compare using Redis pub/sub versus Kafka for our event streaming needs. Pros, cons, trade-offs.",
+    "expected": [
+      "scenario-compare"
+    ],
+    "notes": "Compare + trade-off = scenario-compare"
+  },
+  {
+    "id": "sd021",
+    "prompt": "Help me design the high-level architecture for a multi-tenant SaaS application.",
+    "expected": [
+      "system-design"
+    ],
+    "notes": "High-level design / architecture request"
+  },
+  {
+    "id": "sd022",
+    "prompt": "Design a RESTful API for a notification service. Include endpoint paths, methods, and request/response schemas.",
+    "expected": [
+      "api-design"
+    ],
+    "notes": "REST endpoint design = api-design"
+  },
+  {
+    "id": "sd023",
+    "prompt": "Should we go microservices or keep a monolith given our team size and traffic?",
+    "expected": [
+      "system-design",
+      "scenario-compare"
+    ],
+    "notes": "Microservices vs monolith straddles system-design and scenario-compare"
+  },
+  {
+    "id": "sd024",
+    "prompt": "Write unit tests for the `calculateDiscount` function in pricing.ts.",
+    "expected": [
+      "test-writer"
+    ],
+    "notes": "Direct test-writer request with a specific function"
+  },
+  {
+    "id": "sd025",
+    "prompt": "My test suite is only at 42% coverage. Which critical paths are untested?",
+    "expected": [
+      "test-coverage"
+    ],
+    "notes": "Coverage percentage + missing tests = test-coverage"
+  },
+  {
+    "id": "sd026",
+    "prompt": "Set up a Playwright end-to-end test for the checkout flow on our e-commerce site.",
+    "expected": [
+      "e2e-testing"
+    ],
+    "notes": "Playwright + e2e = e2e-testing"
+  },
+  {
+    "id": "sd027",
+    "prompt": "Generate mock objects for the PaymentGateway interface so I can test without real API calls.",
+    "expected": [
+      "mock-generator"
+    ],
+    "notes": "Mock generation from an interface"
+  },
+  {
+    "id": "sd028",
+    "prompt": "Help me apply TDD to this new feature. Start by writing failing tests before any implementation.",
+    "expected": [
+      "testing",
+      "test-writer"
+    ],
+    "notes": "TDD keyword plus write-tests intent"
+  },
+  {
+    "id": "sd029",
+    "prompt": "Create a Cypress test that simulates a user signing up, verifying email, and logging in.",
+    "expected": [
+      "e2e-testing"
+    ],
+    "notes": "Cypress + user journey = e2e-testing"
+  },
+  {
+    "id": "sd030",
+    "prompt": "Generate OpenAPI documentation for all the endpoints in our Express router.",
+    "expected": [
+      "api-docs"
+    ],
+    "notes": "OpenAPI + endpoint docs = api-docs"
+  },
+  {
+    "id": "sd031",
+    "prompt": "Write a README for this library that covers installation, usage examples, and API reference.",
+    "expected": [
+      "readme-generator"
+    ],
+    "notes": "Direct readme request"
+  },
+  {
+    "id": "sd032",
+    "prompt": "Write a developer guide explaining how to contribute to this project and set up the dev environment.",
+    "expected": [
+      "technical-writing",
+      "onboarding-guide"
+    ],
+    "notes": "Developer guide spans technical-writing and onboarding-guide"
+  },
+  {
+    "id": "sd033",
+    "prompt": "Add inline comments to this cryptographic hashing function so future developers understand it.",
+    "expected": [
+      "code-comments"
+    ],
+    "notes": "Add inline comments = code-comments"
+  },
+  {
+    "id": "sd034",
+    "prompt": "Generate JSDoc comments for every exported function in this TypeScript module.",
+    "expected": [
+      "jsdoc-generator"
+    ],
+    "notes": "JSDoc generation = jsdoc-generator"
+  },
+  {
+    "id": "sd035",
+    "prompt": "Write a how-to tutorial for integrating our SDK into a React application.",
+    "expected": [
+      "technical-writing"
+    ],
+    "notes": "How-to tutorial = technical-writing"
+  },
+  {
+    "id": "sd036",
+    "prompt": "Extract all the text and tables from this quarterly earnings PDF.",
+    "expected": [
+      "pdf-extract"
+    ],
+    "notes": "Extract from PDF = pdf-extract"
+  },
+  {
+    "id": "sd037",
+    "prompt": "Parse this Excel spreadsheet and give me the data as JSON.",
+    "expected": [
+      "document-extract"
+    ],
+    "notes": "Spreadsheet parsing = document-extract"
+  },
+  {
+    "id": "sd038",
+    "prompt": "Give me a TL;DR of this 40-page technical RFC.",
+    "expected": [
+      "summarize"
+    ],
+    "notes": "TL;DR = summarize"
+  },
+  {
+    "id": "sd039",
+    "prompt": "This email I wrote sounds too robotic and AI-generated. Rewrite it to sound more human.",
+    "expected": [
+      "de-ai-ify"
+    ],
+    "notes": "Humanize / less robotic = de-ai-ify"
+  },
+  {
+    "id": "sd040",
+    "prompt": "Summarize the key decisions from last week's team standup notes.",
+    "expected": [
+      "summarize"
+    ],
+    "notes": "Standup notes summary = summarize"
+  },
+  {
+    "id": "sd041",
+    "prompt": "Extract the action items and attendees from this meeting transcript docx file.",
+    "expected": [
+      "document-extract",
+      "summarize"
+    ],
+    "notes": "docx + extract action items overlaps document-extract and summarize"
+  },
+  {
+    "id": "sd042",
+    "prompt": "Write a multi-stage Dockerfile for a Node.js API that minimizes the final image size.",
+    "expected": [
+      "dockerfile"
+    ],
+    "notes": "Multi-stage Dockerfile = dockerfile"
+  },
+  {
+    "id": "sd043",
+    "prompt": "Set up a GitHub Actions CI pipeline that runs lint, tests, and builds on every PR.",
+    "expected": [
+      "ci-cd"
+    ],
+    "notes": "GitHub Actions + CI pipeline = ci-cd"
+  },
+  {
+    "id": "sd044",
+    "prompt": "Create a blue-green deployment strategy for rolling out the new checkout service without downtime.",
+    "expected": [
+      "deployment"
+    ],
+    "notes": "Blue-green + deployment = deployment"
+  },
+  {
+    "id": "sd045",
+    "prompt": "Set up Prometheus metrics and Grafana dashboards for our backend service.",
+    "expected": [
+      "monitoring"
+    ],
+    "notes": "Prometheus + Grafana = monitoring"
+  },
+  {
+    "id": "sd046",
+    "prompt": "Our AWS bill jumped 40% this month. Help me figure out where the money is going and how to reduce it.",
+    "expected": [
+      "cost-analysis"
+    ],
+    "notes": "AWS cost + optimization = cost-analysis"
+  },
+  {
+    "id": "sd047",
+    "prompt": "Write Terraform code to provision a VPC, subnets, and an ECS cluster on AWS.",
+    "expected": [
+      "infrastructure"
+    ],
+    "notes": "Terraform + provision = infrastructure"
+  },
+  {
+    "id": "sd048",
+    "prompt": "I want to add structured logging with log levels to all our microservices. What's the best approach?",
+    "expected": [
+      "logging-strategy",
+      "monitoring"
+    ],
+    "notes": "Structured logging spans logging-strategy and monitoring"
+  },
+  {
+    "id": "sd049",
+    "prompt": "Design a database schema for a multi-tenant SaaS with organizations, users, and roles.",
+    "expected": [
+      "database-schema",
+      "data-modeling"
+    ],
+    "notes": "Schema design + data model overlap"
+  },
+  {
+    "id": "sd050",
+    "prompt": "Write an Alembic migration to add a `deleted_at` soft-delete column to the orders table.",
+    "expected": [
+      "migration"
+    ],
+    "notes": "Alembic + migration = migration"
+  },
+  {
+    "id": "sd051",
+    "prompt": "This query is taking 12 seconds. Can you analyze the EXPLAIN plan and suggest indexes?",
+    "expected": [
+      "sql-optimization"
+    ],
+    "notes": "Slow query + EXPLAIN plan + indexes = sql-optimization"
+  },
+  {
+    "id": "sd052",
+    "prompt": "Create a Prisma seed script that populates the database with realistic test data using Faker.",
+    "expected": [
+      "seed-generator"
+    ],
+    "notes": "Seed script + Faker = seed-generator"
+  },
+  {
+    "id": "sd053",
+    "prompt": "Draw an ER diagram for our e-commerce domain: products, orders, customers, and inventory.",
+    "expected": [
+      "data-modeling"
+    ],
+    "notes": "ER diagram = data-modeling"
+  },
+  {
+    "id": "sd054",
+    "prompt": "I have an N+1 query problem in my ORM. How do I fix it and optimize these joins?",
+    "expected": [
+      "sql-optimization"
+    ],
+    "notes": "N+1 + join optimization = sql-optimization"
+  },
+  {
+    "id": "sd055",
+    "prompt": "Audit this login flow for OWASP Top 10 vulnerabilities including XSS and SQL injection.",
+    "expected": [
+      "security-audit"
+    ],
+    "notes": "OWASP + XSS + injection = security-audit"
+  },
+  {
+    "id": "sd056",
+    "prompt": "Run a vulnerability scan on our npm dependencies and tell me which CVEs we're exposed to.",
+    "expected": [
+      "vulnerability-scan"
+    ],
+    "notes": "CVE + npm audit = vulnerability-scan"
+  },
+  {
+    "id": "sd057",
+    "prompt": "We're storing API keys in environment variables. How should we move to a proper secrets manager like Vault?",
+    "expected": [
+      "secrets-management"
+    ],
+    "notes": "API key + Vault + secret management = secrets-management"
+  },
+  {
+    "id": "sd058",
+    "prompt": "Which of our dependencies are outdated and do any of them have known security issues?",
+    "expected": [
+      "dependency-check",
+      "vulnerability-scan"
+    ],
+    "notes": "Outdated deps + security issues overlaps both skills"
+  },
+  {
+    "id": "sd059",
+    "prompt": "Check our authentication middleware for authorization bypass vulnerabilities.",
+    "expected": [
+      "security-audit"
+    ],
+    "notes": "Auth middleware + bypass = security-audit"
+  },
+  {
+    "id": "sd060",
+    "prompt": "Design a reusable React dropdown component that supports single and multi-select modes.",
+    "expected": [
+      "component-design"
+    ],
+    "notes": "Reusable React component = component-design"
+  },
+  {
+    "id": "sd061",
+    "prompt": "Audit this form for WCAG 2.1 AA compliance. Check ARIA labels, contrast, and keyboard navigation.",
+    "expected": [
+      "accessibility-audit"
+    ],
+    "notes": "WCAG + ARIA + keyboard = accessibility-audit"
+  },
+  {
+    "id": "sd062",
+    "prompt": "Our layout breaks on tablet screens. Add Tailwind breakpoints to make it mobile-first responsive.",
+    "expected": [
+      "responsive-design"
+    ],
+    "notes": "Tablet breakpoints + mobile-first = responsive-design"
+  },
+  {
+    "id": "sd063",
+    "prompt": "Review the CSS for specificity wars, unused styles, and anything I should migrate to Tailwind.",
+    "expected": [
+      "css-review"
+    ],
+    "notes": "CSS audit + Tailwind = css-review"
+  },
+  {
+    "id": "sd064",
+    "prompt": "Create Storybook stories for the Button, Input, and Modal components in our design system.",
+    "expected": [
+      "storybook"
+    ],
+    "notes": "Storybook stories = storybook"
+  },
+  {
+    "id": "sd065",
+    "prompt": "Build a date picker component that matches the Figma mockup I'm sharing.",
+    "expected": [
+      "component-design",
+      "figma"
+    ],
+    "notes": "Figma mockup + component = figma + component-design"
+  },
+  {
+    "id": "sd066",
+    "prompt": "Add proper error handling and retry logic to this external API client.",
+    "expected": [
+      "error-handling"
+    ],
+    "notes": "Error handling + retry = error-handling"
+  },
+  {
+    "id": "sd067",
+    "prompt": "Design a caching layer using Redis with TTL-based invalidation for our product catalog API.",
+    "expected": [
+      "caching-strategy"
+    ],
+    "notes": "Redis + TTL + cache = caching-strategy"
+  },
+  {
+    "id": "sd068",
+    "prompt": "Implement rate limiting middleware for our public API that allows 100 requests/minute per IP.",
+    "expected": [
+      "rate-limiting",
+      "middleware-design"
+    ],
+    "notes": "Rate limiting implemented as middleware overlaps both"
+  },
+  {
+    "id": "sd069",
+    "prompt": "Design an Express middleware pipeline for request validation, auth, and response compression.",
+    "expected": [
+      "middleware-design"
+    ],
+    "notes": "Middleware pipeline = middleware-design"
+  },
+  {
+    "id": "sd070",
+    "prompt": "Set up structured JSON logging with Winston including request IDs for tracing.",
+    "expected": [
+      "logging-strategy"
+    ],
+    "notes": "Structured logging + Winston = logging-strategy"
+  },
+  {
+    "id": "sd071",
+    "prompt": "Create a new skill for handling GraphQL schema stitching tasks.",
+    "expected": [
+      "skill-creator"
+    ],
+    "notes": "Create new skill = skill-creator"
+  },
+  {
+    "id": "sd072",
+    "prompt": "Find all the files that reference the `UserService` class and show me the dependency graph.",
+    "expected": [
+      "find-related",
+      "dependency-graph"
+    ],
+    "notes": "Find references + dependency graph = both skills"
+  },
+  {
+    "id": "sd073",
+    "prompt": "Write an onboarding guide for a new backend engineer joining the team next week.",
+    "expected": [
+      "onboarding-guide"
+    ],
+    "notes": "Onboarding guide + new engineer = onboarding-guide"
+  },
+  {
+    "id": "sd074",
+    "prompt": "Write a technical proposal (RFC) for migrating from REST to GraphQL across our services.",
+    "expected": [
+      "technical-proposal"
+    ],
+    "notes": "RFC + technical proposal = technical-proposal"
+  },
+  {
+    "id": "sd075",
+    "prompt": "Give me a tour of the codebase. How is it organized and where should I start?",
+    "expected": [
+      "code-walkthrough"
+    ],
+    "notes": "Codebase tour + how is it organized = code-walkthrough"
+  },
+  {
+    "id": "sd076",
+    "prompt": "Implement the user notification feature described in the task file.",
+    "expected": [
+      "implementation"
+    ],
+    "notes": "Implement a feature = implementation"
+  },
+  {
+    "id": "sd077",
+    "prompt": "Move this idea about adding dark mode to an actionable task in the pipeline.",
+    "expected": [
+      "workflow-manager"
+    ],
+    "notes": "Idea to task pipeline = workflow-manager"
+  },
+  {
+    "id": "sd078",
+    "prompt": "What ideas are currently in the backlog and which ones have been promoted to tasks?",
+    "expected": [
+      "workflow-manager"
+    ],
+    "notes": "Pipeline status query = workflow-manager"
+  },
+  {
+    "id": "sd079",
+    "prompt": "Write a regex that validates international phone numbers including country codes.",
+    "expected": [
+      "regex-helper"
+    ],
+    "notes": "Regex + validation = regex-helper"
+  },
+  {
+    "id": "sd080",
+    "prompt": "Help me set up my local development environment for this Node.js project from scratch.",
+    "expected": [
+      "env-setup"
+    ],
+    "notes": "Local dev setup = env-setup"
+  },
+  {
+    "id": "sd081",
+    "prompt": "Write user-friendly error messages for the payment failure scenarios in our checkout flow.",
+    "expected": [
+      "error-message-writer"
+    ],
+    "notes": "User-facing error copy = error-message-writer"
+  },
+  {
+    "id": "sd082",
+    "prompt": "Convert this TypeScript config file from JSON format to YAML.",
+    "expected": [
+      "convert-format"
+    ],
+    "notes": "JSON to YAML = convert-format"
+  },
+  {
+    "id": "sd083",
+    "prompt": "Build a CLI tool in Node.js for managing environment configurations across stages.",
+    "expected": [
+      "cli-builder"
+    ],
+    "notes": "CLI tool = cli-builder"
+  },
+  {
+    "id": "sd084",
+    "prompt": "Create a Mermaid flowchart showing the order processing pipeline from cart to fulfillment.",
+    "expected": [
+      "mermaid-diagram"
+    ],
+    "notes": "Mermaid flowchart = mermaid-diagram"
+  },
+  {
+    "id": "sd085",
+    "prompt": "Draw a sequence diagram for the OAuth2 authorization code flow.",
+    "expected": [
+      "mermaid-diagram"
+    ],
+    "notes": "Sequence diagram = mermaid-diagram"
+  },
+  {
+    "id": "sd086",
+    "prompt": "Here's my Figma URL: https://figma.com/file/abc123. Implement the dashboard layout in React.",
+    "expected": [
+      "figma",
+      "component-design"
+    ],
+    "notes": "Figma URL + implement = figma + component-design"
+  },
+  {
+    "id": "sd087",
+    "prompt": "Convert this Figma wireframe into a responsive HTML/CSS page.",
+    "expected": [
+      "figma",
+      "responsive-design"
+    ],
+    "notes": "Wireframe conversion overlaps figma and responsive-design"
+  },
+  {
+    "id": "sd088",
+    "prompt": "My Figma design uses a specific design system with tokens. How do I map those to Tailwind?",
+    "expected": [
+      "figma",
+      "css-review"
+    ],
+    "notes": "Figma design tokens + Tailwind mapping"
+  },
+  {
+    "id": "sd089",
+    "prompt": "Fix the bug in the login form and add a test for it.",
+    "expected": [
+      "debug",
+      "test-writer"
+    ],
+    "notes": "Edge case: fix + test in one prompt activates two skills"
+  },
+  {
+    "id": "sd090",
+    "prompt": "Document the architecture of this service and make sure the README is up to date.",
+    "expected": [
+      "technical-writing",
+      "readme-generator"
+    ],
+    "notes": "Edge case: architecture docs + README update"
+  },
+  {
+    "id": "sd091",
+    "prompt": "Review this code and then refactor it.",
+    "expected": [
+      "code-review",
+      "refactor"
+    ],
+    "notes": "Edge case: chained code review into refactor"
+  },
+  {
+    "id": "sd092",
+    "prompt": "I need to deploy to production but I'm not sure the tests are passing.",
+    "expected": [
+      "deployment",
+      "testing"
+    ],
+    "notes": "Edge case: deploy + test uncertainty"
+  },
+  {
+    "id": "sd093",
+    "prompt": "How do I get started with this project?",
+    "expected": [
+      "onboarding-guide",
+      "env-setup"
+    ],
+    "notes": "Edge case: vague getting-started query matches onboarding and env-setup"
+  },
+  {
+    "id": "sd094",
+    "prompt": "What are the alternatives to using JWT for session management and what are the trade-offs?",
+    "expected": [
+      "scenario-compare",
+      "security-audit"
+    ],
+    "notes": "Edge case: trade-offs + security topic overlaps both skills"
+  },
+  {
+    "id": "sd095",
+    "prompt": "Generate test data for the users table.",
+    "expected": [
+      "seed-generator",
+      "mock-generator"
+    ],
+    "notes": "Edge case: test data could be seeding or mocks"
+  },
+  {
+    "id": "sd096",
+    "prompt": "We need to log every database query for debugging, but I'm worried about performance.",
+    "expected": [
+      "logging-strategy",
+      "performance-optimization"
+    ],
+    "notes": "Edge case: logging + performance tension"
+  },
+  {
+    "id": "sd097",
+    "prompt": "The CI pipeline is failing on the test step. Here's the error output.",
+    "expected": [
+      "debug",
+      "ci-cd"
+    ],
+    "notes": "Edge case: CI failure could be debug or ci-cd"
+  },
+  {
+    "id": "sd098",
+    "prompt": "Analyze this week's team activity and write a weekly summary report.",
+    "expected": [
+      "summarize"
+    ],
+    "notes": "Edge case: weekly summary keyword in summarize"
+  },
+  {
+    "id": "sd099",
+    "prompt": "Show me how the request flows through the system from the API gateway to the database.",
+    "expected": [
+      "code-walkthrough",
+      "system-design"
+    ],
+    "notes": "Edge case: trace + architecture overview spans two skills"
+  },
+  {
+    "id": "sd100",
+    "prompt": "I want to visualize the component hierarchy and how data flows between them.",
+    "expected": [
+      "mermaid-diagram",
+      "component-design"
+    ],
+    "notes": "Edge case: visualize + component structure"
+  }
+]

@@ -21,6 +21,13 @@ if [ -z "$COMMAND" ]; then
   exit 0
 fi
 
+# Safe .env suffixes: template/example/schema files are not secrets.
+# Allow these through before applying the broad .env block pattern.
+SAFE_ENV_VARIANTS='\.env\.(example|sample|template|schema|type|dist|template\.local)'
+if echo "$COMMAND" | grep -qiE "$SAFE_ENV_VARIANTS"; then
+  exit 0
+fi
+
 # Patterns that indicate secret/credential exposure
 BLOCKED_PATTERNS=(
   'cat.*\.env'
@@ -62,7 +69,7 @@ COMMIT_SECRET_PATTERNS=(
   'git add.*\.pem'
   'git add.*\.key'
   'git add -A'
-  'git add \.'
+  'git add \.[[:space:]]*$'
 )
 
 for pattern in "${COMMIT_SECRET_PATTERNS[@]}"; do

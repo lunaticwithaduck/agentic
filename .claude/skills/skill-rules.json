@@ -20,7 +20,7 @@
     "toolTriggers": ["Write", "Read", "Bash"]
   },
   "refactor": {
-    "keywords": ["refactor", "clean up", "simplify", "restructure", "reorganize", "improve code", "DRY", "extract function", "extract method"],
+    "keywords": ["refactor", "clean up", "simplify", "restructure", "reorganize", "improve code", "DRY", "extract function", "extract method", "messy", "hard to read", "too long", "extract", "break down", "break up", "readable", "unreadable"],
     "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs"],
     "toolTriggers": ["Edit"]
   },
@@ -35,7 +35,7 @@
     "toolTriggers": ["Bash", "Read"]
   },
   "performance-optimization": {
-    "keywords": ["performance", "optimize", "slow", "speed up", "latency", "throughput", "bottleneck", "profiling", "benchmark", "memory leak"],
+    "keywords": ["performance", "optimize", "slow", "speed up", "latency", "throughput", "bottleneck", "profiling", "benchmark", "memory leak", "response time", "slower", "degraded", "degradation", "timeout", "too slow", "ms lag", "high latency", "load time"],
     "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs"],
     "toolTriggers": ["Bash", "Read"]
   },
@@ -55,7 +55,7 @@
     "toolTriggers": ["Bash"]
   },
   "create-pr": {
-    "keywords": ["create pr", "open pr", "new pull request", "submit pr", "create pull request", "open pull request"],
+    "keywords": ["create pr", "open pr", "new pull request", "submit pr", "create pull request", "open pull request", "open a pull request", "ready for review", "ready to merge", "ready to ship", "submit my changes"],
     "filePatterns": [".github/**"],
     "toolTriggers": ["Bash"]
   },
@@ -90,7 +90,7 @@
     "toolTriggers": []
   },
   "system-design": {
-    "keywords": ["system design", "architecture", "high level design", "design system", "system architecture", "microservices", "monolith", "distributed"],
+    "keywords": ["system design", "architecture", "high level design", "design system", "system architecture", "microservices", "monolith", "distributed", "how does the system", "end to end flow", "request flow", "flow through the system", "component diagram"],
     "filePatterns": ["docs/ARCHITECTURE.md", "docs/design/**", "**/*.drawio", "**/*.puml"],
     "toolTriggers": ["Write", "Read"]
   },
@@ -300,7 +300,7 @@
     "toolTriggers": ["Grep", "Read"]
   },
   "onboarding-guide": {
-    "keywords": ["onboarding", "getting started", "new developer", "setup guide", "quickstart", "bootstrap", "first time"],
+    "keywords": ["onboarding", "getting started", "get started", "new developer", "setup guide", "quickstart", "bootstrap", "first time", "new to", "just joined", "where to begin", "where do i start"],
     "filePatterns": ["README.md", "docs/**", "CONTRIBUTING.md"],
     "toolTriggers": ["Write"]
   },
@@ -310,7 +310,7 @@
     "toolTriggers": ["Write"]
   },
   "code-walkthrough": {
-    "keywords": ["walkthrough", "code tour", "codebase tour", "show me around", "how is this organized", "project structure", "architecture overview"],
+    "keywords": ["walkthrough", "code tour", "codebase tour", "show me around", "how is this organized", "project structure", "architecture overview", "show me how", "trace the", "flow through", "request flow", "walk me through the code", "how does the request"],
     "filePatterns": [],
     "toolTriggers": ["Read", "Glob"]
   },
@@ -320,7 +320,7 @@
     "toolTriggers": []
   },
   "env-setup": {
-    "keywords": ["env setup", "environment setup", "dev setup", "install dependencies", "project setup", "development environment", "local setup"],
+    "keywords": ["env setup", "environment setup", "dev setup", "install dependencies", "project setup", "development environment", "local setup", "get started", "how to run", "run locally", "set up my environment", "first step"],
     "filePatterns": ["**/package.json", "**/requirements.txt", "**/Cargo.toml", "**/go.mod", "**/Makefile", "**/docker-compose*", "**/.tool-versions"],
     "toolTriggers": ["Read", "Bash"]
   },
