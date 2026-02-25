@@ -1,352 +1,1455 @@
 {
   "code-review": {
-    "keywords": ["review", "code review", "check code", "look at my code", "feedback", "critique", "PR review", "pull request review"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs", "**/*.java", "**/*.rb"],
-    "toolTriggers": ["Read"]
-  },
-  "implementation": {
-    "keywords": ["implement", "implementation", "build feature", "write code", "create feature", "coding", "feature implementation"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs", "**/*.java"],
-    "toolTriggers": ["Write", "Edit", "Bash"]
-  },
-  "testing": {
-    "keywords": ["test", "testing", "write tests", "unit test", "integration test", "TDD", "test coverage", "test driven"],
-    "filePatterns": ["**/*.test.*", "**/*.spec.*", "**/tests/**", "**/__tests__/**", "**/test_*.py", "**/*_test.go"],
-    "toolTriggers": ["Write", "Bash"]
+    "keywords": [
+      "review",
+      "code review",
+      "check code",
+      "look at my code",
+      "feedback",
+      "critique",
+      "PR review",
+      "pull request review"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs",
+      "**/*.java",
+      "**/*.rb"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "workflow-manager": {
-    "keywords": ["workflow", "idea", "task pipeline", "manage tasks", "workflow manager", "ideas to tasks", "pipeline"],
-    "filePatterns": ["workflows/**", "workflows/ideas/**", "workflows/tasks/**", "workflows/done/**"],
-    "toolTriggers": ["Write", "Read", "Bash"]
+    "keywords": [
+      "task pipeline",
+      "manage tasks",
+      "workflow manager",
+      "ideas to tasks",
+      "workflow pipeline",
+      "idea pipeline",
+      "promote task",
+      "task backlog",
+      "actionable task",
+      "in the backlog",
+      "promoted to tasks"
+    ],
+    "filePatterns": [
+      "workflows/**",
+      "workflows/ideas/**",
+      "workflows/tasks/**",
+      "workflows/done/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Read",
+      "Bash"
+    ]
   },
   "refactor": {
-    "keywords": ["refactor", "clean up", "simplify", "restructure", "reorganize", "improve code", "DRY", "extract function", "extract method", "messy", "hard to read", "too long", "extract", "break down", "break up", "readable", "unreadable"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs"],
-    "toolTriggers": ["Edit"]
+    "keywords": [
+      "refactor",
+      "clean up",
+      "simplify",
+      "restructure",
+      "reorganize",
+      "improve code",
+      "DRY",
+      "extract function",
+      "extract method",
+      "messy",
+      "hard to read",
+      "too long",
+      "break up",
+      "readable",
+      "unreadable"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs"
+    ],
+    "toolTriggers": [
+      "Edit"
+    ]
   },
   "explain-code": {
-    "keywords": ["explain", "what does this do", "how does this work", "walk me through", "understand", "meaning of", "what is this"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs", "**/*.java"],
-    "toolTriggers": ["Read"]
+    "keywords": [
+      "what does this do",
+      "how does this work",
+      "walk me through",
+      "meaning of",
+      "what is this"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs",
+      "**/*.java"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "debug": {
-    "keywords": ["debug", "bug", "error", "fix", "broken", "not working", "crash", "exception", "stack trace", "traceback", "failing", "issue"],
-    "filePatterns": ["**/*.log", "**/*.ts", "**/*.js", "**/*.py"],
-    "toolTriggers": ["Bash", "Read"]
+    "keywords": [
+      "debug",
+      "bug",
+      "broken",
+      "not working",
+      "crash",
+      "exception",
+      "stack trace",
+      "traceback",
+      "failing",
+      "root cause",
+      "why is it",
+      "what's wrong"
+    ],
+    "filePatterns": [
+      "**/*.log",
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py"
+    ],
+    "toolTriggers": [
+      "Bash",
+      "Read"
+    ]
   },
   "performance-optimization": {
-    "keywords": ["performance", "optimize", "slow", "speed up", "latency", "throughput", "bottleneck", "profiling", "benchmark", "memory leak", "response time", "slower", "degraded", "degradation", "timeout", "too slow", "ms lag", "high latency", "load time"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs"],
-    "toolTriggers": ["Bash", "Read"]
+    "keywords": [
+      "performance",
+      "optimize",
+      "slow",
+      "speed up",
+      "latency",
+      "throughput",
+      "bottleneck",
+      "profiling",
+      "benchmark",
+      "memory leak",
+      "response time",
+      "slower",
+      "degraded",
+      "degradation",
+      "timeout",
+      "too slow",
+      "ms lag",
+      "high latency",
+      "load time"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs"
+    ],
+    "toolTriggers": [
+      "Bash",
+      "Read"
+    ]
   },
   "code-smell-detector": {
-    "keywords": ["code smell", "anti-pattern", "technical debt", "tech debt", "code quality", "complexity", "coupling", "cohesion"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go"],
-    "toolTriggers": ["Read"]
+    "keywords": [
+      "code smell",
+      "anti-pattern",
+      "technical debt",
+      "tech debt",
+      "code quality",
+      "complexity",
+      "coupling",
+      "cohesion"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "git-commit": {
-    "keywords": ["commit", "git commit", "save changes", "stage", "commit message"],
-    "filePatterns": [".gitignore", ".git/**"],
-    "toolTriggers": ["Bash"]
+    "keywords": [
+      "commit",
+      "git commit",
+      "save changes",
+      "commit message"
+    ],
+    "filePatterns": [
+      ".gitignore",
+      ".git/**"
+    ],
+    "toolTriggers": [
+      "Bash"
+    ]
   },
   "review-pr": {
-    "keywords": ["review pr", "review pull request", "PR #", "pull request", "pr review", "check pr"],
-    "filePatterns": [".github/**"],
-    "toolTriggers": ["Bash"]
+    "keywords": [
+      "review pr",
+      "review pull request",
+      "PR #",
+      "pull request",
+      "pr review",
+      "check pr"
+    ],
+    "filePatterns": [
+      ".github/**"
+    ],
+    "toolTriggers": [
+      "Bash"
+    ]
   },
   "create-pr": {
-    "keywords": ["create pr", "open pr", "new pull request", "submit pr", "create pull request", "open pull request", "open a pull request", "ready for review", "ready to merge", "ready to ship", "submit my changes"],
-    "filePatterns": [".github/**"],
-    "toolTriggers": ["Bash"]
+    "keywords": [
+      "create pr",
+      "open pr",
+      "new pull request",
+      "submit pr",
+      "create pull request",
+      "open pull request",
+      "open a pull request",
+      "ready for review",
+      "ready to merge",
+      "ready to ship",
+      "submit my changes"
+    ],
+    "filePatterns": [
+      ".github/**"
+    ],
+    "toolTriggers": [
+      "Bash"
+    ]
   },
   "changelog": {
-    "keywords": ["changelog", "release notes", "what changed", "version history", "CHANGELOG"],
-    "filePatterns": ["CHANGELOG.md", "CHANGELOG", "HISTORY.md", "RELEASES.md"],
-    "toolTriggers": ["Read", "Edit"]
+    "keywords": [
+      "changelog",
+      "release notes",
+      "what changed",
+      "version history",
+      "CHANGELOG"
+    ],
+    "filePatterns": [
+      "CHANGELOG.md",
+      "CHANGELOG",
+      "HISTORY.md",
+      "RELEASES.md"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit"
+    ]
   },
   "git-workflow": {
-    "keywords": ["git workflow", "branching model", "gitflow", "trunk-based", "merge strategy", "rebase", "cherry-pick", "branch name", "branch naming", "create branch", "cleanup branches", "stale branches", "git bisect", "interactive rebase", "merge conflict"],
-    "filePatterns": [".git/**", ".github/**"],
-    "toolTriggers": ["Bash"]
+    "keywords": [
+      "git workflow",
+      "branching model",
+      "gitflow",
+      "trunk-based",
+      "merge strategy",
+      "rebase",
+      "cherry-pick",
+      "branch name",
+      "branch naming",
+      "create branch",
+      "cleanup branches",
+      "stale branches",
+      "git bisect",
+      "interactive rebase",
+      "merge conflict"
+    ],
+    "filePatterns": [
+      ".git/**",
+      ".github/**"
+    ],
+    "toolTriggers": [
+      "Bash"
+    ]
   },
   "adr": {
-    "keywords": ["adr", "architecture decision", "decision record", "design decision", "technical decision", "architecture record"],
-    "filePatterns": ["docs/adr/**", "docs/decisions/**", "adr/**"],
-    "toolTriggers": ["Write"]
+    "keywords": [
+      "adr",
+      "architecture decision",
+      "decision record",
+      "design decision",
+      "technical decision",
+      "architecture record"
+    ],
+    "filePatterns": [
+      "docs/adr/**",
+      "docs/decisions/**",
+      "adr/**"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "impact-analysis": {
-    "keywords": ["impact", "impact analysis", "what will break", "downstream", "upstream", "dependencies affected", "blast radius", "risk assessment"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py"],
-    "toolTriggers": ["Read", "Grep"]
+    "keywords": [
+      "impact",
+      "impact analysis",
+      "what will break",
+      "downstream",
+      "upstream",
+      "dependencies affected",
+      "blast radius",
+      "risk assessment"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Grep"
+    ]
   },
   "dependency-graph": {
-    "keywords": ["dependency graph", "import graph", "module graph", "dependency tree", "who imports", "what imports", "circular dependency"],
-    "filePatterns": ["package.json", "requirements.txt", "Cargo.toml", "go.mod", "pyproject.toml"],
-    "toolTriggers": ["Read", "Bash"]
+    "keywords": [
+      "dependency graph",
+      "import graph",
+      "module graph",
+      "dependency tree",
+      "who imports",
+      "what imports",
+      "circular dependency"
+    ],
+    "filePatterns": [
+      "package.json",
+      "requirements.txt",
+      "Cargo.toml",
+      "go.mod",
+      "pyproject.toml"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Bash"
+    ]
   },
   "scenario-compare": {
-    "keywords": ["compare", "tradeoff", "trade-off", "pros and cons", "option A", "option B", "which approach", "alternatives", "versus", "vs"],
+    "keywords": [
+      "compare",
+      "tradeoff",
+      "trade-off",
+      "pros and cons",
+      "option A",
+      "option B",
+      "which approach",
+      "alternatives",
+      "versus",
+      "vs"
+    ],
     "filePatterns": [],
     "toolTriggers": []
   },
   "system-design": {
-    "keywords": ["system design", "architecture", "high level design", "design system", "system architecture", "microservices", "monolith", "distributed", "how does the system", "end to end flow", "request flow", "flow through the system", "component diagram"],
-    "filePatterns": ["docs/ARCHITECTURE.md", "docs/design/**", "**/*.drawio", "**/*.puml"],
-    "toolTriggers": ["Write", "Read"]
+    "keywords": [
+      "system design",
+      "high level design",
+      "system architecture",
+      "monolith",
+      "distributed",
+      "how does the system",
+      "end to end flow",
+      "request flow",
+      "flow through the system",
+      "component diagram",
+      "high-level architecture"
+    ],
+    "filePatterns": [
+      "docs/ARCHITECTURE.md",
+      "docs/design/**",
+      "**/*.drawio",
+      "**/*.puml"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Read"
+    ]
   },
   "api-design": {
-    "keywords": ["api design", "endpoint", "REST", "GraphQL", "gRPC", "API schema", "openapi", "swagger", "route design", "API contract"],
-    "filePatterns": ["**/*.openapi.yaml", "**/*.swagger.json", "**/openapi.yaml", "**/swagger.yaml", "**/*.graphql", "**/*.proto"],
-    "toolTriggers": ["Write", "Read"]
+    "keywords": [
+      "api design",
+      "endpoint",
+      "REST",
+      "gRPC",
+      "API schema",
+      "openapi",
+      "swagger",
+      "route design",
+      "API contract",
+      "graphql api",
+      "graphql endpoint"
+    ],
+    "filePatterns": [
+      "**/*.openapi.yaml",
+      "**/*.swagger.json",
+      "**/openapi.yaml",
+      "**/swagger.yaml",
+      "**/*.graphql",
+      "**/*.proto"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Read"
+    ]
   },
   "test-writer": {
-    "keywords": ["write test", "add test", "create test", "unit test", "test for", "test case", "spec", "write spec"],
-    "filePatterns": ["**/*.test.*", "**/*.spec.*", "**/tests/**", "**/__tests__/**", "**/test_*.py", "**/*_test.go"],
-    "toolTriggers": ["Write", "Bash"]
+    "keywords": [
+      "write test",
+      "add test",
+      "create test",
+      "unit test",
+      "test for",
+      "test case",
+      "write spec"
+    ],
+    "filePatterns": [
+      "**/*.test.*",
+      "**/*.spec.*",
+      "**/tests/**",
+      "**/__tests__/**",
+      "**/test_*.py",
+      "**/*_test.go"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Bash"
+    ]
   },
   "test-coverage": {
-    "keywords": ["test coverage", "coverage report", "uncovered", "coverage gap", "missing tests", "coverage percentage", "lcov"],
-    "filePatterns": ["coverage/**", "*.lcov", ".nycrc", "jest.config.*", "pytest.ini", "setup.cfg"],
-    "toolTriggers": ["Bash"]
+    "keywords": [
+      "test coverage",
+      "coverage report",
+      "uncovered",
+      "coverage gap",
+      "missing tests",
+      "coverage percentage",
+      "lcov",
+      "% coverage",
+      "untested"
+    ],
+    "filePatterns": [
+      "coverage/**",
+      "*.lcov",
+      ".nycrc",
+      "jest.config.*",
+      "pytest.ini",
+      "setup.cfg"
+    ],
+    "toolTriggers": [
+      "Bash"
+    ]
   },
   "e2e-testing": {
-    "keywords": ["e2e", "end to end", "end-to-end", "integration test", "playwright", "cypress", "selenium", "puppeteer"],
-    "filePatterns": ["**/e2e/**", "**/cypress/**", "**/playwright/**", "playwright.config.*", "cypress.config.*"],
-    "toolTriggers": ["Write", "Bash"]
+    "keywords": [
+      "e2e",
+      "end to end",
+      "end-to-end",
+      "integration test",
+      "playwright",
+      "cypress",
+      "selenium",
+      "puppeteer"
+    ],
+    "filePatterns": [
+      "**/e2e/**",
+      "**/cypress/**",
+      "**/playwright/**",
+      "playwright.config.*",
+      "cypress.config.*"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Bash"
+    ]
   },
   "mock-generator": {
-    "keywords": ["mock", "stub", "fake", "spy", "test double", "fixture", "factory", "test data", "seed data"],
-    "filePatterns": ["**/__mocks__/**", "**/mocks/**", "**/fixtures/**", "**/factories/**"],
-    "toolTriggers": ["Write"]
+    "keywords": [
+      "stub",
+      "spy",
+      "test double",
+      "fixture",
+      "factory",
+      "test data",
+      "seed data",
+      "mock object"
+    ],
+    "filePatterns": [
+      "**/__mocks__/**",
+      "**/mocks/**",
+      "**/fixtures/**",
+      "**/factories/**"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "api-docs": {
-    "keywords": ["api docs", "api documentation", "document api", "endpoint docs", "swagger docs", "openapi docs"],
-    "filePatterns": ["**/openapi.yaml", "**/swagger.*", "docs/api/**"],
-    "toolTriggers": ["Write", "Read"]
+    "keywords": [
+      "api docs",
+      "api documentation",
+      "document api",
+      "endpoint docs",
+      "swagger docs",
+      "openapi docs"
+    ],
+    "filePatterns": [
+      "**/openapi.yaml",
+      "**/swagger.*",
+      "docs/api/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Read"
+    ]
   },
   "readme-generator": {
-    "keywords": ["readme", "README", "project readme", "write readme", "update readme", "generate readme"],
-    "filePatterns": ["README.md", "README", "readme.md"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "readme",
+      "README",
+      "project readme",
+      "write readme",
+      "update readme",
+      "generate readme"
+    ],
+    "filePatterns": [
+      "README.md",
+      "README",
+      "readme.md"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "technical-writing": {
-    "keywords": ["documentation", "docs", "technical writing", "write docs", "document", "guide", "tutorial", "how-to"],
-    "filePatterns": ["docs/**", "**/*.md", "**/*.rst", "**/*.adoc"],
-    "toolTriggers": ["Write"]
+    "keywords": [
+      "documentation",
+      "docs",
+      "technical writing",
+      "write docs",
+      "document",
+      "guide",
+      "tutorial",
+      "how-to"
+    ],
+    "filePatterns": [
+      "docs/**",
+      "**/*.md",
+      "**/*.rst",
+      "**/*.adoc"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "code-comments": {
-    "keywords": ["comment", "add comments", "document code", "inline docs", "code documentation", "annotate"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs", "**/*.java"],
-    "toolTriggers": ["Edit"]
+    "keywords": [
+      "comment",
+      "add comments",
+      "document code",
+      "inline docs",
+      "code documentation",
+      "annotate"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs",
+      "**/*.java"
+    ],
+    "toolTriggers": [
+      "Edit"
+    ]
   },
   "jsdoc-generator": {
-    "keywords": ["jsdoc", "tsdoc", "typedoc", "docstring", "pydoc", "godoc", "rustdoc", "javadoc", "generate docs from code"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs", "**/*.java"],
-    "toolTriggers": ["Edit"]
+    "keywords": [
+      "jsdoc",
+      "tsdoc",
+      "typedoc",
+      "docstring",
+      "pydoc",
+      "godoc",
+      "rustdoc",
+      "javadoc",
+      "generate docs from code"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs",
+      "**/*.java"
+    ],
+    "toolTriggers": [
+      "Edit"
+    ]
   },
   "pdf-extract": {
-    "keywords": ["pdf", "extract pdf", "read pdf", "parse pdf", "pdf content"],
-    "filePatterns": ["**/*.pdf"],
-    "toolTriggers": ["Read"]
-  },
-  "document-extract": {
-    "keywords": ["extract", "parse document", "read document", "docx", "xlsx", "csv", "spreadsheet"],
-    "filePatterns": ["**/*.docx", "**/*.xlsx", "**/*.csv", "**/*.pptx"],
-    "toolTriggers": ["Read", "Bash"]
+    "keywords": [
+      "pdf",
+      "extract pdf",
+      "read pdf",
+      "parse pdf",
+      "pdf content"
+    ],
+    "filePatterns": [
+      "**/*.pdf"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "summarize": {
-    "keywords": ["summarize", "summary", "tldr", "tl;dr", "brief", "overview", "key points", "main points", "meeting notes", "meeting summary", "action items", "meeting minutes", "standup notes", "weekly summary", "weekly report", "week recap", "activity summary"],
-    "filePatterns": ["**/*.md", "**/*.txt", "**/*.pdf"],
-    "toolTriggers": ["Read", "Bash"]
+    "keywords": [
+      "summarize",
+      "summary",
+      "tldr",
+      "tl;dr",
+      "brief",
+      "overview",
+      "key points",
+      "main points",
+      "meeting notes",
+      "meeting summary",
+      "action items",
+      "meeting minutes",
+      "standup notes",
+      "weekly summary",
+      "weekly report",
+      "week recap",
+      "activity summary"
+    ],
+    "filePatterns": [
+      "**/*.md",
+      "**/*.txt",
+      "**/*.pdf"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Bash"
+    ]
   },
   "de-ai-ify": {
-    "keywords": ["de-ai", "humanize", "rewrite", "make natural", "less robotic", "remove ai tone", "sound human", "authentic voice"],
-    "filePatterns": ["**/*.md", "**/*.txt"],
-    "toolTriggers": ["Edit"]
+    "keywords": [
+      "de-ai",
+      "humanize",
+      "rewrite",
+      "make natural",
+      "less robotic",
+      "remove ai tone",
+      "sound human",
+      "authentic voice"
+    ],
+    "filePatterns": [
+      "**/*.md",
+      "**/*.txt"
+    ],
+    "toolTriggers": [
+      "Edit"
+    ]
   },
   "dockerfile": {
-    "keywords": ["docker", "dockerfile", "container", "containerize", "docker-compose", "docker compose", "image", "multi-stage build"],
-    "filePatterns": ["Dockerfile", "Dockerfile.*", "docker-compose.yml", "docker-compose.yaml", "compose.yml", "compose.yaml", ".dockerignore"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "docker",
+      "dockerfile",
+      "container",
+      "containerize",
+      "docker-compose",
+      "docker compose",
+      "image",
+      "multi-stage build"
+    ],
+    "filePatterns": [
+      "Dockerfile",
+      "Dockerfile.*",
+      "docker-compose.yml",
+      "docker-compose.yaml",
+      "compose.yml",
+      "compose.yaml",
+      ".dockerignore"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "ci-cd": {
-    "keywords": ["ci", "cd", "ci/cd", "pipeline", "github actions", "gitlab ci", "jenkins", "workflow", "continuous integration", "continuous deployment"],
-    "filePatterns": [".github/workflows/**", ".gitlab-ci.yml", "Jenkinsfile", ".circleci/**", ".travis.yml"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "ci/cd",
+      "github actions",
+      "gitlab ci",
+      "jenkins",
+      "circleci",
+      "continuous integration",
+      "continuous deployment",
+      "build pipeline",
+      "ci pipeline",
+      "deployment pipeline",
+      "github workflow",
+      "build workflow",
+      "automate build",
+      "automate deploy"
+    ],
+    "filePatterns": [
+      ".github/workflows/**",
+      ".gitlab-ci.yml",
+      "Jenkinsfile",
+      ".circleci/**",
+      ".travis.yml"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "deployment": {
-    "keywords": ["deploy", "deployment", "release", "ship", "go live", "production", "staging", "rollback", "blue-green", "canary"],
-    "filePatterns": ["deploy/**", "k8s/**", "kubernetes/**", "terraform/**", "pulumi/**", "ansible/**"],
-    "toolTriggers": ["Write", "Bash"]
+    "keywords": [
+      "deployment",
+      "production",
+      "staging",
+      "rollback",
+      "blue-green",
+      "canary",
+      "deploy to"
+    ],
+    "filePatterns": [
+      "deploy/**",
+      "k8s/**",
+      "kubernetes/**",
+      "terraform/**",
+      "pulumi/**",
+      "ansible/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Bash"
+    ]
   },
   "monitoring": {
-    "keywords": ["monitoring", "observability", "alerting", "metrics", "logging", "tracing", "dashboard", "prometheus", "grafana", "datadog"],
-    "filePatterns": ["monitoring/**", "grafana/**", "prometheus/**", "**/*alerting*", "**/*monitoring*"],
-    "toolTriggers": ["Write", "Read"]
+    "keywords": [
+      "monitoring",
+      "observability",
+      "alerting",
+      "metrics",
+      "tracing",
+      "prometheus",
+      "grafana",
+      "datadog",
+      "log level",
+      "structured logging"
+    ],
+    "filePatterns": [
+      "monitoring/**",
+      "grafana/**",
+      "prometheus/**",
+      "**/*alerting*",
+      "**/*monitoring*"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Read"
+    ]
   },
   "cost-analysis": {
-    "keywords": ["cost", "pricing", "budget", "cloud cost", "aws cost", "gcp cost", "azure cost", "cost optimization", "billing"],
-    "filePatterns": ["terraform/**", "pulumi/**", "infra/**"],
-    "toolTriggers": ["Read"]
+    "keywords": [
+      "cost",
+      "budget",
+      "cloud cost",
+      "aws cost",
+      "gcp cost",
+      "azure cost",
+      "cost optimization",
+      "billing",
+      "cloud pricing",
+      "aws bill",
+      "cloud bill"
+    ],
+    "filePatterns": [
+      "terraform/**",
+      "pulumi/**",
+      "infra/**"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "infrastructure": {
-    "keywords": ["infrastructure", "infra", "terraform", "pulumi", "cloudformation", "IaC", "infrastructure as code", "provision", "cloud"],
-    "filePatterns": ["terraform/**", "pulumi/**", "infra/**", "cloudformation/**", "**/*.tf", "**/*.hcl"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "infrastructure",
+      "infra",
+      "terraform",
+      "pulumi",
+      "cloudformation",
+      "IaC",
+      "infrastructure as code",
+      "provision",
+      "cloud"
+    ],
+    "filePatterns": [
+      "terraform/**",
+      "pulumi/**",
+      "infra/**",
+      "cloudformation/**",
+      "**/*.tf",
+      "**/*.hcl"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "database-schema": {
-    "keywords": ["schema", "database schema", "table", "create table", "alter table", "column", "entity", "ERD", "data model"],
-    "filePatterns": ["**/*.sql", "migrations/**", "prisma/**", "**/*.prisma", "**/schema.*"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "database schema",
+      "db schema",
+      "schema design",
+      "create table",
+      "alter table",
+      "add column",
+      "drop column",
+      "entity",
+      "ERD",
+      "table structure",
+      "schema migration"
+    ],
+    "filePatterns": [
+      "**/*.sql",
+      "migrations/**",
+      "prisma/**",
+      "**/*.prisma",
+      "**/schema.*"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "migration": {
-    "keywords": ["migration", "migrate", "database migration", "schema migration", "alembic", "knex", "flyway", "liquibase", "prisma migrate"],
-    "filePatterns": ["migrations/**", "db/migrate/**", "alembic/**", "prisma/migrations/**"],
-    "toolTriggers": ["Write", "Bash"]
+    "keywords": [
+      "migration",
+      "database migration",
+      "schema migration",
+      "alembic",
+      "knex",
+      "flyway",
+      "liquibase",
+      "prisma migrate"
+    ],
+    "filePatterns": [
+      "migrations/**",
+      "db/migrate/**",
+      "alembic/**",
+      "prisma/migrations/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Bash"
+    ]
   },
   "data-modeling": {
-    "keywords": ["data model", "data modeling", "entity relationship", "ER diagram", "normalization", "denormalization", "schema design"],
-    "filePatterns": ["**/*.prisma", "**/*.sql", "models/**", "**/models.*", "**/entities/**"],
-    "toolTriggers": ["Write", "Read"]
+    "keywords": [
+      "data model",
+      "data modeling",
+      "entity relationship",
+      "ER diagram",
+      "normalization",
+      "denormalization",
+      "schema design"
+    ],
+    "filePatterns": [
+      "**/*.prisma",
+      "**/*.sql",
+      "models/**",
+      "**/models.*",
+      "**/entities/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Read"
+    ]
   },
   "sql-optimization": {
-    "keywords": ["sql optimization", "slow query", "query optimization", "index", "explain plan", "query plan", "N+1", "join optimization"],
-    "filePatterns": ["**/*.sql", "**/*.prisma"],
-    "toolTriggers": ["Read", "Bash"]
+    "keywords": [
+      "sql optimization",
+      "slow query",
+      "query optimization",
+      "index",
+      "explain plan",
+      "query plan",
+      "N+1",
+      "join optimization"
+    ],
+    "filePatterns": [
+      "**/*.sql",
+      "**/*.prisma"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Bash"
+    ]
   },
   "seed-generator": {
-    "keywords": ["seed", "seed data", "sample data", "test data", "faker", "factory", "fixture data", "populate database"],
-    "filePatterns": ["**/seed.*", "**/seeds/**", "db/seeds/**", "prisma/seed.*"],
-    "toolTriggers": ["Write"]
+    "keywords": [
+      "seed",
+      "seed data",
+      "sample data",
+      "test data",
+      "faker",
+      "factory",
+      "fixture data",
+      "populate database"
+    ],
+    "filePatterns": [
+      "**/seed.*",
+      "**/seeds/**",
+      "db/seeds/**",
+      "prisma/seed.*"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "security-audit": {
-    "keywords": ["security", "security audit", "vulnerability", "OWASP", "injection", "XSS", "CSRF", "authentication", "authorization", "pentest"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.java"],
-    "toolTriggers": ["Read"]
+    "keywords": [
+      "security",
+      "security audit",
+      "vulnerability",
+      "OWASP",
+      "injection",
+      "XSS",
+      "CSRF",
+      "authentication",
+      "pentest"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.java"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "vulnerability-scan": {
-    "keywords": ["vulnerability scan", "CVE", "npm audit", "snyk", "dependabot", "security scan", "outdated dependencies"],
-    "filePatterns": ["package.json", "package-lock.json", "yarn.lock", "requirements.txt", "Gemfile.lock", "Cargo.lock", "go.sum"],
-    "toolTriggers": ["Bash", "Read"]
+    "keywords": [
+      "vulnerability scan",
+      "CVE",
+      "npm audit",
+      "snyk",
+      "dependabot",
+      "security scan",
+      "outdated dependencies"
+    ],
+    "filePatterns": [
+      "package.json",
+      "package-lock.json",
+      "yarn.lock",
+      "requirements.txt",
+      "Gemfile.lock",
+      "Cargo.lock",
+      "go.sum"
+    ],
+    "toolTriggers": [
+      "Bash",
+      "Read"
+    ]
   },
   "secrets-management": {
-    "keywords": ["secrets", "env vars", "environment variables", ".env", "vault", "secret management", "credentials", "API key", "token management"],
-    "filePatterns": [".env", ".env.*", "**/*.env", ".envrc", "vault/**"],
-    "toolTriggers": ["Read"]
+    "keywords": [
+      "secrets",
+      "env vars",
+      "environment variables",
+      ".env",
+      "vault",
+      "secret management",
+      "credentials",
+      "API key",
+      "token management"
+    ],
+    "filePatterns": [
+      ".env",
+      ".env.*",
+      "**/*.env",
+      ".envrc",
+      "vault/**"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "dependency-check": {
-    "keywords": ["dependency", "outdated", "update dependencies", "upgrade", "npm outdated", "dependency audit", "license check"],
-    "filePatterns": ["package.json", "requirements.txt", "Cargo.toml", "go.mod", "Gemfile", "pyproject.toml", "pom.xml"],
-    "toolTriggers": ["Bash", "Read"]
+    "keywords": [
+      "outdated",
+      "update dependencies",
+      "upgrade",
+      "npm outdated",
+      "dependency audit",
+      "license check"
+    ],
+    "filePatterns": [
+      "package.json",
+      "requirements.txt",
+      "Cargo.toml",
+      "go.mod",
+      "Gemfile",
+      "pyproject.toml",
+      "pom.xml"
+    ],
+    "toolTriggers": [
+      "Bash",
+      "Read"
+    ]
   },
   "component-design": {
-    "keywords": ["component", "react component", "vue component", "svelte component", "web component", "UI component", "widget", "design system"],
-    "filePatterns": ["**/*.tsx", "**/*.jsx", "**/*.vue", "**/*.svelte", "components/**"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "component",
+      "react component",
+      "vue component",
+      "svelte component",
+      "web component",
+      "UI component",
+      "widget",
+      "design system"
+    ],
+    "filePatterns": [
+      "**/*.tsx",
+      "**/*.jsx",
+      "**/*.vue",
+      "**/*.svelte",
+      "components/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "accessibility-audit": {
-    "keywords": ["accessibility", "a11y", "WCAG", "aria", "screen reader", "keyboard navigation", "contrast", "alt text"],
-    "filePatterns": ["**/*.tsx", "**/*.jsx", "**/*.html", "**/*.vue", "**/*.svelte"],
-    "toolTriggers": ["Read"]
+    "keywords": [
+      "accessibility",
+      "a11y",
+      "WCAG",
+      "screen reader",
+      "keyboard navigation",
+      "contrast",
+      "alt text",
+      "aria label"
+    ],
+    "filePatterns": [
+      "**/*.tsx",
+      "**/*.jsx",
+      "**/*.html",
+      "**/*.vue",
+      "**/*.svelte"
+    ],
+    "toolTriggers": [
+      "Read"
+    ]
   },
   "responsive-design": {
-    "keywords": ["responsive", "mobile", "tablet", "breakpoint", "media query", "viewport", "mobile-first", "adaptive"],
-    "filePatterns": ["**/*.css", "**/*.scss", "**/*.less", "**/*.tsx", "**/*.jsx", "tailwind.config.*"],
-    "toolTriggers": ["Edit", "Read"]
+    "keywords": [
+      "responsive",
+      "mobile",
+      "tablet",
+      "breakpoint",
+      "media query",
+      "viewport",
+      "mobile-first",
+      "adaptive"
+    ],
+    "filePatterns": [
+      "**/*.css",
+      "**/*.scss",
+      "**/*.less",
+      "**/*.tsx",
+      "**/*.jsx",
+      "tailwind.config.*"
+    ],
+    "toolTriggers": [
+      "Edit",
+      "Read"
+    ]
   },
   "css-review": {
-    "keywords": ["css", "styling", "styles", "css review", "css audit", "tailwind", "scss", "sass", "less", "styled-components"],
-    "filePatterns": ["**/*.css", "**/*.scss", "**/*.less", "**/*.module.css", "tailwind.config.*"],
-    "toolTriggers": ["Read", "Edit"]
+    "keywords": [
+      "css",
+      "styling",
+      "styles",
+      "css review",
+      "css audit",
+      "tailwind",
+      "scss",
+      "sass",
+      "less",
+      "styled-components"
+    ],
+    "filePatterns": [
+      "**/*.css",
+      "**/*.scss",
+      "**/*.less",
+      "**/*.module.css",
+      "tailwind.config.*"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit"
+    ]
   },
   "storybook": {
-    "keywords": ["storybook", "stories", "component story", "visual testing", "component library", "design system docs"],
-    "filePatterns": ["**/*.stories.*", ".storybook/**", "storybook/**"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "storybook",
+      "stories",
+      "component story",
+      "visual testing",
+      "component library",
+      "design system docs"
+    ],
+    "filePatterns": [
+      "**/*.stories.*",
+      ".storybook/**",
+      "storybook/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "error-handling": {
-    "keywords": ["error handling", "exception handling", "try catch", "error boundary", "error recovery", "graceful degradation", "retry logic"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "**/*.rs", "**/*.java"],
-    "toolTriggers": ["Edit"]
+    "keywords": [
+      "error handling",
+      "exception handling",
+      "try catch",
+      "error boundary",
+      "error recovery",
+      "graceful degradation",
+      "retry logic"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "**/*.rs",
+      "**/*.java"
+    ],
+    "toolTriggers": [
+      "Edit"
+    ]
   },
   "logging-strategy": {
-    "keywords": ["logging", "log", "logger", "log level", "structured logging", "log format", "winston", "pino", "bunyan"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/logger.*", "**/logging.*"],
-    "toolTriggers": ["Edit", "Write"]
+    "keywords": [
+      "logging",
+      "logger",
+      "log level",
+      "structured logging",
+      "log format",
+      "winston",
+      "pino",
+      "bunyan",
+      "add logging",
+      "logging strategy",
+      "logging setup"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/logger.*",
+      "**/logging.*"
+    ],
+    "toolTriggers": [
+      "Edit",
+      "Write"
+    ]
   },
   "caching-strategy": {
-    "keywords": ["cache", "caching", "redis", "memcached", "CDN", "cache invalidation", "cache strategy", "memoize", "TTL"],
-    "filePatterns": ["**/*.ts", "**/*.js", "**/*.py", "**/*.go", "redis.conf"],
-    "toolTriggers": ["Edit", "Write"]
+    "keywords": [
+      "cache",
+      "caching",
+      "memcached",
+      "CDN",
+      "cache invalidation",
+      "cache strategy",
+      "memoize",
+      "ttl-based"
+    ],
+    "filePatterns": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go",
+      "redis.conf"
+    ],
+    "toolTriggers": [
+      "Edit",
+      "Write"
+    ]
   },
   "middleware-design": {
-    "keywords": ["middleware", "interceptor", "filter", "pipe", "express middleware", "koa middleware", "request pipeline"],
-    "filePatterns": ["**/middleware/**", "**/middlewares/**", "**/interceptors/**"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "middleware",
+      "interceptor",
+      "express middleware",
+      "koa middleware",
+      "request pipeline",
+      "middleware design",
+      "middleware layer"
+    ],
+    "filePatterns": [
+      "**/middleware/**",
+      "**/middlewares/**",
+      "**/interceptors/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "rate-limiting": {
-    "keywords": ["rate limit", "rate limiting", "throttle", "throttling", "request limit", "API limit", "quota", "backoff"],
-    "filePatterns": ["**/middleware/**", "**/*.ts", "**/*.js", "**/*.py", "**/*.go"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "rate limit",
+      "rate limiting",
+      "throttle",
+      "throttling",
+      "request limit",
+      "API limit",
+      "quota",
+      "backoff"
+    ],
+    "filePatterns": [
+      "**/middleware/**",
+      "**/*.ts",
+      "**/*.js",
+      "**/*.py",
+      "**/*.go"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "skill-creator": {
-    "keywords": ["create skill", "new skill", "add skill", "custom skill", "skill template", "make a skill"],
-    "filePatterns": [".claude/skills/**"],
-    "toolTriggers": ["Write"]
-  },
-  "find-related": {
-    "keywords": ["related files", "find related", "connected", "references", "who uses", "where is this used", "dependents"],
-    "filePatterns": [],
-    "toolTriggers": ["Grep", "Read"]
+    "keywords": [
+      "create skill",
+      "new skill",
+      "add skill",
+      "custom skill",
+      "skill template",
+      "make a skill"
+    ],
+    "filePatterns": [
+      ".claude/skills/**"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "onboarding-guide": {
-    "keywords": ["onboarding", "getting started", "get started", "new developer", "setup guide", "quickstart", "bootstrap", "first time", "new to", "just joined", "where to begin", "where do i start"],
-    "filePatterns": ["README.md", "docs/**", "CONTRIBUTING.md"],
-    "toolTriggers": ["Write"]
+    "keywords": [
+      "onboarding",
+      "getting started",
+      "get started",
+      "new developer",
+      "setup guide",
+      "quickstart",
+      "bootstrap",
+      "first time",
+      "new to",
+      "just joined",
+      "where to begin",
+      "where do i start"
+    ],
+    "filePatterns": [
+      "README.md",
+      "docs/**",
+      "CONTRIBUTING.md"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "technical-proposal": {
-    "keywords": ["proposal", "RFC", "technical proposal", "design doc", "design document", "spec", "specification", "tech spec"],
-    "filePatterns": ["docs/rfcs/**", "docs/proposals/**", "docs/specs/**"],
-    "toolTriggers": ["Write"]
+    "keywords": [
+      "proposal",
+      "RFC",
+      "technical proposal",
+      "design doc",
+      "design document",
+      "specification",
+      "tech spec"
+    ],
+    "filePatterns": [
+      "docs/rfcs/**",
+      "docs/proposals/**",
+      "docs/specs/**"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "code-walkthrough": {
-    "keywords": ["walkthrough", "code tour", "codebase tour", "show me around", "how is this organized", "project structure", "architecture overview", "show me how", "trace the", "flow through", "request flow", "walk me through the code", "how does the request"],
+    "keywords": [
+      "walkthrough",
+      "code tour",
+      "codebase tour",
+      "show me around",
+      "how is this organized",
+      "project structure",
+      "architecture overview",
+      "show me how",
+      "trace the",
+      "flow through",
+      "request flow",
+      "walk me through the code",
+      "how does the request"
+    ],
     "filePatterns": [],
-    "toolTriggers": ["Read", "Glob"]
+    "toolTriggers": [
+      "Read",
+      "Glob"
+    ]
   },
   "regex-helper": {
-    "keywords": ["regex", "regular expression", "regexp", "pattern matching", "regex help", "regex builder", "regex test"],
+    "keywords": [
+      "regex",
+      "regular expression",
+      "regexp",
+      "pattern matching",
+      "regex help",
+      "regex builder",
+      "regex test"
+    ],
     "filePatterns": [],
     "toolTriggers": []
   },
   "env-setup": {
-    "keywords": ["env setup", "environment setup", "dev setup", "install dependencies", "project setup", "development environment", "local setup", "get started", "how to run", "run locally", "set up my environment", "first step"],
-    "filePatterns": ["**/package.json", "**/requirements.txt", "**/Cargo.toml", "**/go.mod", "**/Makefile", "**/docker-compose*", "**/.tool-versions"],
-    "toolTriggers": ["Read", "Bash"]
+    "keywords": [
+      "env setup",
+      "environment setup",
+      "dev setup",
+      "install dependencies",
+      "project setup",
+      "development environment",
+      "local setup",
+      "get started",
+      "how to run",
+      "run locally",
+      "set up my environment",
+      "first step"
+    ],
+    "filePatterns": [
+      "**/package.json",
+      "**/requirements.txt",
+      "**/Cargo.toml",
+      "**/go.mod",
+      "**/Makefile",
+      "**/docker-compose*",
+      "**/.tool-versions"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Bash"
+    ]
   },
   "error-message-writer": {
-    "keywords": ["error message", "error text", "user-facing error", "error copy", "error wording", "error UX", "friendly error"],
-    "filePatterns": ["**/errors/**", "**/messages/**", "**/i18n/**", "**/locales/**"],
-    "toolTriggers": ["Edit", "Write"]
-  },
-  "convert-format": {
-    "keywords": ["convert format", "json to yaml", "yaml to json", "csv to json", "toml to json", "format conversion", "xml to json"],
-    "filePatterns": ["**/*.json", "**/*.yaml", "**/*.yml", "**/*.toml", "**/*.csv", "**/*.xml", "**/*.ini"],
-    "toolTriggers": ["Read", "Write"]
+    "keywords": [
+      "error message",
+      "error text",
+      "user-facing error",
+      "error copy",
+      "error wording",
+      "error UX",
+      "friendly error"
+    ],
+    "filePatterns": [
+      "**/errors/**",
+      "**/messages/**",
+      "**/i18n/**",
+      "**/locales/**"
+    ],
+    "toolTriggers": [
+      "Edit",
+      "Write"
+    ]
   },
   "cli-builder": {
-    "keywords": ["cli", "command line", "cli tool", "cli builder", "command line interface", "argument parsing", "CLI design"],
-    "filePatterns": ["**/cli.*", "**/cli/**", "**/bin/**", "**/cmd/**"],
-    "toolTriggers": ["Write", "Edit"]
+    "keywords": [
+      "command line",
+      "cli tool",
+      "cli builder",
+      "command line interface",
+      "argument parsing",
+      "CLI design"
+    ],
+    "filePatterns": [
+      "**/cli.*",
+      "**/cli/**",
+      "**/bin/**",
+      "**/cmd/**"
+    ],
+    "toolTriggers": [
+      "Write",
+      "Edit"
+    ]
   },
   "mermaid-diagram": {
-    "keywords": ["mermaid", "diagram", "flowchart", "sequence diagram", "class diagram", "er diagram", "state diagram", "visualize", "timeline", "gantt", "milestones", "roadmap"],
+    "keywords": [
+      "mermaid",
+      "diagram",
+      "flowchart",
+      "sequence diagram",
+      "class diagram",
+      "er diagram",
+      "state diagram",
+      "visualize",
+      "timeline",
+      "gantt",
+      "milestones",
+      "roadmap"
+    ],
     "filePatterns": [],
-    "toolTriggers": ["Write"]
+    "toolTriggers": [
+      "Write"
+    ]
   },
   "figma": {
-    "keywords": ["figma", "design to code", "figma link", "figma url", "figma frame", "mockup", "wireframe", "dev mode", "design system", "figma mcp", "from design", "match the design"],
-    "filePatterns": ["figma.config.*", "**/*.figma.*"],
-    "toolTriggers": ["Read", "Write"]
+    "keywords": [
+      "figma",
+      "design to code",
+      "figma link",
+      "figma url",
+      "figma frame",
+      "mockup",
+      "wireframe",
+      "dev mode",
+      "figma mcp",
+      "from design",
+      "match the design"
+    ],
+    "filePatterns": [
+      "figma.config.*",
+      "**/*.figma.*"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Write"
+    ]
   }
 }

@@ -30,7 +30,7 @@ build/
 # Local Claude overrides (keep settings.local.json for personal config)
 # .claude/settings.local.json
 
-# Bench: timestamped run metrics (changelog.md is the human-readable record)
+# Bench: raw JSON metrics (machine-readable, regenerable — .md files ARE tracked)
 bench/results/metrics/*.json
 
 # Bench e2e: cached API responses and judgements (expensive to regenerate)

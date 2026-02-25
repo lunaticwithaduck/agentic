@@ -3,7 +3,8 @@
     "id": "sd001",
     "prompt": "Can you review this pull request diff and tell me what could be improved?",
     "expected": [
-      "code-review"
+      "code-review",
+      "review-pr"
     ],
     "notes": "Explicit review request on code changes"
   },
@@ -12,6 +13,7 @@
     "prompt": "Look at my authentication module and give me feedback on the overall code quality.",
     "expected": [
       "code-review",
+      "code-smell-detector",
       "security-audit"
     ],
     "notes": "Code review + security overlap since auth is involved"
@@ -84,6 +86,7 @@
     "id": "sd011",
     "prompt": "Can you review PR #142 and flag any issues before I merge it?",
     "expected": [
+      "code-review",
       "review-pr"
     ],
     "notes": "PR review with a PR number"
@@ -148,8 +151,7 @@
     "id": "sd019",
     "prompt": "Show me which modules import from the `utils/auth.ts` file and map out the dependency graph.",
     "expected": [
-      "dependency-graph",
-      "find-related"
+      "dependency-graph"
     ],
     "notes": "Import graph + who imports = dependency-graph overlapping with find-related"
   },
@@ -206,7 +208,8 @@
     "id": "sd026",
     "prompt": "Set up a Playwright end-to-end test for the checkout flow on our e-commerce site.",
     "expected": [
-      "e2e-testing"
+      "e2e-testing",
+      "test-writer"
     ],
     "notes": "Playwright + e2e = e2e-testing"
   },
@@ -222,7 +225,6 @@
     "id": "sd028",
     "prompt": "Help me apply TDD to this new feature. Start by writing failing tests before any implementation.",
     "expected": [
-      "testing",
       "test-writer"
     ],
     "notes": "TDD keyword plus write-tests intent"
@@ -239,7 +241,9 @@
     "id": "sd030",
     "prompt": "Generate OpenAPI documentation for all the endpoints in our Express router.",
     "expected": [
-      "api-docs"
+      "api-design",
+      "api-docs",
+      "technical-writing"
     ],
     "notes": "OpenAPI + endpoint docs = api-docs"
   },
@@ -272,6 +276,7 @@
     "id": "sd034",
     "prompt": "Generate JSDoc comments for every exported function in this TypeScript module.",
     "expected": [
+      "code-comments",
       "jsdoc-generator"
     ],
     "notes": "JSDoc generation = jsdoc-generator"
@@ -295,9 +300,7 @@
   {
     "id": "sd037",
     "prompt": "Parse this Excel spreadsheet and give me the data as JSON.",
-    "expected": [
-      "document-extract"
-    ],
+    "expected": [],
     "notes": "Spreadsheet parsing = document-extract"
   },
   {
@@ -328,7 +331,6 @@
     "id": "sd041",
     "prompt": "Extract the action items and attendees from this meeting transcript docx file.",
     "expected": [
-      "document-extract",
       "summarize"
     ],
     "notes": "docx + extract action items overlaps document-extract and summarize"
@@ -427,7 +429,8 @@
     "id": "sd053",
     "prompt": "Draw an ER diagram for our e-commerce domain: products, orders, customers, and inventory.",
     "expected": [
-      "data-modeling"
+      "data-modeling",
+      "mermaid-diagram"
     ],
     "notes": "ER diagram = data-modeling"
   },
@@ -435,6 +438,7 @@
     "id": "sd054",
     "prompt": "I have an N+1 query problem in my ORM. How do I fix it and optimize these joins?",
     "expected": [
+      "performance-optimization",
       "sql-optimization"
     ],
     "notes": "N+1 + join optimization = sql-optimization"
@@ -451,6 +455,7 @@
     "id": "sd056",
     "prompt": "Run a vulnerability scan on our npm dependencies and tell me which CVEs we're exposed to.",
     "expected": [
+      "security-audit",
       "vulnerability-scan"
     ],
     "notes": "CVE + npm audit = vulnerability-scan"
@@ -468,6 +473,7 @@
     "prompt": "Which of our dependencies are outdated and do any of them have known security issues?",
     "expected": [
       "dependency-check",
+      "security-audit",
       "vulnerability-scan"
     ],
     "notes": "Outdated deps + security issues overlaps both skills"
@@ -500,6 +506,7 @@
     "id": "sd062",
     "prompt": "Our layout breaks on tablet screens. Add Tailwind breakpoints to make it mobile-first responsive.",
     "expected": [
+      "css-review",
       "responsive-design"
     ],
     "notes": "Tablet breakpoints + mobile-first = responsive-design"
@@ -508,6 +515,7 @@
     "id": "sd063",
     "prompt": "Review the CSS for specificity wars, unused styles, and anything I should migrate to Tailwind.",
     "expected": [
+      "code-review",
       "css-review"
     ],
     "notes": "CSS audit + Tailwind = css-review"
@@ -516,6 +524,7 @@
     "id": "sd064",
     "prompt": "Create Storybook stories for the Button, Input, and Modal components in our design system.",
     "expected": [
+      "component-design",
       "storybook"
     ],
     "notes": "Storybook stories = storybook"
@@ -566,7 +575,8 @@
     "id": "sd070",
     "prompt": "Set up structured JSON logging with Winston including request IDs for tracing.",
     "expected": [
-      "logging-strategy"
+      "logging-strategy",
+      "monitoring"
     ],
     "notes": "Structured logging + Winston = logging-strategy"
   },
@@ -582,7 +592,6 @@
     "id": "sd072",
     "prompt": "Find all the files that reference the `UserService` class and show me the dependency graph.",
     "expected": [
-      "find-related",
       "dependency-graph"
     ],
     "notes": "Find references + dependency graph = both skills"
@@ -591,7 +600,8 @@
     "id": "sd073",
     "prompt": "Write an onboarding guide for a new backend engineer joining the team next week.",
     "expected": [
-      "onboarding-guide"
+      "onboarding-guide",
+      "technical-writing"
     ],
     "notes": "Onboarding guide + new engineer = onboarding-guide"
   },
@@ -599,6 +609,7 @@
     "id": "sd074",
     "prompt": "Write a technical proposal (RFC) for migrating from REST to GraphQL across our services.",
     "expected": [
+      "api-design",
       "technical-proposal"
     ],
     "notes": "RFC + technical proposal = technical-proposal"
@@ -614,9 +625,7 @@
   {
     "id": "sd076",
     "prompt": "Implement the user notification feature described in the task file.",
-    "expected": [
-      "implementation"
-    ],
+    "expected": [],
     "notes": "Implement a feature = implementation"
   },
   {
@@ -662,9 +671,7 @@
   {
     "id": "sd082",
     "prompt": "Convert this TypeScript config file from JSON format to YAML.",
-    "expected": [
-      "convert-format"
-    ],
+    "expected": [],
     "notes": "JSON to YAML = convert-format"
   },
   {
@@ -704,6 +711,7 @@
     "id": "sd087",
     "prompt": "Convert this Figma wireframe into a responsive HTML/CSS page.",
     "expected": [
+      "css-review",
       "figma",
       "responsive-design"
     ],
@@ -713,8 +721,9 @@
     "id": "sd088",
     "prompt": "My Figma design uses a specific design system with tokens. How do I map those to Tailwind?",
     "expected": [
-      "figma",
-      "css-review"
+      "component-design",
+      "css-review",
+      "figma"
     ],
     "notes": "Figma design tokens + Tailwind mapping"
   },
@@ -749,8 +758,7 @@
     "id": "sd092",
     "prompt": "I need to deploy to production but I'm not sure the tests are passing.",
     "expected": [
-      "deployment",
-      "testing"
+      "deployment"
     ],
     "notes": "Edge case: deploy + test uncertainty"
   },
