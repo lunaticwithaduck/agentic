@@ -3,19 +3,28 @@
 bench/e2e/compare.py — E2E Task Quality Comparison
 
 Compares Claude responses WITH vs WITHOUT agentic infrastructure context.
-Uses the Anthropic API directly via urllib (no dependencies).
+
+Two modes:
+  api (default)  — Uses the Anthropic API directly; simulates infra via system
+                   prompt injection (skill file content + CLAUDE.md).
+  subprocess     — Spawns `claude -p` in two real directories:
+                     • with-infra:    project root (.claude/ present, hooks fire,
+                                      skill-detector runs, CLAUDE.md is loaded)
+                     • without-infra: fresh temp dir (no .claude/, no hooks)
+                   This is a true A/B test of the infrastructure's effect.
 
 Usage:
     python3 bench/e2e/compare.py [options]
 
 Options:
-    --task=eq01          Run only this task (default: all)
-    --no-cache           Re-run API calls even if cached results exist
-    --judge-only         Re-judge cached responses without re-running tasks
-    --response-model=X  Model for generating responses (default: claude-sonnet-4-6)
-    --judge-model=X     Model for judging responses (default: claude-haiku-4-5-20251001)
-    --dry-run           Show what would run without calling API
-    --json              Output JSON instead of human-readable
+    --mode=api|subprocess    Comparison mode (default: api)
+    --task=eq01              Run only this task (default: all)
+    --no-cache               Re-run even if cached results exist
+    --judge-only             Re-judge cached responses without re-running tasks
+    --response-model=X       Model for generating responses (default: claude-sonnet-4-6)
+    --judge-model=X          Model for judging responses (default: claude-haiku-4-5-20251001)
+    --dry-run                Show what would run without calling API
+    --json                   Output JSON instead of human-readable
 
 Requires:
     ANTHROPIC_API_KEY environment variable
@@ -24,8 +33,9 @@ Requires:
 import argparse
 import json
 import os
+import subprocess
 import sys
-import time
+import tempfile
 import urllib.request
 import urllib.error
 from pathlib import Path
@@ -45,8 +55,11 @@ CLAUDE_MD = ROOT_DIR / "CLAUDE.md"
 # ── Defaults ──────────────────────────────────────────────────────────────────
 DEFAULT_RESPONSE_MODEL = "claude-sonnet-4-6"
 DEFAULT_JUDGE_MODEL    = "claude-haiku-4-5-20251001"
+DEFAULT_MODE           = "subprocess"
 ANTHROPIC_VERSION      = "2023-06-01"
 API_URL                = "https://api.anthropic.com/v1/messages"
+CLAUDE_BIN             = "claude"
+SUBPROCESS_TIMEOUT     = 180  # seconds per claude subprocess call
 
 
 # ── API helpers ───────────────────────────────────────────────────────────────
@@ -84,7 +97,80 @@ def api_call(messages: list, system: str, model: str, max_tokens: int = 2048) ->
         raise RuntimeError(f"API error {e.code}: {body}") from e
 
 
-# ── Infrastructure context builders ───────────────────────────────────────────
+# ── Subprocess helpers ─────────────────────────────────────────────────────────
+
+def run_claude_subprocess(prompt: str, work_dir: str, model: str) -> str:
+    """Run `claude -p prompt --output-format=json` in work_dir.
+
+    Disallows file-mutation tools (Bash, Edit, Write, NotebookEdit) so both
+    conditions produce pure text responses suitable for comparison.
+    """
+    cmd = [
+        CLAUDE_BIN, "-p", prompt,
+        "--output-format", "json",
+        "--no-session-persistence",
+        "--model", model,
+        "--disallowedTools", "Bash,Edit,Write,NotebookEdit",
+    ]
+    # Strip CLAUDECODE so the child session isn't blocked as a nested session.
+    # Claude Code sets this var to prevent accidental nesting, but -p (non-interactive)
+    # with --no-session-persistence is safe to run as a sibling process.
+    env = {k: v for k, v in os.environ.items() if k != "CLAUDECODE"}
+
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=work_dir,
+            stdin=subprocess.DEVNULL,   # prevent any stdin-wait hang
+            capture_output=True,
+            text=True,
+            timeout=SUBPROCESS_TIMEOUT,
+            env=env,
+        )
+    except FileNotFoundError:
+        raise RuntimeError(
+            f"'{CLAUDE_BIN}' not found in PATH. Ensure Claude Code is installed."
+        )
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(
+            f"claude subprocess timed out after {SUBPROCESS_TIMEOUT}s"
+        )
+
+    if result.returncode != 0:
+        stderr = (result.stderr or "")[:500]
+        raise RuntimeError(
+            f"claude subprocess exited {result.returncode}: {stderr}"
+        )
+
+    try:
+        data = json.loads(result.stdout)
+        if isinstance(data, dict):
+            if data.get("is_error"):
+                raise RuntimeError(f"claude reported an error: {data.get('result', '')}")
+            return data.get("result", result.stdout.strip())
+        return result.stdout.strip()
+    except json.JSONDecodeError:
+        return result.stdout.strip()
+
+
+def run_with_infra_subprocess(prompt: str, model: str) -> str:
+    """Run in project root — full agentic infra active (hooks, CLAUDE.md, skills)."""
+    return run_claude_subprocess(prompt, str(ROOT_DIR), model)
+
+
+def run_without_infra_subprocess(prompt: str, model: str) -> str:
+    """Run in a fresh temp dir — vanilla Claude Code (no .claude/, no hooks)."""
+    with tempfile.TemporaryDirectory(prefix="e2e-control-") as tmpdir:
+        return run_claude_subprocess(prompt, tmpdir, model)
+
+
+def judge_via_subprocess(judge_prompt: str, model: str) -> str:
+    """Run the judge prompt through claude -p in a bare temp dir (no infra context)."""
+    with tempfile.TemporaryDirectory(prefix="e2e-judge-") as tmpdir:
+        return run_claude_subprocess(judge_prompt, tmpdir, model)
+
+
+# ── Infrastructure context builders (api mode) ────────────────────────────────
 
 def load_skill(skill_name: str) -> str:
     path = SKILL_DIR / f"{skill_name}.md"
@@ -141,15 +227,15 @@ def save_cache(task_id: str, condition: str, content: str) -> None:
     path.write_text(content)
 
 
-def load_judgement(task_id: str) -> dict | None:
-    path = task_dir(task_id) / "judgement.json"
+def load_judgement(task_id: str, key: str = "judgement") -> dict | None:
+    path = task_dir(task_id) / f"{key}.json"
     if path.exists():
         return json.loads(path.read_text())
     return None
 
 
-def save_judgement(task_id: str, data: dict) -> None:
-    path = task_dir(task_id) / "judgement.json"
+def save_judgement(task_id: str, data: dict, key: str = "judgement") -> None:
+    path = task_dir(task_id) / f"{key}.json"
     path.write_text(json.dumps(data, indent=2))
 
 
@@ -160,8 +246,13 @@ def judge_responses(
     with_resp: str,
     without_resp: str,
     judge_model: str,
+    use_subprocess: bool = False,
 ) -> dict:
-    """Use an LLM judge to score both responses against the task rubric."""
+    """Use an LLM judge to score both responses against the task rubric.
+
+    When use_subprocess=True, the judge call goes through `claude -p` in a
+    bare temp dir instead of the Anthropic API directly — no ANTHROPIC_API_KEY needed.
+    """
     rubric_lines = "\n".join(
         f"- **{r['dimension']}** (weight {r['weight']}): {r['description']}"
         for r in task["rubric"]
@@ -195,12 +286,15 @@ Respond ONLY with valid JSON matching this exact schema (no markdown fences):
   "reasoning": "<2-3 sentence explanation of the key difference>"
 }}"""
 
-    raw = api_call(
-        messages=[{"role": "user", "content": judge_prompt}],
-        system="You are an impartial evaluator. You must respond with valid JSON only.",
-        model=judge_model,
-        max_tokens=1024,
-    )
+    if use_subprocess:
+        raw = judge_via_subprocess(judge_prompt, judge_model)
+    else:
+        raw = api_call(
+            messages=[{"role": "user", "content": judge_prompt}],
+            system="You are an impartial evaluator. You must respond with valid JSON only.",
+            model=judge_model,
+            max_tokens=1024,
+        )
 
     # Strip markdown fences if present
     text = raw.strip()
@@ -265,9 +359,12 @@ def print_task_result(task: dict, judgement: dict, with_score: float, without_sc
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def run(args: argparse.Namespace) -> dict:
-    if not os.environ.get("ANTHROPIC_API_KEY"):
+    # subprocess mode routes everything through `claude -p` — no API key needed.
+    # api mode calls the Anthropic API directly and requires ANTHROPIC_API_KEY.
+    if args.mode == "api" and not os.environ.get("ANTHROPIC_API_KEY"):
         print("\033[31mERROR: ANTHROPIC_API_KEY not set.\033[0m", file=sys.stderr)
         print("Export it and re-run:  export ANTHROPIC_API_KEY=sk-ant-...", file=sys.stderr)
+        print("Or use subprocess mode (default): python3 compare.py --mode=subprocess", file=sys.stderr)
         sys.exit(2)
 
     tasks = json.loads((E2E_DIR / "tasks.json").read_text())
@@ -280,8 +377,20 @@ def run(args: argparse.Namespace) -> dict:
     response_model = args.response_model
     judge_model    = args.judge_model
 
+    # Cache keys are mode-suffixed so api and subprocess results coexist.
+    mode_suffix = "-sub" if args.mode == "subprocess" else ""
+    with_key    = f"with-infra{mode_suffix}"
+    without_key = f"without-infra{mode_suffix}"
+    judge_key   = f"judgement{mode_suffix}"
+
     if not args.json:
-        print(f"\n  Tasks: {len(tasks)}  |  Response model: {response_model}  |  Judge: {judge_model}")
+        mode_label = (
+            "subprocess (real claude -p runs)"
+            if args.mode == "subprocess"
+            else "api (simulated system prompts)"
+        )
+        print(f"\n  Tasks: {len(tasks)}  |  Mode: {mode_label}")
+        print(f"  Response model: {response_model}  |  Judge: {judge_model}")
         if args.dry_run:
             print("  \033[33mDRY RUN — no API calls will be made\033[0m")
 
@@ -292,49 +401,51 @@ def run(args: argparse.Namespace) -> dict:
 
         # ── Step 1: Get responses ─────────────────────────────────────────────
         if not args.judge_only:
-            # WITH infrastructure
-            with_cached = load_cache(task_id, "with-infra")
+            with_cached = load_cache(task_id, with_key)
             if with_cached and not args.no_cache:
-                with_resp = with_cached
+                with_resp    = with_cached
+                without_resp = load_cache(task_id, without_key) or ""
                 if not args.json:
                     print(f"\n  [{task_id}] {task['title']} — using cached responses")
             else:
+                caller = "claude CLI" if args.mode == "subprocess" else "API"
                 if not args.json:
-                    print(f"\n  [{task_id}] {task['title']} — calling API...", end=" ", flush=True)
+                    print(f"\n  [{task_id}] {task['title']} — calling {caller}...",
+                          end=" ", flush=True)
                 if args.dry_run:
-                    with_resp = "[DRY RUN — with infra response]"
+                    with_resp    = "[DRY RUN — with infra response]"
+                    without_resp = "[DRY RUN — without infra response]"
+                elif args.mode == "subprocess":
+                    with_resp    = run_with_infra_subprocess(task["prompt"], response_model)
+                    without_resp = run_without_infra_subprocess(task["prompt"], response_model)
                 else:
                     with_resp = api_call(
                         messages=[{"role": "user", "content": task["prompt"]}],
                         system=build_with_infra_system(task.get("expected_skills", [])),
                         model=response_model,
                     )
-                if not args.dry_run:
-                    save_cache(task_id, "with-infra", with_resp)
-
-                # WITHOUT infrastructure
-                if args.dry_run:
-                    without_resp = "[DRY RUN — without infra response]"
-                else:
                     without_resp = api_call(
                         messages=[{"role": "user", "content": task["prompt"]}],
                         system=build_without_infra_system(),
                         model=response_model,
                     )
-                    save_cache(task_id, "without-infra", without_resp)
+                if not args.dry_run:
+                    save_cache(task_id, with_key, with_resp)
+                    save_cache(task_id, without_key, without_resp)
                 if not args.json:
                     print("done")
         else:
-            # Judge-only mode: load from cache
-            with_resp    = load_cache(task_id, "with-infra") or ""
-            without_resp = load_cache(task_id, "without-infra") or ""
+            # Judge-only: load from cache (mode-specific)
+            with_resp    = load_cache(task_id, with_key) or ""
+            without_resp = load_cache(task_id, without_key) or ""
             if not with_resp or not without_resp:
                 if not args.json:
-                    print(f"\n  [{task_id}] {task['title']} — no cached responses, skipping")
+                    print(f"\n  [{task_id}] {task['title']} "
+                          f"— no cached responses ({args.mode} mode), skipping")
                 continue
 
         # ── Step 2: Judge ─────────────────────────────────────────────────────
-        judgement_cached = load_judgement(task_id)
+        judgement_cached = load_judgement(task_id, judge_key)
         if judgement_cached and not args.no_cache:
             judgement = judgement_cached
         else:
@@ -348,9 +459,12 @@ def run(args: argparse.Namespace) -> dict:
                     "reasoning": "Dry run placeholder.",
                 }
             else:
-                judgement = judge_responses(task, with_resp, without_resp, judge_model)
+                judgement = judge_responses(
+                    task, with_resp, without_resp, judge_model,
+                    use_subprocess=(args.mode == "subprocess"),
+                )
             if not args.dry_run:
-                save_judgement(task_id, judgement)
+                save_judgement(task_id, judgement, judge_key)
             if not args.json and not args.dry_run:
                 print("done")
 
@@ -376,28 +490,29 @@ def run(args: argparse.Namespace) -> dict:
     if not results:
         return {"error": "no results"}
 
-    infra_wins  = sum(1 for r in results if r["winner"] == "A")
+    infra_wins   = sum(1 for r in results if r["winner"] == "A")
     vanilla_wins = sum(1 for r in results if r["winner"] == "B")
-    ties        = sum(1 for r in results if r["winner"] == "TIE")
-    avg_delta   = sum(r["delta"] for r in results) / len(results)
-    avg_with    = sum(r["with_score"] for r in results) / len(results)
-    avg_without = sum(r["without_score"] for r in results) / len(results)
-    infra_win_rate = (infra_wins + ties) / len(results)  # ties count as half-win
+    ties         = sum(1 for r in results if r["winner"] == "TIE")
+    avg_delta    = sum(r["delta"] for r in results) / len(results)
+    avg_with     = sum(r["with_score"] for r in results) / len(results)
+    avg_without  = sum(r["without_score"] for r in results) / len(results)
+    infra_win_rate = (infra_wins + ties) / len(results)
 
     summary = {
-        "timestamp":      utcnow().isoformat() + "Z",
-        "task_count":     len(results),
-        "infra_wins":     infra_wins,
-        "vanilla_wins":   vanilla_wins,
-        "ties":           ties,
-        "infra_win_rate": round(infra_win_rate, 3),
+        "timestamp":         utcnow().isoformat() + "Z",
+        "mode":              args.mode,
+        "task_count":        len(results),
+        "infra_wins":        infra_wins,
+        "vanilla_wins":      vanilla_wins,
+        "ties":              ties,
+        "infra_win_rate":    round(infra_win_rate, 3),
         "avg_with_score":    round(avg_with, 3),
         "avg_without_score": round(avg_without, 3),
         "avg_delta":         round(avg_delta, 3),
-        "pass":           infra_win_rate >= 0.60,
-        "tasks":          results,
-        "response_model": response_model,
-        "judge_model":    judge_model,
+        "pass":              infra_win_rate >= 0.60,
+        "tasks":             results,
+        "response_model":    response_model,
+        "judge_model":       judge_model,
     }
 
     if not args.json:
@@ -423,6 +538,11 @@ def run(args: argparse.Namespace) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description="E2E task quality comparison")
+    parser.add_argument(
+        "--mode", choices=["api", "subprocess"], default=DEFAULT_MODE,
+        help="subprocess: real `claude -p` runs in project root vs temp dir (default); "
+             "api: simulated system prompts",
+    )
     parser.add_argument("--task", help="Run only this task ID")
     parser.add_argument("--no-cache", action="store_true", help="Re-run even if cached")
     parser.add_argument("--judge-only", action="store_true", help="Re-judge cached responses")

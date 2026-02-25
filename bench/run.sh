@@ -129,5 +129,8 @@ fi
 
 echo ""
 
+# ─── Pretty report ────────────────────────────────────────────────────────────
+python3 "$BENCH_DIR/lib/report.py" 2>/dev/null || true
+
 # Exit with failure if any tests failed
 [ "$TOTAL_FAILED" -eq 0 ]

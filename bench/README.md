@@ -3,11 +3,36 @@
 Benchmark suite for the agentic infrastructure. Measures whether the infrastructure
 is actually doing what it claims — and tracks regressions over time.
 
-## Quick start
+## Quick start — new machine (< 5 minutes)
+
+Suites 01–03 need only `python3` + `bash`. Suite 04 (LLM quality comparison) uses real
+`claude` agent runs — just needs Claude Code installed and authenticated, which you
+already have if you're using this repo.
+
+**Run from a real terminal** (not from inside a Claude Code session):
 
 ```bash
+# Clone and run — no extra setup needed for suites 01–03
+git clone <repo-url> && cd <repo>
 bash bench/run.sh
+
+# Suite 04 requires Claude Code CLI (already installed if you're here):
+bash bench/run.sh --suite=04
+# → spawns `claude -p` in project root (with infra) vs a temp dir (without)
+# → caches results, so re-runs are free
 ```
+
+**Prerequisites:**
+
+| Suite | Requirements |
+|-------|-------------|
+| 01, 02, 03 | `python3` (stdlib only), `bash` |
+| 04 (subprocess, default) | `claude` CLI authenticated — run from a **real terminal** |
+| 04 (api mode fallback) | `ANTHROPIC_API_KEY` env var — works inside any environment |
+
+> **Note:** Suite 04 subprocess mode cannot run *inside* a Claude Code session (nested
+> session block). If you're running the bench from within Claude Code, it skips
+> automatically with a clear message. Run it from your shell directly.
 
 ## What it measures
 
@@ -46,15 +71,22 @@ bash bench/run.sh --suite=02          # run only suites matching "02"
 bash bench/run.sh --no-changelog      # skip changelog update
 bash bench/run.sh --quiet             # suppress per-test output (TODO)
 
-# Suite 04 only (requires ANTHROPIC_API_KEY):
+# Suite 04 (api mode — simulates infra via system prompt injection):
 export ANTHROPIC_API_KEY=sk-ant-...
 bash bench/run.sh --suite=04
 
+# Suite 04 (subprocess mode — real claude -p runs; must be outside a Claude Code session):
+BENCH_E2E_MODE=subprocess bash bench/run.sh --suite=04
+
 # E2E options passed through to compare.py:
-python3 bench/e2e/compare.py --task=eq01        # single task
-python3 bench/e2e/compare.py --judge-only        # re-judge cached responses
-python3 bench/e2e/compare.py --no-cache          # force re-run all API calls
-python3 bench/e2e/compare.py --dry-run           # no API calls, fake scores
+python3 bench/e2e/compare.py --task=eq01         # single task
+python3 bench/e2e/compare.py --judge-only         # re-judge cached responses
+python3 bench/e2e/compare.py --no-cache           # force re-run all API calls
+python3 bench/e2e/compare.py --dry-run            # no API calls, fake scores
+python3 bench/e2e/compare.py --mode=subprocess    # real agent runs (outside CC session)
+
+# Cleanup e2e response caches after analysis:
+bash bench/e2e/cleanup.sh --all
 ```
 
 ## Thresholds

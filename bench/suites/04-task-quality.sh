@@ -12,6 +12,7 @@ SUITE_JSON="{}"
 
 COMPARE="$ROOT_DIR/bench/e2e/compare.py"
 TASKS_FILE="$ROOT_DIR/bench/e2e/tasks.json"
+E2E_MODE="${BENCH_E2E_MODE:-subprocess}"
 
 # ── Preflight ──────────────────────────────────────────────────────────────────
 if [ ! -f "$COMPARE" ]; then
@@ -24,19 +25,29 @@ if [ ! -f "$TASKS_FILE" ]; then
   return 0
 fi
 
-if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-  print_skip "ANTHROPIC_API_KEY not set — skipping E2E suite"
-  print_info "Export ANTHROPIC_API_KEY and re-run to enable task quality comparison"
+if [ "$E2E_MODE" = "subprocess" ] && [ -n "${CLAUDECODE:-}" ]; then
+  print_skip "subprocess mode cannot run inside a Claude Code session (nested session block)"
+  print_info "Run from a real terminal:  bash bench/run.sh --suite=04"
+  print_info "Or use api mode:           BENCH_E2E_MODE=api ANTHROPIC_API_KEY=sk-ant-... bash bench/run.sh --suite=04"
+  return 0
+fi
+
+if [ -z "${ANTHROPIC_API_KEY:-}" ] && [ "$E2E_MODE" = "api" ]; then
+  print_skip "ANTHROPIC_API_KEY not set — skipping E2E suite (api mode requires it)"
+  print_info "Export ANTHROPIC_API_KEY, or run from a real terminal for subprocess mode (default)"
   return 0
 fi
 
 TASK_COUNT=$(python3 -c "import json; d=json.load(open('$TASKS_FILE')); print(len(d))" 2>/dev/null || echo 0)
-print_info "Running $TASK_COUNT tasks against claude-sonnet-4-6..."
+print_info "Running $TASK_COUNT tasks | mode: $E2E_MODE | model: claude-sonnet-4-6"
 print_info "Results cached in bench/results/e2e/ — use --no-cache to force re-run"
+if [ "$E2E_MODE" = "subprocess" ]; then
+  print_info "subprocess mode: spawning real claude -p runs (project root vs temp dir)"
+fi
 echo ""
 
 # ── Run comparison ────────────────────────────────────────────────────────────
-COMPARE_OUT=$(python3 "$COMPARE" --json 2>&1)
+COMPARE_OUT=$(python3 "$COMPARE" --json --mode="$E2E_MODE" 2>&1)
 COMPARE_EXIT=$?
 
 if [ $COMPARE_EXIT -eq 2 ]; then
