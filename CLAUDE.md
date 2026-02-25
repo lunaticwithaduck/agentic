@@ -1,6 +1,5 @@
 # CLAUDE.md - Agentic Project Infrastructure
 
-<!-- TODO: Customize project name and description for your project -->
 This project uses **agentic**, an AI-first infrastructure for Claude Code.
 It provides workflows, skills, hooks, subagents, and slash commands out of the box.
 
@@ -57,8 +56,6 @@ Hooks in `.claude/settings.json` enforce guardrails automatically:
 - **PostToolUse (Write/Edit)**: Runs validation after file modifications
 - **Stop**: Post-response hook placeholder for skill usage validation (`post-stop.sh`)
 
-<!-- TODO: Add project-specific hooks (linting, type-checking, etc.) -->
-
 ## Multi-Agent System
 
 Eight specialized agents in `.claude/agents/`:
@@ -94,8 +91,6 @@ multi-agent workflows for larger work items.
 
 ## Conventions
 
-<!-- TODO: Customize these conventions for your project -->
-
 1. **Use subagents for parallel work** - When multiple independent changes are needed,
    spawn worker subagents to handle them concurrently
 2. **Use hooks for enforcement** - Automate guardrails rather than relying on memory;
@@ -108,22 +103,32 @@ multi-agent workflows for larger work items.
 
 ## Project-Specific Configuration
 
-<!-- TODO: Fill in these sections when adopting agentic for a new project -->
-
 ### Language / Framework
-<!-- e.g., TypeScript + Next.js, Python + FastAPI, Rust + Axum -->
+Bash + Python 3 (no external dependencies). Configuration via JSON and Markdown with YAML frontmatter.
 
 ### Build Commands
-<!-- e.g., npm run build, cargo build, make -->
+No build step — agentic is a collection of config files and shell scripts.
 
 ### Test Commands
-<!-- e.g., npm test, pytest, cargo test -->
+```bash
+bash bench/run.sh                  # run all benchmark suites
+bash bench/run.sh --suite=02       # run a single suite
+bash .claude/scripts/validate.sh   # validate infrastructure integrity
+```
 
 ### Lint Commands
-<!-- e.g., npm run lint, ruff check, cargo clippy -->
+```bash
+shellcheck .claude/hooks/*.sh      # lint hook scripts (if shellcheck installed)
+python3 -m json.tool .claude/skills/skill-rules.json  # validate JSON
+```
 
 ### Key Directories
-<!-- e.g., src/ for source, tests/ for tests, migrations/ for DB -->
+- `.claude/skills/` — 65 skill definitions + skill-rules.json
+- `.claude/hooks/` — 4 lifecycle hook scripts
+- `.claude/agents/` — 8 agent role definitions
+- `.claude/commands/` — 10 slash command definitions
+- `bench/` — benchmark suite (suites, fixtures, results)
+- `workflows/` — idea → task → done pipeline
 
 ## File Structure
 
