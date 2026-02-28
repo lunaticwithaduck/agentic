@@ -61,7 +61,7 @@ DEFAULT_MODE           = "subprocess"
 ANTHROPIC_VERSION      = "2023-06-01"
 API_URL                = "https://api.anthropic.com/v1/messages"
 CLAUDE_BIN             = "claude"
-SUBPROCESS_TIMEOUT     = 180  # seconds per claude subprocess call
+SUBPROCESS_TIMEOUT     = 300  # seconds per claude subprocess call
 
 
 # ── API helpers ───────────────────────────────────────────────────────────────
@@ -100,6 +100,18 @@ def api_call(messages: list, system: str, model: str, max_tokens: int = 2048) ->
 
 
 # ── Subprocess helpers ─────────────────────────────────────────────────────────
+
+def _run_with_retry(fn, *args, log=None, **kwargs):
+    """Call fn(*args, **kwargs), retrying once on RuntimeError (transient timeouts)."""
+    try:
+        return fn(*args, **kwargs)
+    except RuntimeError as e:
+        if log:
+            log(f" failed ({e}), retrying...")
+        else:
+            print(f"  [retry] {e}", file=sys.stderr)
+        return fn(*args, **kwargs)
+
 
 def run_claude_subprocess(prompt: str, work_dir: str, model: str) -> str:
     """Run `claude -p prompt --output-format=json` in work_dir.
@@ -469,27 +481,39 @@ def run(args: argparse.Namespace) -> dict:
                     with_resp    = "[DRY RUN — with infra response]"
                     without_resp = "[DRY RUN — without infra response]"
                 elif args.mode == "subprocess":
-                    log(f"    → with-infra:    calling {caller}...", end=" ")
-                    with_resp = run_with_infra_subprocess(task["prompt"], response_model, fixture_dir)
-                    log("done")
-                    log(f"    → without-infra: calling {caller}...", end=" ")
-                    without_resp = run_without_infra_subprocess(task["prompt"], response_model, fixture_dir)
-                    log("done")
+                    try:
+                        log(f"    → with-infra:    calling {caller}...", end=" ")
+                        with_resp = _run_with_retry(run_with_infra_subprocess, task["prompt"], response_model, fixture_dir, log=log)
+                        log("done")
+                        log(f"    → without-infra: calling {caller}...", end=" ")
+                        without_resp = _run_with_retry(run_without_infra_subprocess, task["prompt"], response_model, fixture_dir, log=log)
+                        log("done")
+                    except RuntimeError as e:
+                        log(f"FAILED")
+                        log(f"    → error: {e}")
+                        log(f"    → skipping task {task_id}")
+                        continue
                 else:
-                    log(f"    → with-infra:    calling {caller}...", end=" ")
-                    with_resp = api_call(
-                        messages=[{"role": "user", "content": task["prompt"]}],
-                        system=build_with_infra_system(task.get("expected_skills", [])),
-                        model=response_model,
-                    )
-                    log("done")
-                    log(f"    → without-infra: calling {caller}...", end=" ")
-                    without_resp = api_call(
-                        messages=[{"role": "user", "content": task["prompt"]}],
-                        system=build_without_infra_system(),
-                        model=response_model,
-                    )
-                    log("done")
+                    try:
+                        log(f"    → with-infra:    calling {caller}...", end=" ")
+                        with_resp = api_call(
+                            messages=[{"role": "user", "content": task["prompt"]}],
+                            system=build_with_infra_system(task.get("expected_skills", [])),
+                            model=response_model,
+                        )
+                        log("done")
+                        log(f"    → without-infra: calling {caller}...", end=" ")
+                        without_resp = api_call(
+                            messages=[{"role": "user", "content": task["prompt"]}],
+                            system=build_without_infra_system(),
+                            model=response_model,
+                        )
+                        log("done")
+                    except RuntimeError as e:
+                        log(f"FAILED")
+                        log(f"    → error: {e}")
+                        log(f"    → skipping task {task_id}")
+                        continue
                 if not args.dry_run:
                     save_cache(task_id, with_key, with_resp)
                     save_cache(task_id, without_key, without_resp)

@@ -1,0 +1,130 @@
+{
+  "timestamp": "2026-02-28T21:04:32.946645+00:00Z",
+  "model": "claude-sonnet-4-6",
+  "task_count": 10,
+  "avg_input_overhead": 0,
+  "avg_output_delta": 0,
+  "avg_cost_ratio": 0,
+  "tasks": [
+    {
+      "task_id": "eq01",
+      "title": "Write unit tests",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq02",
+      "title": "Security review",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq03",
+      "title": "Debug a race condition",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq04",
+      "title": "Refactor messy code",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq05",
+      "title": "Architecture decision: caching strategy",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq06",
+      "title": "SQL query optimization",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq07",
+      "title": "Dockerfile production hardening",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq08",
+      "title": "Accessibility audit",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq09",
+      "title": "Rate limiting middleware",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    },
+    {
+      "task_id": "eq10",
+      "title": "CI/CD pipeline setup",
+      "with_input": 0,
+      "with_output": 0,
+      "without_input": 0,
+      "without_output": 0,
+      "input_overhead": 0,
+      "output_delta": 0,
+      "cost_ratio": 0.0,
+      "dry_run": true
+    }
+  ]
+}

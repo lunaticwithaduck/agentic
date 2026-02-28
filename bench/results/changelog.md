@@ -4,6 +4,35 @@ Tracks each benchmark run. Newest entries first.
 
 ---
 
+## 2026-02-28T21:47:19Z  |  sha: `c708f54`  |  [results](metrics/2026-02-28_21-47-19.md)
+
+**Score:** 100.0%  (prev: 99.2%, ++0.8% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 04-task-quality | 100.0% | +100.0% ↑ |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-02-28T21:07:53Z  |  sha: `c708f54`  |  [results](metrics/2026-02-28_21-07-53.md)
+
+**Score:** 99.2%  (prev: 100.0%, -0.8% ↓)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 100.0% | +0.0% → |
+| 02-skill-detection | 100.0% | +0.0% → |
+| 03-hook-security | 100.0% | +0.0% → |
+| 04-task-quality | 0.0% | -100.0% ↓ |
+| 05-keyword-overlap | 100.0% | +0.0% → |
+| 06-token-cost | 100.0% | — |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
 ## 2026-02-28T20:19:16Z  |  sha: `65be21a`  |  [results](metrics/2026-02-28_20-19-16.md)
 
 **Score:** 100.0%  (prev: 96.8%, ++3.2% ↑)
