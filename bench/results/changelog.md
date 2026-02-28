@@ -4,6 +4,34 @@ Tracks each benchmark run. Newest entries first.
 
 ---
 
+## 2026-02-28T18:25:40Z  |  sha: `ce27799`  |  [results](metrics/2026-02-28_18-25-40.md)
+
+**Score:** 50.0%  (prev: 98.4%, -48.4% ↓)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 04-task-quality | 50.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-02-28T18:19:37Z  |  sha: `ce27799`  |  [results](metrics/2026-02-28_18-19-37.md)
+
+**Score:** 98.4%  (prev: 97.6%, ++0.8% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 100.0% | +0.0% → |
+| 02-skill-detection | 100.0% | +0.0% → |
+| 03-hook-security | 100.0% | +0.0% → |
+| 04-task-quality | 50.0% | +25.0% ↑ |
+| 05-keyword-overlap | 100.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
 ## 2026-02-28T18:10:29Z  |  sha: `150a9fa`  |  [results](metrics/2026-02-28_18-10-29.md)
 
 **Score:** 97.6%  (prev: 97.6%, ++0.0% →)

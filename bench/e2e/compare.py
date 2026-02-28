@@ -306,13 +306,24 @@ Respond ONLY with valid JSON matching this exact schema (no markdown fences):
     return json.loads(text)
 
 
+def _norm(name: str) -> str:
+    """Normalize a dimension name for lookup: lowercase, spaces/hyphens → underscores."""
+    return name.lower().replace(" ", "_").replace("-", "_")
+
+
 def compute_weighted_score(rubric: list, scores: dict) -> float:
-    """Compute weighted average score from rubric weights and per-dimension scores."""
+    """Compute weighted average score from rubric weights and per-dimension scores.
+
+    The judge model may return snake_case keys ("edge_case_coverage") while the
+    rubric uses title-case names ("Edge case coverage").  Normalize both sides
+    before lookup so the two always match.
+    """
     total_weight = sum(r["weight"] for r in rubric)
     if total_weight == 0:
         return 0.0
+    normalized = {_norm(k): v for k, v in scores.items()}
     weighted = sum(
-        r["weight"] * scores.get(r["dimension"], 3)  # default 3 if dimension missing
+        r["weight"] * normalized.get(_norm(r["dimension"]), 3)  # default 3 if missing
         for r in rubric
     )
     return weighted / total_weight
