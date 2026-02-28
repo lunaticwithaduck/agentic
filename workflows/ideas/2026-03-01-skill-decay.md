@@ -26,13 +26,25 @@ validated recently.
 - Zero fires over a long period (domain may no longer be relevant to the project)
 - User correction after skill fires (negative signal — connects to negative-signal-gap problem)
 
+## Usage Tracking
+
+Skills should carry `last_used` and `used_count` metadata, updated each time the skill fires.
+These are the most reliable decay signals:
+
+- `last_used` — active signal: skill hasn't fired in 90 days → domain may no longer be relevant
+- `used_count` — depth signal: `count: 0` means the skill never helped; `count: 500` means
+  it's load-bearing and should be updated with care, not overwritten
+
+Implementation note: writing back to skill `.md` frontmatter from a hook is fragile.
+Prefer a sidecar file — `.claude/skill-usage.json` — with `{ skill_name: { last_used, count } }`.
+The decay check reads the sidecar; the skill files stay clean.
+
 ## Key Design Questions
 
 - What's the right decay window? (3 months? 6 months? domain-dependent?)
-- Who validates a flagged skill? Claude alone, or prompt to user?
 - When `.sc` files conflict with existing skills, should the skill update or the `.sc` be rejected?
-- Should fire rate be tracked? (requires state — adds complexity)
-- How does decay interact with autolearn? (autolearn could refresh a skill, resetting its clock)
+- How does decay interact with autolearn? (autolearn synthesis resets `last_validated`, not `last_used`)
+- At what `used_count` threshold does a skill become "stable" and require stronger evidence to update?
 
 ## Possible Acceptance Criteria
 

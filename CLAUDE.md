@@ -5,11 +5,12 @@ It provides workflows, skills, hooks, subagents, and slash commands out of the b
 
 ## Workflow Pipeline
 
-Ideas flow through a three-stage pipeline:
+Ideas flow through a pipeline:
 
 1. **Ideas** (`workflows/ideas/`) - Raw ideas, feature requests, brainstorms
 2. **Tasks** (`workflows/tasks/`) - Refined, actionable work items with clear acceptance criteria
-3. **Done** (`workflows/done/`) - Completed work with outcome notes
+3. **Done** (`workflows/done/`) - Completed work with outcome notes and `.sc` skill candidates
+4. **Problems** (`workflows/problems/`) - Open design problems and known issues (not actionable yet)
 
 Use `/idea`, `/promote`, `/complete`, and `/status` slash commands to manage the pipeline.
 
@@ -44,10 +45,10 @@ intentionally excluded — they add template overhead without adding knowledge.
 
 ### Skill Auto-Detection
 
-The hook at `.claude/hooks/skill-detector.sh` runs on every user prompt and injects a skill
-evaluation protocol. Pattern-based trigger rules are defined in `.claude/skills/skill-rules.json`,
-mapping each skill to keywords, file patterns, and tool triggers. Claude evaluates all skills
-against the prompt and activates the 1-3 most relevant ones before proceeding.
+The hook at `.claude/hooks/skill-detector.sh` runs on every user prompt. It reads the prompt
+text, matches it deterministically against keywords in `.claude/skills/skill-rules.json`, and
+injects matched skill content directly as context. If nothing matches, the hook outputs nothing —
+zero overhead. No AI evaluation step, no token cost on non-domain prompts.
 
 ## Hooks
 
@@ -90,6 +91,7 @@ multi-agent workflows for larger work items.
 | `/diagram` | Generate architecture diagrams |
 | `/agent <type> <task>` | Dispatch a named subagent |
 | `/clean [mode]` | Clean up stale items in the project |
+| `/bench` | Show latest benchmark results |
 
 ## Conventions
 
@@ -101,7 +103,7 @@ multi-agent workflows for larger work items.
    (security, SQL, infra, a11y); for general coding tasks Claude needs no skill activation
 4. **Plan before coding** - Always read existing code and create a plan before implementing
 5. **Test everything** - Write tests alongside features, not after
-6. **Document decisions** - Record architectural decisions in `docs/ARCHITECTURE.md`
+6. **Document decisions** - Record open problems in `workflows/problems/`, completed decisions in `workflows/done/`
 
 ## Project-Specific Configuration
 
@@ -128,7 +130,7 @@ python3 -m json.tool .claude/skills/skill-rules.json  # validate JSON
 - `.claude/skills/` — 26 domain-specific skill definitions + skill-rules.json
 - `.claude/hooks/` — 4 lifecycle hook scripts
 - `.claude/agents/` — 8 agent role definitions
-- `.claude/commands/` — 10 slash command definitions
+- `.claude/commands/` — 11 slash command definitions
 - `bench/` — benchmark suite (suites, fixtures, results)
 - `workflows/` — idea → task → done pipeline
 
@@ -145,9 +147,8 @@ python3 -m json.tool .claude/skills/skill-rules.json  # validate JSON
 workflows/
   ideas/           # Stage 1: Raw ideas
   tasks/           # Stage 2: Actionable tasks
-  done/            # Stage 3: Completed work
-docs/
-  ARCHITECTURE.md  # System architecture documentation
+  done/            # Stage 3: Completed work (+ .sc skill candidates)
+  problems/        # Open design problems and known issues
 ```
 
 ## Getting Started
