@@ -90,6 +90,7 @@ multi-agent workflows for larger work items.
 | `/diagram` | Generate architecture diagrams |
 | `/agent <type> <task>` | Dispatch a named subagent |
 | `/clean [mode]` | Clean up stale items in the project |
+| `/learn [mode]` | Analyze completed work to discover patterns and propose skill improvements |
 
 ## Conventions
 
@@ -128,7 +129,7 @@ python3 -m json.tool .claude/skills/skill-rules.json  # validate JSON
 - `.claude/skills/` — 26 domain-specific skill definitions + skill-rules.json
 - `.claude/hooks/` — 4 lifecycle hook scripts
 - `.claude/agents/` — 8 agent role definitions
-- `.claude/commands/` — 10 slash command definitions
+- `.claude/commands/` — 11 slash command definitions
 - `bench/` — benchmark suite (suites, fixtures, results)
 - `workflows/` — idea → task → done pipeline
 
