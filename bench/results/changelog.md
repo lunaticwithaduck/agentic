@@ -4,6 +4,38 @@ Tracks each benchmark run. Newest entries first.
 
 ---
 
+## 2026-02-28T20:19:16Z  |  sha: `65be21a`  |  [results](metrics/2026-02-28_20-19-16.md)
+
+**Score:** 100.0%  (prev: 96.8%, ++3.2% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 100.0% | +8.3% ↑ |
+| 02-skill-detection | 100.0% | +50.0% ↑ |
+| 03-hook-security | 100.0% | +0.0% → |
+| 04-task-quality | 100.0% | +0.0% → |
+| 05-keyword-overlap | 100.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-02-28T20:07:59Z  |  sha: `65be21a`  |  [results](metrics/2026-02-28_20-07-59.md)
+
+**Score:** 96.8%  (prev: 100.0%, -3.2% ↓)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 91.7% | — |
+| 02-skill-detection | 50.0% | — |
+| 03-hook-security | 100.0% | — |
+| 04-task-quality | 100.0% | +0.0% → |
+| 05-keyword-overlap | 100.0% | — |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
 ## 2026-02-28T19:05:41Z  |  sha: `d4b5fba`  |  [results](metrics/2026-02-28_19-05-41.md)
 
 **Score:** 100.0%  (prev: 25.0%, ++75.0% ↑)

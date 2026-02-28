@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # skill-detector.sh - UserPromptSubmit hook for automatic skill detection
-# Reads JSON from stdin (contains user prompt), outputs skill evaluation instructions to stdout.
+# Reads stdin (JSON with user prompt), outputs skill evaluation instructions to stdout.
 # Pure bash, no dependencies, designed for speed.
 
 # Read stdin (JSON with user prompt) - we don't parse it, we just ensure the hook runs
@@ -14,20 +14,13 @@ For each skill, determine: Is this skill relevant to what the user is asking?
 
 Available skills by category:
 
-[CODE QUALITY] code-review, refactor, explain-code, debug, performance-optimization, code-smell-detector
-[GIT & GITHUB] git-commit, review-pr, create-pr, changelog, git-workflow
-[ARCHITECTURE] adr, impact-analysis, dependency-graph, scenario-compare, system-design, api-design
-[TESTING] testing, test-writer, test-coverage, e2e-testing, mock-generator
-[DOCUMENTATION] api-docs, readme-generator, technical-writing, code-comments, jsdoc-generator
-[CONTENT] pdf-extract, document-extract, summarize, de-ai-ify
-[DEVOPS] dockerfile, ci-cd, deployment, monitoring, cost-analysis, infrastructure
-[DATA] database-schema, migration, data-modeling, sql-optimization, seed-generator
 [SECURITY] security-audit, vulnerability-scan, secrets-management, dependency-check
-[FRONTEND] component-design, accessibility-audit, responsive-design, css-review, storybook
-[BACKEND] error-handling, logging-strategy, caching-strategy, middleware-design, rate-limiting
-[META] skill-creator, find-related, onboarding-guide, technical-proposal, code-walkthrough
-[WORKFLOW] implementation, workflow-manager
-[UTILITIES] regex-helper, env-setup, error-message-writer, convert-format, cli-builder, mermaid-diagram
+[DATA] database-schema, migration, data-modeling, sql-optimization
+[BACKEND] caching-strategy, rate-limiting, logging-strategy
+[DEVOPS] dockerfile, ci-cd, deployment, monitoring, cost-analysis, infrastructure
+[FRONTEND] accessibility-audit, responsive-design, css-review, storybook
+[CONTENT] pdf-extract, de-ai-ify
+[UTILITIES] regex-helper, mermaid-diagram, skill-creator
 [DESIGN] figma
 
 ACTIVATION RULES:

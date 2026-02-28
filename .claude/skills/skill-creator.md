@@ -67,6 +67,16 @@ Add an entry to `.claude/skills/skill-rules.json`:
 
 `toolTriggers` options: `Read`, `Write`, `Edit`, `Bash`, `Glob`, `Grep`
 
+## Also Update skill-detector.sh
+
+Add the skill name to the appropriate category line in `.claude/hooks/skill-detector.sh`:
+
+```bash
+[CATEGORY] existing-skill, new-skill-name
+```
+
+This is what Claude sees on every prompt — if the skill isn't listed here, it won't be evaluated for activation.
+
 ## Also Update CLAUDE.md
 
 Add the new skill to the appropriate category row in the Skills Library table in `CLAUDE.md`.
