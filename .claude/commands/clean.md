@@ -25,6 +25,14 @@ Clean up stale items in the project.
 - Search the codebase for `TODO`, `FIXME`, and `HACK` comments
 - Report the count by file
 
+### Stale Skills
+- Read `.claude/skill-usage.json` (if it exists) to get `last_used` and `used_count` per skill
+- Read `.claude/skills/skill-rules.json` to get the full list of skill names
+- For each skill in skill-rules.json:
+  - If the skill has NO entry in skill-usage.json → flag as "never fired"
+  - If the skill has `last_used` older than 90 days → flag as "stale (no fires in N days)"
+- Sort flagged skills: stale skills first (oldest first), then never-fired skills alphabetically
+
 3. Output a cleanup report:
 
 ```
@@ -42,11 +50,18 @@ Clean up stale items in the project.
 ### Code Annotations
 - [filename]: [count] TODO, [count] FIXME, [count] HACK
 
+### Stale Skills ([count] items)
+| Skill | Status | Last Used | Fire Count |
+|-------|--------|-----------|------------|
+| [skill-name] | stale (N days) | [date] | [count] |
+| [skill-name] | never fired | — | 0 |
+
 ### Summary
 - Total stale ideas: [n]
 - Total stale tasks: [n]
 - Total orphaned branches: [n]
 - Total code annotations: [n]
+- Total stale/unused skills: [n]
 ```
 
 4. If in "apply" mode, perform cleanup actions:
@@ -54,3 +69,5 @@ Clean up stale items in the project.
    - Move stale tasks to `workflows/archive/`
    - Delete orphaned branches after user confirmation
    - Code annotations are reported only (not auto-fixed)
+   - Stale/unused skills: ask user which to archive, then move to `.claude/skills/archived/`
+     and remove from `skill-rules.json`
