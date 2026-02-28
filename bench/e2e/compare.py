@@ -394,9 +394,13 @@ def run(args: argparse.Namespace) -> dict:
         if args.dry_run:
             print("  \033[33mDRY RUN — no API calls will be made\033[0m")
 
+    def log(msg: str, end: str = "\n") -> None:
+        """Always print to stderr so progress is visible even in --json mode."""
+        print(msg, end=end, flush=True, file=sys.stderr)
+
     results = []
 
-    for task in tasks:
+    for i, task in enumerate(tasks, 1):
         task_id = task["id"]
 
         # ── Step 1: Get responses ─────────────────────────────────────────────
@@ -405,40 +409,45 @@ def run(args: argparse.Namespace) -> dict:
             if with_cached and not args.no_cache:
                 with_resp    = with_cached
                 without_resp = load_cache(task_id, without_key) or ""
-                if not args.json:
-                    print(f"\n  [{task_id}] {task['title']} — using cached responses")
+                log(f"\n  [{i}/{len(tasks)}] {task['title']} — using cached responses")
             else:
                 caller = "claude CLI" if args.mode == "subprocess" else "API"
-                if not args.json:
-                    print(f"\n  [{task_id}] {task['title']} — calling {caller}...",
-                          end=" ", flush=True)
+                log(f"\n  [{i}/{len(tasks)}] {task['title']}")
                 if args.dry_run:
                     with_resp    = "[DRY RUN — with infra response]"
                     without_resp = "[DRY RUN — without infra response]"
                 elif args.mode == "subprocess":
-                    with_resp    = run_with_infra_subprocess(task["prompt"], response_model)
+                    log(f"    → with-infra:    calling {caller}...", end=" ")
+                    with_resp = run_with_infra_subprocess(task["prompt"], response_model)
+                    log("done")
+                    log(f"    → without-infra: calling {caller}...", end=" ")
                     without_resp = run_without_infra_subprocess(task["prompt"], response_model)
+                    log("done")
                 else:
+                    log(f"    → with-infra:    calling {caller}...", end=" ")
                     with_resp = api_call(
                         messages=[{"role": "user", "content": task["prompt"]}],
                         system=build_with_infra_system(task.get("expected_skills", [])),
                         model=response_model,
                     )
+                    log("done")
+                    log(f"    → without-infra: calling {caller}...", end=" ")
                     without_resp = api_call(
                         messages=[{"role": "user", "content": task["prompt"]}],
                         system=build_without_infra_system(),
                         model=response_model,
                     )
+                    log("done")
                 if not args.dry_run:
                     save_cache(task_id, with_key, with_resp)
                     save_cache(task_id, without_key, without_resp)
-                if not args.json:
-                    print("done")
         else:
             # Judge-only: load from cache (mode-specific)
             with_resp    = load_cache(task_id, with_key) or ""
             without_resp = load_cache(task_id, without_key) or ""
             if not with_resp or not without_resp:
+                log(f"\n  [{i}/{len(tasks)}] {task['title']} "
+                    f"— no cached responses ({args.mode} mode), skipping")
                 if not args.json:
                     print(f"\n  [{task_id}] {task['title']} "
                           f"— no cached responses ({args.mode} mode), skipping")
@@ -448,9 +457,10 @@ def run(args: argparse.Namespace) -> dict:
         judgement_cached = load_judgement(task_id, judge_key)
         if judgement_cached and not args.no_cache:
             judgement = judgement_cached
+            log(f"    → judge:         using cached judgement")
         else:
-            if not args.json and not args.dry_run:
-                print(f"  [{task_id}] judging...", end=" ", flush=True)
+            if not args.dry_run:
+                log(f"    → judge:         scoring...", end=" ")
             if args.dry_run:
                 judgement = {
                     "response_a": {r["dimension"]: 4 for r in task["rubric"]},
@@ -463,10 +473,11 @@ def run(args: argparse.Namespace) -> dict:
                     task, with_resp, without_resp, judge_model,
                     use_subprocess=(args.mode == "subprocess"),
                 )
+                log("done")
             if not args.dry_run:
                 save_judgement(task_id, judgement, judge_key)
             if not args.json and not args.dry_run:
-                print("done")
+                pass  # already logged above
 
         # ── Step 3: Score ─────────────────────────────────────────────────────
         with_score    = compute_weighted_score(task["rubric"], judgement.get("response_a", {}))

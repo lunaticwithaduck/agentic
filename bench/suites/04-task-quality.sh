@@ -47,18 +47,40 @@ fi
 echo ""
 
 # ── Run comparison ────────────────────────────────────────────────────────────
-COMPARE_OUT=$(python3 "$COMPARE" --json --mode="$E2E_MODE" 2>&1)
+# run.sh uses set -euo pipefail; we must capture compare.py's exit code ourselves
+# because it exits 1 on test failure (valid JSON, just didn't hit threshold) and
+# set -e would kill the entire run.sh before the error handling below can fire.
+print_info "Starting comparison engine (may take several minutes)..."
+_E2E_STDERR=$(mktemp)
+set +e
+COMPARE_OUT=$(python3 "$COMPARE" --json --mode="$E2E_MODE" 2>"$_E2E_STDERR")
 COMPARE_EXIT=$?
+set -e
 
-if [ $COMPARE_EXIT -eq 2 ]; then
+# Always surface stderr — compare.py writes per-task progress there in --json mode
+if [ -s "$_E2E_STDERR" ]; then
+  while IFS= read -r _line; do
+    print_info "$_line"
+  done < "$_E2E_STDERR"
+fi
+rm -f "$_E2E_STDERR"
+
+if [ "$COMPARE_EXIT" -eq 2 ]; then
   # API key error already handled above, but catch for robustness
-  print_fail "API key error from compare.py"
+  print_fail "API key error from compare.py (exit 2)"
+  return 0
+fi
+
+if [ "$COMPARE_EXIT" -ne 0 ] && [ "$COMPARE_EXIT" -ne 1 ]; then
+  # Unexpected error (not "tests ran but infra lost", which is exit 1)
+  print_fail "compare.py exited with unexpected code $COMPARE_EXIT"
+  [ -n "$COMPARE_OUT" ] && print_info "Output: ${COMPARE_OUT:0:300}"
   return 0
 fi
 
 if ! echo "$COMPARE_OUT" | python3 -m json.tool > /dev/null 2>&1; then
-  print_fail "compare.py returned invalid output"
-  print_info "$COMPARE_OUT"
+  print_fail "compare.py returned invalid JSON (exit $COMPARE_EXIT)"
+  print_info "${COMPARE_OUT:0:300}"
   return 0
 fi
 
@@ -73,9 +95,14 @@ AVG_WITHOUT=$(echo "$COMPARE_OUT"   | python3 -c "import json,sys; d=json.load(s
 PASSED_OVERALL=$(echo "$COMPARE_OUT"| python3 -c "import json,sys; d=json.load(sys.stdin); print(d['pass'])")
 
 # Per-task results
-echo "$COMPARE_OUT" | python3 - <<'PYEOF'
+# Note: `echo "$VAR" | python3 - <<'PYEOF'` is broken — the heredoc overrides
+# stdin, so Python consumes the script source from stdin and json.load(sys.stdin)
+# sees EOF.  Write to a temp file and pass the path as sys.argv[1] instead.
+_JSON_TMP=$(mktemp)
+printf '%s' "$COMPARE_OUT" > "$_JSON_TMP"
+python3 - "$_JSON_TMP" <<'PYEOF'
 import json, sys
-data = json.load(sys.stdin)
+data = json.load(open(sys.argv[1]))
 for t in data.get("tasks", []):
     winner = t["winner"]
     delta = t["delta"]
@@ -87,6 +114,7 @@ for t in data.get("tasks", []):
     }.get(winner, winner)
     print(f"  [{t['task_id']}] {t['title'][:45]:<45}  {t['with_score']:.2f} vs {t['without_score']:.2f}  {sign}{delta:.2f}  [{label}]")
 PYEOF
+rm -f "$_JSON_TMP"
 
 echo ""
 print_info "Infrastructure wins: $INFRA_WINS  |  Vanilla wins: $VANILLA_WINS  |  Ties: $TIES"
