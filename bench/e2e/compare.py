@@ -33,6 +33,7 @@ Requires:
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -45,12 +46,13 @@ def utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-BENCH_DIR = Path(__file__).parent.parent
-ROOT_DIR  = BENCH_DIR.parent
-E2E_DIR   = Path(__file__).parent
-RESULTS   = BENCH_DIR / "results" / "e2e"
-SKILL_DIR = ROOT_DIR / ".claude" / "skills"
-CLAUDE_MD = ROOT_DIR / "CLAUDE.md"
+BENCH_DIR    = Path(__file__).parent.parent
+ROOT_DIR     = BENCH_DIR.parent
+E2E_DIR      = Path(__file__).parent
+RESULTS      = BENCH_DIR / "results" / "e2e"
+FIXTURES_DIR = E2E_DIR / "fixtures"
+SKILL_DIR    = ROOT_DIR / ".claude" / "skills"
+CLAUDE_MD    = ROOT_DIR / "CLAUDE.md"
 
 # ── Defaults ──────────────────────────────────────────────────────────────────
 DEFAULT_RESPONSE_MODEL = "claude-sonnet-4-6"
@@ -153,14 +155,46 @@ def run_claude_subprocess(prompt: str, work_dir: str, model: str) -> str:
         return result.stdout.strip()
 
 
-def run_with_infra_subprocess(prompt: str, model: str) -> str:
-    """Run in project root — full agentic infra active (hooks, CLAUDE.md, skills)."""
-    return run_claude_subprocess(prompt, str(ROOT_DIR), model)
+def _copy_fixtures(fixture_dir: Path, dest: str) -> None:
+    """Copy fixture files into dest directory."""
+    for item in fixture_dir.iterdir():
+        target = Path(dest) / item.name
+        if item.is_dir():
+            shutil.copytree(str(item), str(target))
+        else:
+            shutil.copy2(str(item), str(target))
 
 
-def run_without_infra_subprocess(prompt: str, model: str) -> str:
-    """Run in a fresh temp dir — vanilla Claude Code (no .claude/, no hooks)."""
+def run_with_infra_subprocess(prompt: str, model: str, fixture_dir: Path | None = None) -> str:
+    """Run in a temp dir with only .claude/ copied in (no project-specific CLAUDE.md).
+
+    Optionally copies fixture files (e.g. a vulnerable app.py) so skills that
+    scan the filesystem work against real code rather than inline prompt text.
+    settings.local.json is excluded — it contains developer-local permissions,
+    not reusable infrastructure.
+    """
+    claude_src = ROOT_DIR / ".claude"
+    with tempfile.TemporaryDirectory(prefix="e2e-infra-") as tmpdir:
+        if claude_src.exists():
+            shutil.copytree(
+                str(claude_src),
+                str(Path(tmpdir) / ".claude"),
+                ignore=shutil.ignore_patterns("settings.local.json"),
+            )
+        if fixture_dir and fixture_dir.exists():
+            _copy_fixtures(fixture_dir, tmpdir)
+        return run_claude_subprocess(prompt, tmpdir, model)
+
+
+def run_without_infra_subprocess(prompt: str, model: str, fixture_dir: Path | None = None) -> str:
+    """Run in a fresh temp dir — vanilla Claude Code (no .claude/, no hooks).
+
+    Receives the same fixture files as the with-infra run so both conditions
+    start from an identical codebase.
+    """
     with tempfile.TemporaryDirectory(prefix="e2e-control-") as tmpdir:
+        if fixture_dir and fixture_dir.exists():
+            _copy_fixtures(fixture_dir, tmpdir)
         return run_claude_subprocess(prompt, tmpdir, model)
 
 
@@ -414,6 +448,11 @@ def run(args: argparse.Namespace) -> dict:
     for i, task in enumerate(tasks, 1):
         task_id = task["id"]
 
+        # Resolve optional fixture directory for this task
+        fixture_dir: Path | None = None
+        if task.get("fixture_dir"):
+            fixture_dir = FIXTURES_DIR / task["fixture_dir"]
+
         # ── Step 1: Get responses ─────────────────────────────────────────────
         if not args.judge_only:
             with_cached = load_cache(task_id, with_key)
@@ -424,15 +463,17 @@ def run(args: argparse.Namespace) -> dict:
             else:
                 caller = "claude CLI" if args.mode == "subprocess" else "API"
                 log(f"\n  [{i}/{len(tasks)}] {task['title']}")
+                if task.get("fixture_dir"):
+                    log(f"    → fixtures:      {task['fixture_dir']}/")
                 if args.dry_run:
                     with_resp    = "[DRY RUN — with infra response]"
                     without_resp = "[DRY RUN — without infra response]"
                 elif args.mode == "subprocess":
                     log(f"    → with-infra:    calling {caller}...", end=" ")
-                    with_resp = run_with_infra_subprocess(task["prompt"], response_model)
+                    with_resp = run_with_infra_subprocess(task["prompt"], response_model, fixture_dir)
                     log("done")
                     log(f"    → without-infra: calling {caller}...", end=" ")
-                    without_resp = run_without_infra_subprocess(task["prompt"], response_model)
+                    without_resp = run_without_infra_subprocess(task["prompt"], response_model, fixture_dir)
                     log("done")
                 else:
                     log(f"    → with-infra:    calling {caller}...", end=" ")

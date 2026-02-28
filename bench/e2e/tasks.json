@@ -14,8 +14,9 @@
   {
     "id": "eq02",
     "title": "Security review",
+    "fixture_dir": "eq02",
     "expected_skills": ["security-audit", "vulnerability-scan"],
-    "prompt": "Review this Python code for security vulnerabilities:\n\n```python\nfrom flask import Flask, request, session, redirect\nimport sqlite3\n\napp = Flask(__name__)\napp.secret_key = \"dev_secret_key_123\"\n\ndef get_db():\n    return sqlite3.connect('users.db')\n\n@app.route('/login', methods=['POST'])\ndef login():\n    username = request.form['username']\n    password = request.form['password']\n    conn = get_db()\n    query = f\"SELECT * FROM users WHERE username='{username}' AND password='{password}'\"\n    user = conn.execute(query).fetchone()\n    if user:\n        session['user'] = username\n        session['role'] = user[3]\n        return redirect('/dashboard')\n    return 'Login failed', 401\n\n@app.route('/admin')\ndef admin_panel():\n    if session.get('role') == 'admin':\n        return f\"Welcome admin {session['user']}! User count: {get_db().execute('SELECT count(*) FROM users').fetchone()[0]}\"\n    return 'Forbidden', 403\n\n@app.route('/user/<user_id>')\ndef get_user(user_id):\n    conn = get_db()\n    result = conn.execute(f'SELECT name, email FROM users WHERE id = {user_id}').fetchone()\n    return f'<h1>{result[0]}</h1><p>{result[1]}</p>'\n```",
+    "prompt": "Review `app.py` in this project for security vulnerabilities. Identify all issues by severity (Critical, High, Medium, Low), explain each clearly, and provide concrete fixes with corrected code examples.",
     "rubric": [
       {"dimension": "Vulnerability identification", "description": "Correctly identifies SQL injection, hardcoded secret, XSS, session issues", "weight": 3},
       {"dimension": "Severity assessment", "description": "Correctly ranks severity (critical/high/medium/low) for each issue", "weight": 1},
