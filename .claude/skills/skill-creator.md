@@ -1,75 +1,72 @@
 ---
 name: skill-creator
-description: Create new Claude Code skill files with proper structure and activation triggers
+description: Create a new domain-specific skill for the agentic skill library
 activation:
-  keywords: ["create skill", "new skill", "skill creator", "add skill", "make skill"]
-  file_patterns: ["**/.claude/skills/**"]
+  keywords: ["create skill", "new skill", "add skill", "custom skill", "skill template", "make a skill"]
+  file_patterns: [".claude/skills/**"]
 ---
 
 # Skill Creator
 
+## Design Principle
+
+Skills inject **domain-specific knowledge** Claude doesn't have reliably on its own.
+They are NOT methodology templates. Before creating a skill, ask:
+
+> "Does this inject facts, patterns, or standards that Claude lacks — or does it just
+> describe a process Claude already knows?"
+
+If Claude would do fine without the skill, don't create it. Good candidates:
+- Specific tool syntax (Dockerfile best practices, Terraform patterns, Mermaid syntax)
+- Specific standards with enumerable criteria (WCAG levels, OWASP Top 10)
+- Specific domain checklists (SQL indexing patterns, cache invalidation strategies)
+- Specific output tasks Claude doesn't naturally do (de-ai-ify text, extract PDF content)
+
+Poor candidates (delete these, don't create more):
+- How to debug, refactor, review code, write tests — Claude knows these
+- Generic "best practices" without domain-specific content
+- Methodology templates with phases and steps
+
+## Skill File Format
+
+Create the file at `.claude/skills/<skill-name>.md`:
+
+```markdown
+---
+name: <skill-name>
+description: <one-line description of what domain knowledge this injects>
+activation:
+  keywords: ["keyword1", "keyword2"]
+  file_patterns: ["**/*.ext", "specific-file"]
+---
+
+# Skill Title
+
 ## Purpose
-Create new Claude Code skill files that follow the standard template format
-with appropriate activation triggers, clear instructions, and useful output formats.
+[What specific domain knowledge does this inject? Be concrete.]
 
-## Instructions
+## [Domain Knowledge Sections]
+[The actual expert content — patterns, standards, checklists, syntax examples]
+[This is the value. Make it specific and actionable.]
 
-1. **Gather Requirements**
-   - Ask what the skill should help with
-   - Identify the target audience (developers, reviewers, architects)
-   - Determine if the skill is language-specific or generic
-   - Understand the expected input and output
-
-2. **Define Activation Triggers**
-   - Choose 4-6 descriptive keywords that users would naturally use
-   - Define file patterns that indicate relevance (e.g., `**/*.test.*`)
-   - Ensure keywords do not overlap too much with existing skills
-   - Use specific phrases over single generic words
-
-3. **Write Clear Instructions**
-   - Break the task into numbered steps
-   - Each step should be specific and actionable
-   - Include what to check, what to look for, what to produce
-   - Order steps logically (analysis before implementation)
-   - Include both the "what" and the "why" for each step
-   - Keep total line count between 40-80 lines
-
-4. **Define Output Format**
-   - Specify the exact structure of the expected output
-   - Include a template or example
-   - Use markdown formatting for readability
-   - Ensure the output is actionable, not just informational
-
-5. **Follow Template Structure**
-   Every skill file must have:
-   ```markdown
-   ---
-   name: skill-name
-   description: One-line description
-   activation:
-     keywords: ["keyword1", "keyword2"]
-     file_patterns: ["**/*.ext"]
-   ---
-   # Skill Title
-   ## Purpose
-   ## Instructions
-   ## Output Format
-   ```
-
-6. **Validate the Skill**
-   - Verify the YAML frontmatter is valid
-   - Ensure instructions are clear without prior context
-   - Check that output format matches what instructions produce
-   - Confirm keywords are discoverable and unambiguous
-
-## Output Format
-
-Generate the complete skill file content in markdown with YAML frontmatter.
-The file should be saved to `.claude/skills/skill-name.md`.
-
-```
-File: .claude/skills/<skill-name>.md
-Content: [complete skill file]
+## Output Format (optional)
+[Only if the skill produces a specific structured output]
 ```
 
-Confirm the skill was created and summarize its purpose and triggers.
+## Also Update skill-rules.json
+
+Add an entry to `.claude/skills/skill-rules.json`:
+
+```json
+"<skill-name>": {
+  "keywords": ["keyword1", "keyword2"],
+  "filePatterns": ["**/*.ext"],
+  "toolTriggers": ["Read", "Write"]
+}
+```
+
+`toolTriggers` options: `Read`, `Write`, `Edit`, `Bash`, `Glob`, `Grep`
+
+## Also Update CLAUDE.md
+
+Add the new skill to the appropriate category row in the Skills Library table in `CLAUDE.md`.
