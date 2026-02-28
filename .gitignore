@@ -36,3 +36,7 @@ bench/results/metrics/*.json
 # Bench e2e: cached API responses and judgements (expensive to regenerate)
 # Commit these intentionally if you want to preserve a run baseline
 bench/results/e2e/
+
+# Autolearn runtime state (regenerable, machine-specific)
+.claude/skill-usage.json
+.claude/autolearn-pending
