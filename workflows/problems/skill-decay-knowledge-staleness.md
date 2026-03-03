@@ -1,7 +1,7 @@
-# Problem: Skill Decay
+# Problem: Skill Decay — Knowledge Staleness
 
 **Date identified:** 2026-03-01
-**Status:** Open
+**Status:** Partially solved — usage decay implemented, knowledge freshness open
 
 ---
 
@@ -25,14 +25,12 @@ change), and any skill tied to a specific API or library.
 
 1. **No freshness metadata** — skills have no `last_validated` date or source reference
 2. **No decay signal** — nothing tells us when a skill's domain has changed
-3. **No pruning mechanism** — the library only grows, never shrinks or updates
-4. **Cross-session blindness** — Claude Code has no memory of when a skill was last useful
+3. ~~**No pruning mechanism** — the library only grows, never shrinks or updates~~ ✓ Solved — `/clean` archives stale skills based on fire rate
+4. ~~**Cross-session blindness** — Claude Code has no memory of when a skill was last useful~~ ✓ Solved — `skill-usage.json` tracks last_used and used_count per skill
 
 ## Approaches Worth Exploring
 
 - Add `last_validated` and `source` frontmatter to skill files; flag skills older than N months
 - After autolearn runs, check if existing skills in the same domain conflict with new patterns;
   if so, propose an update rather than a new skill
-- Track skill "fire rate" over time: if a skill stops firing (domain no longer comes up),
-  flag for review
 - Version skills: keep a changelog of what changed and why, so decay is visible
