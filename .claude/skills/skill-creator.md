@@ -49,6 +49,12 @@ activation:
 [The actual expert content — patterns, standards, checklists, syntax examples]
 [This is the value. Make it specific and actionable.]
 
+## Failure Modes
+[Anti-patterns, edge cases, and things that look right but go wrong in this domain.
+Only include observed failures — not inferred ones. Format: "Avoid X because Y."
+Leave this section empty or omit it if no real failures have been observed yet.
+Do NOT populate this with generic caution — it must be specific and earned.]
+
 ## Output Format (optional)
 [Only if the skill produces a specific structured output]
 ```

@@ -40,6 +40,7 @@ import tempfile
 import urllib.request
 import urllib.error
 from pathlib import Path
+from typing import Optional
 from datetime import datetime, timezone
 
 def utcnow() -> datetime:
@@ -177,7 +178,7 @@ def _copy_fixtures(fixture_dir: Path, dest: str) -> None:
             shutil.copy2(str(item), str(target))
 
 
-def run_with_infra_subprocess(prompt: str, model: str, fixture_dir: Path | None = None) -> str:
+def run_with_infra_subprocess(prompt: str, model: str, fixture_dir: Optional[Path] = None) -> str:
     """Run in a temp dir with only .claude/ copied in (no project-specific CLAUDE.md).
 
     Optionally copies fixture files (e.g. a vulnerable app.py) so skills that
@@ -198,7 +199,7 @@ def run_with_infra_subprocess(prompt: str, model: str, fixture_dir: Path | None 
         return run_claude_subprocess(prompt, tmpdir, model)
 
 
-def run_without_infra_subprocess(prompt: str, model: str, fixture_dir: Path | None = None) -> str:
+def run_without_infra_subprocess(prompt: str, model: str, fixture_dir: Optional[Path] = None) -> str:
     """Run in a fresh temp dir — vanilla Claude Code (no .claude/, no hooks).
 
     Receives the same fixture files as the with-infra run so both conditions
@@ -263,7 +264,7 @@ def task_dir(task_id: str) -> Path:
     return d
 
 
-def load_cache(task_id: str, condition: str) -> str | None:
+def load_cache(task_id: str, condition: str) -> Optional[str]:
     path = task_dir(task_id) / f"{condition}.txt"
     return path.read_text() if path.exists() else None
 
@@ -273,7 +274,7 @@ def save_cache(task_id: str, condition: str, content: str) -> None:
     path.write_text(content)
 
 
-def load_judgement(task_id: str, key: str = "judgement") -> dict | None:
+def load_judgement(task_id: str, key: str = "judgement") -> Optional[dict]:
     path = task_dir(task_id) / f"{key}.json"
     if path.exists():
         return json.loads(path.read_text())
@@ -461,7 +462,7 @@ def run(args: argparse.Namespace) -> dict:
         task_id = task["id"]
 
         # Resolve optional fixture directory for this task
-        fixture_dir: Path | None = None
+        fixture_dir: Optional[Path] = None
         if task.get("fixture_dir"):
             fixture_dir = FIXTURES_DIR / task["fixture_dir"]
 

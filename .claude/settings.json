@@ -49,7 +49,9 @@
       "Bash(npm *)",
       "Bash(npx *)",
       "Bash(ls *)",
-      "Bash(mkdir *)"
+      "Bash(mkdir *)",
+      "Bash(bash .claude/hooks/post-write.sh *)",
+      "Bash(bash */hooks/post-write.sh *)"
     ]
   }
 }

@@ -33,11 +33,25 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
      IaC syntax, WCAG criteria, etc.) qualifies.
    - If YES and the knowledge isn't already covered by an existing skill in `.claude/skills/`:
      - Generate a `.sc` file at `workflows/done/[same-base-filename].sc`
-     - Frontmatter: `domain` (canonical lowercase name), `source_task` (the done filename),
-       `date` (today), `keywords` (3-6 trigger words for this domain)
+     - Frontmatter: `domain` (canonical lowercase name — use the broad technology/standard,
+       NOT a sub-topic: `graphql` not `graphql-schema`, `postgres` not `postgres-indexing`,
+       `react` not `react-hooks`; hyphenate multi-word names: `rate-limiting`, `ci-cd`),
+       `source_task` (the done filename), `date` (today), `keywords` (3-6 trigger words for this domain)
      - Body: `## Extracted Knowledge` with the specific patterns/facts learned,
        and `## Proposed Skill Content` with what a skill file would contain
    - If NO: skip — no `.sc` file needed. Most tasks won't generate one.
+   - Also ask: "Did this task reveal that an *existing* skill gave wrong, incomplete, or
+     misleading guidance?" This is the negative signal question — symmetric to the one above.
+     - If YES: add a `## Failure Modes Observed` section to the `.sc` file (or write a
+       standalone note in the Outcome section of the done file) capturing:
+       - Which skill fired (if known)
+       - What the guidance said or implied
+       - What was actually correct
+       - The specific condition that made the skill wrong (version, scope, edge case, etc.)
+     - Be specific — "the skill was wrong" is not useful. "The skill recommended X but
+       this only applies when Y; in our case Z, so the correct approach was W" is useful.
+     - This is captured for future skill amendment. It will not automatically update the
+       skill today, but it builds the corpus that informs the next synthesis cycle.
 9. Confirm completion with:
    - Task title
    - Time from creation to completion (if dates are available)

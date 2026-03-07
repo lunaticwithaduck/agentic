@@ -42,6 +42,7 @@ bash bench/run.sh --suite=04
 | `02-skill-detection` | Keyword routing accuracy against 100 labeled prompts | Precision / Recall / F1 | — |
 | `03-hook-security` | block-secrets.sh against 85 safe/dangerous commands | False positive/negative rates | — |
 | `04-task-quality` | LLM-judged response quality: with infra vs. without | Win rate / avg score delta | `ANTHROPIC_API_KEY` |
+| `07-skill-candidating` | Autolearn pipeline: domain counting, synthesis injection, skill firing | Pass/fail | — |
 
 ## Outputs
 

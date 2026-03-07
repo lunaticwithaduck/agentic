@@ -104,6 +104,10 @@ multi-agent workflows for larger work items.
 4. **Plan before coding** - Always read existing code and create a plan before implementing
 5. **Test everything** - Write tests alongside features, not after
 6. **Document decisions** - Record open problems in `workflows/problems/`, completed decisions in `workflows/done/`
+7. **Self-complete tasks** - The workflow pipeline is agent-facing infrastructure, not human-facing.
+   When you have fully implemented a task that exists in `workflows/tasks/`, run `/complete` on it
+   autonomously — do not wait to be asked. The human works from external tools (JIRA, Linear, etc.);
+   `workflows/` exists for you.
 
 ## Project-Specific Configuration
 

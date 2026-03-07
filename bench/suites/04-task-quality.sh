@@ -26,9 +26,9 @@ if [ ! -f "$TASKS_FILE" ]; then
 fi
 
 if [ "$E2E_MODE" = "subprocess" ] && [ -n "${CLAUDECODE:-}" ]; then
-  print_skip "subprocess mode cannot run inside a Claude Code session (nested session block)"
-  print_info "Run from a real terminal:  bash bench/run.sh --suite=04"
-  print_info "Or use api mode:           BENCH_E2E_MODE=api ANTHROPIC_API_KEY=sk-ant-... bash bench/run.sh --suite=04"
+  print_skip "Suite 04 cannot run inside a Claude Code session (subprocess mode is blocked)"
+  print_info "This suite is intended to be run by Claude. To run it:"
+  print_info "  env -u CLAUDECODE bash bench/run.sh --suite=04"
   return 0
 fi
 

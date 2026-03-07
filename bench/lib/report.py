@@ -12,6 +12,7 @@ import json
 import sys
 import os
 from pathlib import Path
+from typing import Optional
 from datetime import datetime, timezone
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
@@ -87,6 +88,7 @@ SUITE_LABELS = {
     "03-hook-security":   "03 · Hook Security   ",
     "04-task-quality":    "04 · Task Quality    ",
     "05-keyword-overlap": "05 · Keyword Overlap ",
+    "07-skill-candidating": "07 · Skill Candidating",
 }
 
 def suite_notes(name: str, suite: dict) -> str:
@@ -167,7 +169,7 @@ def fmt_ms(ms: int) -> str:
 
 # ── Single-run report ─────────────────────────────────────────────────────────
 
-def render_run(data: dict, prev: dict | None = None) -> None:
+def render_run(data: dict, prev: Optional[dict] = None) -> None:
     overall    = data.get("overall", {})
     suites     = data.get("suites", {})
     ts         = fmt_ts(data.get("timestamp", ""))

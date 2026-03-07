@@ -26,8 +26,9 @@ if [ ! -f "$TASKS_FILE" ]; then
 fi
 
 if [ -n "${CLAUDECODE:-}" ]; then
-  print_skip "subprocess mode cannot run inside a Claude Code session (nested session block)"
-  print_info "Run from a real terminal:  bash bench/run.sh --suite=06"
+  print_skip "Suite 06 cannot run inside a Claude Code session (subprocess mode is blocked)"
+  print_info "This suite is intended to be run by Claude. To run it:"
+  print_info "  env -u CLAUDECODE bash bench/run.sh --suite=06"
   return 0
 fi
 

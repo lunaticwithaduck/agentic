@@ -35,6 +35,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from typing import Optional
 from datetime import datetime, timezone
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
@@ -133,7 +134,7 @@ def _copy_fixtures(fixture_dir: Path, dest: str) -> None:
             shutil.copy2(str(item), str(target))
 
 
-def run_with_infra(prompt: str, model: str, fixture_dir: Path | None = None) -> dict:
+def run_with_infra(prompt: str, model: str, fixture_dir: Optional[Path] = None) -> dict:
     """Run in temp dir with .claude/ copied in. Returns raw JSON response."""
     claude_src = ROOT_DIR / ".claude"
     with tempfile.TemporaryDirectory(prefix="tok-infra-") as tmpdir:
@@ -148,7 +149,7 @@ def run_with_infra(prompt: str, model: str, fixture_dir: Path | None = None) -> 
         return run_claude_subprocess_raw(prompt, tmpdir, model)
 
 
-def run_without_infra(prompt: str, model: str, fixture_dir: Path | None = None) -> dict:
+def run_without_infra(prompt: str, model: str, fixture_dir: Optional[Path] = None) -> dict:
     """Run in a fresh temp dir — vanilla Claude, no .claude/."""
     with tempfile.TemporaryDirectory(prefix="tok-ctrl-") as tmpdir:
         if fixture_dir and fixture_dir.exists():
@@ -164,7 +165,7 @@ def task_dir(task_id: str) -> Path:
     return d
 
 
-def load_cache(task_id: str) -> dict | None:
+def load_cache(task_id: str) -> Optional[dict]:
     path = task_dir(task_id) / "tokens.json"
     return json.loads(path.read_text()) if path.exists() else None
 
@@ -218,7 +219,7 @@ def run(args: argparse.Namespace) -> dict:
                 "dry_run":        True,
             }
         else:
-            fixture_dir: Path | None = None
+            fixture_dir: Optional[Path] = None
             if task.get("fixture_dir"):
                 fixture_dir = FIXTURES_DIR / task["fixture_dir"]
 

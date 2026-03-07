@@ -29,6 +29,7 @@ import json
 import os
 import sys
 from pathlib import Path
+from typing import Optional
 from datetime import datetime, timezone
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
@@ -154,7 +155,7 @@ def load_metrics() -> list[dict]:
     return records
 
 
-def load_latest(directory: Path, pattern: str) -> dict | None:
+def load_latest(directory: Path, pattern: str) -> Optional[dict]:
     matches = sorted(directory.glob(pattern))
     if not matches:
         return None
@@ -175,7 +176,7 @@ def short_ts(ts: str) -> str:
 # Panels
 # ═══════════════════════════════════════════════════════════════════════════════
 
-def panel_stat_bar(e2e: dict, tokens: dict | None) -> list[str]:
+def panel_stat_bar(e2e: dict, tokens: Optional[dict]) -> list[str]:
     """Top headline row of key numbers."""
     win_rate  = e2e.get("infra_win_rate", 0) * 100
     iw        = e2e.get("infra_wins", 0)

@@ -77,10 +77,14 @@ SUITE_LABELS = {
 ```
 Any suite not in this dict renders with its raw filename. Add a label when you add a suite.
 
+### `.claude/hooks/skill-detector.sh` (synthesis instruction block)
+**Synthesis step now also writes to `bench/fixtures/skill-prompts.json`.**
+If you change the fixture format in `skill-prompts.json` (field names, structure), update the fixture generation instruction in `skill-detector.sh` and the format tests in `bench/suites/07-skill-candidating.sh` (tests 11–12).
+
 ### `.claude/skills/*.md` (skill library)
 - `bench/e2e/tasks.json` — `expected_skills` arrays reference skill names. If you delete a skill, search tasks.json for it and remove references.
 - `bench/suites/01-infrastructure.sh` — validates that every .md has a rule in skill-rules.json and vice versa (automated, no threshold to update).
-- `bench/suites/02-skill-detection.sh` — runs against `bench/fixtures/skill-detection/`. If you add a skill, consider adding fixture prompts that should/shouldn't trigger it.
+- `bench/suites/02-skill-detection.sh` — runs against `bench/fixtures/skill-prompts.json`. If you add a skill, consider adding fixture prompts that should/shouldn't trigger it.
 
 ### `block-secrets.sh` exit codes
 `bench/suites/03-hook-security.sh` relies on the contract:
@@ -168,7 +172,12 @@ Manually maintained. Update when you add/remove/rename a suite.
 
 ## Key Gotchas
 
-1. **Suite 04 skips inside Claude Code sessions** — `CLAUDECODE` env var is set inside any active Claude Code session. `04-task-quality.sh` detects this and returns early with a skip message. To actually run suite 04, use a real terminal.
+1. **Suites 04 and 06 skip inside Claude Code sessions** — `CLAUDECODE` env var is set inside any active Claude Code session. Both suites use subprocess mode (spawning `claude -p`) which is blocked there. To run them, use:
+   ```
+   env -u CLAUDECODE bash bench/run.sh --suite=04
+   env -u CLAUDECODE bash bench/run.sh --suite=06
+   ```
+   This works from Claude Code's Bash tool — unsetting `CLAUDECODE` lets the subprocess calls through.
 
 2. **Suites are `source`d, not exec'd** — They run in the same shell as `run.sh`. Variables like `SUITE_PASSED`, `SUITE_FAILED`, `SUITE_JSON` are shared. Don't `exit` from a suite (use `return 0`).
 
