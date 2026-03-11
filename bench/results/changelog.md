@@ -4,6 +4,24 @@ Tracks each benchmark run. Newest entries first.
 
 ---
 
+## 2026-03-11T18:10:23Z  |  sha: `363047d`  |  [results](metrics/2026-03-11_18-10-23.md)
+
+**Score:** 68.3%  (prev: 100.0%, -31.6% ↓)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 91.7% | — |
+| 02-skill-detection | 100.0% | — |
+| 03-hook-security | 52.8% | — |
+| 04-task-quality | 100.0% | — |
+| 05-keyword-overlap | 100.0% | — |
+| 06-token-cost | 100.0% | — |
+| 07-skill-candidating | 100.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
 ## 2026-03-09T20:37:28Z  |  sha: `363047d`  |  [results](metrics/2026-03-09_20-37-28.md)
 
 **Score:** 100.0%  (prev: 100.0%, ++0.0% →)

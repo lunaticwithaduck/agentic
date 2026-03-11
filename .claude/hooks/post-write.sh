@@ -10,14 +10,16 @@ if [ -z "$TOOL_INPUT" ]; then
   TOOL_INPUT=$(cat 2>/dev/null)
 fi
 
-# Extract file_path from the tool input JSON (handles both Write and Edit)
+# Extract file_path from the tool input JSON
+# Claude Code now wraps tool params under "tool_input" key; fall back to flat for older versions
 FILE_PATH=""
 if [ -n "$TOOL_INPUT" ]; then
   FILE_PATH=$(echo "$TOOL_INPUT" | python3 -c "
 import json, sys
 try:
     d = json.loads(sys.stdin.read())
-    print(d.get('file_path', ''))
+    payload = d.get('tool_input', d)
+    print(payload.get('file_path', ''))
 except Exception:
     pass
 " 2>/dev/null)

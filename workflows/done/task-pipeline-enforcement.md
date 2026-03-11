@@ -57,10 +57,11 @@ Low friction, easy to maintain. Doesn't work — conventions lose to user reques
 Injected `[WORKFLOW]` message via `skill-detector.sh`. Claude reads it as informational
 context and proceeds to implement anyway.
 
-**3. Hard hook instruction (in progress — prompt 4)**
+**3. Hard hook instruction (validated — prompt 4 worked)**
 Injected `[REQUIRED — Before writing any code or files]` with explicit prohibition:
 "Do not write any implementation files until at least one task file exists."
-Stronger language, same channel. May work; may not — channel is the same problem.
+Sandbox result: 18 tasks created and completed correctly across the full project build.
+Claude followed the instruction. Strong language + clear step list was sufficient.
 
 **4. Hook blocks on empty tasks (not yet tried)**
 `skill-detector.sh` outputs `{"decision": "block", "reason": "..."}` to block the
@@ -118,18 +119,25 @@ Fix: synthesis step 4 now auto-queues instead of just deleting the flag —
 - If found: overwrites `autolearn-pending` with next domain (chains synthesis automatically)
 - If none: deletes the flag
 
+**11. Git root edge case (found 2026-03-11 — documented, not engineered)**
+When agentic is installed as a subdirectory of another git repo, hooks compute ROOT_DIR
+from the parent repo's git root → .sc files counted in wrong done/ dir → flag never set.
+
+Found during sandbox testing: `temp/webhook-relay/` lived inside the agentic git repo.
+Fix for the sandbox: `git init` in `temp/webhook-relay/` (confirmed working).
+Not a bug for normal installs (copying agentic into a project that IS the git root).
+Decision: document the requirement, don't engineer around it. The edge case is narrow.
+
 ## Status
 
-**All three root causes fixed as of 2026-03-09.**
+**CLOSED as of 2026-03-11.**
 
-The next prompt sent to the webhook-relay session will:
-1. Inject synthesis instructions for `fastapi` (3 .sc files queued)
-2. After fastapi synthesis, auto-queue `sqlite` (3 .sc files also queued)
-3. After sqlite synthesis, clear the flag
-
-Zero manual intervention required going forward.
+- Synthesis pipeline: fully validated end-to-end. `fastapi` and `sqlite` skills auto-generated
+  in the sandbox without manual intervention (after git root fix).
+- Task creation: approach 3 validated. Sandbox completed 18 tasks with correct pipeline use.
+- Git root requirement: documented. Agentic must be installed at the project git root.
 
 ## Revisit Triggers
 
-- If synthesis is still skipped after these fixes → synthesis must be moved out-of-band
-- If block approach needed for other reasons → gate on synthesis pending, not on tasks/ empty
+- If task creation regresses (agent skips pipeline on a real project) → try approach 4 (block)
+- If git root edge case is commonly hit → add ROOT_DIR derivation from FILE_PATH in post-write.sh

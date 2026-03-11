@@ -9,13 +9,25 @@
 set -euo pipefail
 
 TOOL_INPUT="${1:-}"
+if [ -z "$TOOL_INPUT" ]; then
+  TOOL_INPUT=$(cat 2>/dev/null)
+fi
 
 if [ -z "$TOOL_INPUT" ]; then
   exit 0
 fi
 
 # Extract the command from the JSON input
-COMMAND=$(echo "$TOOL_INPUT" | grep -oP '"command"\s*:\s*"([^"]*)"' | sed 's/"command"\s*:\s*"//;s/"$//' || true)
+# Claude Code wraps tool params under "tool_input"; fall back to flat for older versions
+COMMAND=$(echo "$TOOL_INPUT" | python3 -c "
+import json, sys
+try:
+    d = json.loads(sys.stdin.read())
+    payload = d.get('tool_input', d)
+    print(payload.get('command', ''))
+except Exception:
+    pass
+" 2>/dev/null)
 
 if [ -z "$COMMAND" ]; then
   exit 0

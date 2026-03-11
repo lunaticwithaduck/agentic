@@ -182,13 +182,19 @@ never created and the pipeline was never fed. Discovered via webhook-relay sandb
 
 ## Sandbox Testing (temp/webhook-relay)
 
-Active experiment to validate autolearn pipeline end-to-end on a real project:
-- `temp/` is now gitignored
-- `temp/webhook-relay/` has full agentic infra installed with empty skills
-- Building a FastAPI/SQLite webhook relay service from scratch
-- Goal: skills should auto-generate from development work, then score well on Suite 02
-- Prompt 1 result: app built correctly, pipeline bypassed (convention bug, now fixed)
-- Prompt 2 running now with fixed CLAUDE.md
+Experiment to validate autolearn pipeline end-to-end on a real project — **COMPLETE**.
+
+- `temp/webhook-relay/` has full agentic infra installed, app fully built (18 tasks, all done)
+- Skills auto-generated: `fastapi` (synthesized), `sqlite` (synthesized 2026-03-11)
+- Pipeline works: tasks created, .sc files generated, synthesis triggered, skills written
+- `logging-strategy` has 2 .sc files — needs one more to trigger synthesis
+
+**Git root edge case found (2026-03-11):**
+- The sandbox lives inside the agentic git repo → hooks computed ROOT_DIR as `agentic/`
+  instead of `temp/webhook-relay/` → counted .sc files in wrong done/ dir → flag never set
+- Fix: `git init` in `temp/webhook-relay/` — confirmed hook then writes to correct location
+- This is NOT a bug in normal installations (copying agentic into a project that IS the git root)
+- Edge case: running agentic as a subdirectory of another git repo. Document, don't engineer.
 
 ---
 
@@ -196,8 +202,7 @@ Active experiment to validate autolearn pipeline end-to-end on a real project:
 
 - **eq09 silent failure** — subprocess timeout, empty result directory, not yet fixed
 - **"bench" keyword breadth** — `e2e-evaluation` skill fires on any prompt with "bench" (too noisy)
-- **Suite 01 count stale** — still says 27 skills, should be 28
-- **webhook-relay sandbox** — prompt 2 running, watching for pipeline to fire correctly
+- **task-pipeline-enforcement** — approach 3 (`[REQUIRED]` hard instruction) deployed and likely working (sandbox has 18 tasks); formal close pending — see `workflows/problems/task-pipeline-enforcement.md`
 - **`.sc-negative` pipeline** — deferred until positive path has more data
 - **Federated Skill Commons** — explicitly deferred, too early
 
