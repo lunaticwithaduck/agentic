@@ -1,4 +1,27 @@
 {
+  "e2e-evaluation": {
+    "keywords": [
+      "suite 04",
+      "e2e benchmark",
+      "LLM judge",
+      "judge variance",
+      "bench",
+      "rubric",
+      "infra win",
+      "vanilla win",
+      "benchmark regression",
+      "benchmark task"
+    ],
+    "filePatterns": [
+      "bench/suites/**",
+      "bench/e2e/**",
+      "bench/results/**"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Write"
+    ]
+  },
   "skill-creator": {
     "keywords": [
       "create skill",

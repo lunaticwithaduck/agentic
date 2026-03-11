@@ -59,6 +59,46 @@ security anti-patterns.
    - Verify encryption at rest and in transit
    - Review API responses for over-fetching sensitive fields
 
+## Severity Rating Guide
+
+Rate every finding using this framework — do not rely on intuition:
+
+**CRITICAL** — Exploitable with no special conditions; direct, immediate impact:
+- Remote code execution (any vector)
+- Authentication bypass (attacker logs in as any user without credentials)
+- SQL injection in a login or admin endpoint
+- Plaintext password storage (breach = full credential exposure)
+- Exposed private keys or certificates in source
+
+**HIGH** — Serious impact; may require one precondition (e.g., authenticated user):
+- Hardcoded secrets / API keys / session signing keys in source code
+  → Any repo access enables session forgery or full account takeover
+- IDOR / broken object-level authorization (missing ownership checks)
+  → Authenticated user can read/modify any other user's data by ID
+- Session fixation — attacker can hijack any session post-login
+- Reflected or stored XSS in an authenticated context
+- SQL injection in non-login endpoints
+- JWT secret exposed or algorithm set to `none`
+
+**MEDIUM** — Real vulnerability but requires additional conditions or has limited impact:
+- CSRF without sensitive state change
+- Verbose error messages exposing stack traces or DB schema
+- Missing rate limiting on non-auth endpoints
+- Insecure direct object reference with partial data exposure only
+- Weak (but not broken) cryptographic choices
+
+**LOW** — Defense-in-depth gap; low standalone impact:
+- Missing security headers (X-Content-Type-Options, X-Frame-Options)
+- Overly broad CORS without credentials
+- Dependency with no known exploit path
+- Missing logging or audit trail
+
+**Common misratings to avoid:**
+- Hardcoded `secret_key` / `SECRET_KEY` = **HIGH**, not MEDIUM — session signing keys enable cookie forgery → full account takeover
+- IDOR (missing auth on object endpoints) = **HIGH**, not LOW — OWASP A01 #1 ranked; full PII enumeration is a serious breach
+- Missing HTTPS enforcement = **HIGH** in production, MEDIUM in dev
+- `eval()` on user input = **CRITICAL** (remote code execution)
+
 ## Output Format
 
 Present findings as a security report:

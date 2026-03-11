@@ -4,6 +4,72 @@ Tracks each benchmark run. Newest entries first.
 
 ---
 
+## 2026-03-09T20:37:28Z  |  sha: `363047d`  |  [results](metrics/2026-03-09_20-37-28.md)
+
+**Score:** 100.0%  (prev: 100.0%, ++0.0% →)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 07-skill-candidating | 100.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-03-09T20:35:22Z  |  sha: `363047d`  |  [results](metrics/2026-03-09_20-35-22.md)
+
+**Score:** 100.0%  (prev: 83.3%, ++16.7% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 07-skill-candidating | 100.0% | +16.7% ↑ |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-03-09T20:34:28Z  |  sha: `363047d`  |  [results](metrics/2026-03-09_20-34-28.md)
+
+**Score:** 83.3%  (prev: 68.3%, ++15.0% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 07-skill-candidating | 83.3% | -16.7% ↓ |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-03-07T17:42:52Z  |  sha: `363047d`  |  [results](metrics/2026-03-07_17-42-52.md)
+
+**Score:** 68.3%  (prev: 100.0%, -31.6% ↓)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 91.7% | — |
+| 02-skill-detection | 100.0% | +0.0% → |
+| 03-hook-security | 52.8% | — |
+| 04-task-quality | 100.0% | — |
+| 05-keyword-overlap | 100.0% | — |
+| 06-token-cost | 100.0% | — |
+| 07-skill-candidating | 100.0% | — |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-03-07T17:04:01Z  |  sha: `363047d`  |  [results](metrics/2026-03-07_17-04-01.md)
+
+**Score:** 100.0%  (prev: 67.6%, ++32.4% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 02-skill-detection | 100.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
 ## 2026-03-07T15:57:07Z  |  sha: `e4d8e86`  |  [results](metrics/2026-03-07_15-57-07.md)
 
 **Score:** 67.6%  (prev: 65.9%, ++1.7% ↑)

@@ -329,5 +329,45 @@
       "mermaid-diagram"
     ],
     "notes": "Edge case: visualize + component structure"
+  },
+  {
+    "id": "e2e-evaluation-p01",
+    "prompt": "suite 04 is showing a loss on eq07 but I didn't change anything \u2014 is this just judge variance?",
+    "expected": [
+      "e2e-evaluation"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "e2e-evaluation-p02",
+    "prompt": "how do I write a rubric dimension for behavior preservation that the LLM judge will actually enforce strictly?",
+    "expected": [
+      "e2e-evaluation"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "e2e-evaluation-p03",
+    "prompt": "infra lost on the refactoring bench task even though the response looked good \u2014 what should I check first?",
+    "expected": [
+      "e2e-evaluation"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "e2e-evaluation-p04",
+    "prompt": "my benchmark results flip between runs, how do I know if a skill change actually helped?",
+    "expected": [
+      "e2e-evaluation"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "e2e-evaluation-p05",
+    "prompt": "the judge gave vanilla a win because it 'fixed a latent bug' during refactoring \u2014 is that expected behavior?",
+    "expected": [
+      "e2e-evaluation"
+    ],
+    "notes": "autolearn-generated"
   }
 ]

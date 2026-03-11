@@ -4,7 +4,11 @@
 # - Validates JSON files automatically
 # - Detects .sc (skill candidate) files and flags domains for synthesis at N=3
 
+# Accept tool input from $1 (command-line arg) OR stdin — handles both Claude Code delivery modes
 TOOL_INPUT="${1:-}"
+if [ -z "$TOOL_INPUT" ]; then
+  TOOL_INPUT=$(cat 2>/dev/null)
+fi
 
 # Extract file_path from the tool input JSON (handles both Write and Edit)
 FILE_PATH=""
@@ -35,8 +39,9 @@ case "$FILE_PATH" in
 esac
 
 # Skill candidating: detect .sc file writes in workflows/done/
+# Match both absolute (/path/to/workflows/done/foo.sc) and relative (workflows/done/foo.sc)
 case "$FILE_PATH" in
-  */workflows/done/*.sc)
+  *workflows/done/*.sc)
     command -v python3 >/dev/null 2>&1 || exit 0
 
     DONE_DIR="$ROOT_DIR/workflows/done"
@@ -48,6 +53,9 @@ case "$FILE_PATH" in
 import os, sys
 
 sc_path = "$FILE_PATH"
+# Normalize to absolute path (in case agent used a relative path)
+if not os.path.isabs(sc_path):
+    sc_path = os.path.join("$ROOT_DIR", sc_path)
 done_dir = "$DONE_DIR"
 pending_file = "$PENDING_FILE"
 threshold = $THRESHOLD

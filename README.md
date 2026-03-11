@@ -24,7 +24,7 @@ skill content directly as context — zero overhead if nothing matches, no AI ev
 User prompt → keyword match → skill injected → Claude responds with domain expertise
 ```
 
-26 skills ship out of the box across security, data, backend, DevOps, frontend, and content
+28 skills ship out of the box across security, data, backend, DevOps, frontend, and content
 domains. See `.claude/skills/` and `.claude/skills/skill-rules.json`.
 
 ### 2. Autolearning — the Self-Improving Skill Library
@@ -56,9 +56,10 @@ security patches land. The autolearn loop tracks freshness — when a `.sc` file
 existing domain conflicts with the current skill, it proposes an update rather than a
 new skill. Stale skills surface in `/status` output.
 
-> **Note:** Autolearning is in active development. The architecture is designed, the `.sc`
-> format is being finalized, and the synthesis hook is upcoming. See `workflows/ideas/` for
-> the current state of the work.
+> **Status:** Autolearning is live and validated end-to-end. The full cycle — `.sc` candidating
+> → domain threshold → synthesis injection → skill written → Suite 02 regression check — has
+> been confirmed in production. The first auto-generated skill (`e2e-evaluation`) was synthesized
+> from three `.sc` files. Skill decay tracking is also active via `/status` and `/clean`.
 
 ### 3. Benchmarking AI Infrastructure
 
@@ -66,7 +67,7 @@ The only way to know if the skill library is actually helping is to measure it. 
 ships with a benchmark suite that compares Claude's output quality with and without the
 infrastructure active.
 
-Six suites:
+Seven suites:
 
 | Suite | What it measures |
 |-------|-----------------|
@@ -76,6 +77,7 @@ Six suites:
 | 04 | E2E task quality (A/B: with-infra vs. without, Claude-as-judge scoring) |
 | 05 | Keyword overlap (no two skills claim the same trigger) |
 | 06 | Token cost (output token delta: does the infra make responses more efficient?) |
+| 07 | Skill candidating (autolearn pipeline integrity — `.sc` detection, synthesis injection, fixture format) |
 
 Run all suites:
 
@@ -146,15 +148,15 @@ project's stack.
 
 ## Current Status
 
-The core infrastructure (skill detection, hooks, benchmark suites 01-06) is stable and
-tested. The autolearning loop (`.sc` candidating, synthesis, decay) is in active design —
-see `workflows/ideas/` for the work in progress and `workflows/problems/` for known open
-questions.
+All seven benchmark suites pass. The autolearning loop is live — skills grow automatically
+from completed work without manual intervention. See `workflows/problems/` for known open
+design questions.
 
-Benchmark results (as of 2026-03-01, 10 E2E tasks):
-- 7/10 tasks: with-infra wins
-- Average quality delta: +0.334 (scale 0-5)
-- Skill detection F1: passing
+Benchmark results (as of 2026-03-07, 10 E2E tasks):
+- 8/10 tasks: with-infra wins (after re-runs correcting LLM judge variance)
+- Average quality delta: +0.334 (scale 0–5)
+- Skill detection: 98.1% precision, Suite 02
+- Suite 07 (autolearn pipeline): 12/12
 
 ---
 

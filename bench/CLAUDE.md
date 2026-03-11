@@ -81,6 +81,16 @@ Any suite not in this dict renders with its raw filename. Add a label when you a
 **Synthesis step now also writes to `bench/fixtures/skill-prompts.json`.**
 If you change the fixture format in `skill-prompts.json` (field names, structure), update the fixture generation instruction in `skill-detector.sh` and the format tests in `bench/suites/07-skill-candidating.sh` (tests 11–12).
 
+**Flag lifecycle**: The hook does NOT auto-clear `autolearn-pending`. The flag persists until Claude explicitly deletes it (or queues the next domain) in synthesis step 4. This ensures synthesis re-fires on every prompt until it actually completes. Test 7 in suite 07 verifies this persistence.
+
+**Auto-queue**: Synthesis step 4 scans `workflows/done/` for other domains with ≥3 .sc files but no skill yet. If found, it overwrites `autolearn-pending` with the next domain before finishing — chaining synthesis runs automatically without manual intervention.
+
+### `.claude/hooks/post-write.sh` (PostToolUse hook)
+Detects `.sc` file writes and sets `autolearn-pending` when a domain reaches N=3.
+Pattern used: `*workflows/done/*.sc` — matches BOTH absolute and relative file paths.
+(The old `*/workflows/done/*.sc` pattern only matched absolute paths; agents often write with relative paths.)
+If you change the pattern, update tests 1–4 in `bench/suites/07-skill-candidating.sh`.
+
 ### `.claude/skills/*.md` (skill library)
 - `bench/e2e/tasks.json` — `expected_skills` arrays reference skill names. If you delete a skill, search tasks.json for it and remove references.
 - `bench/suites/01-infrastructure.sh` — validates that every .md has a rule in skill-rules.json and vice versa (automated, no threshold to update).

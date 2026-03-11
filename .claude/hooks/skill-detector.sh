@@ -63,6 +63,24 @@ except Exception:
 
 prompt_lower = prompt.lower()
 
+# Synthesis takes absolute priority — check pending flag before anything else.
+# If synthesis is pending, output ONLY the synthesis instructions and exit.
+# Do not inject workflow reminders or skills alongside synthesis.
+synthesis_pending = os.path.exists(pending_file)
+
+if not synthesis_pending:
+    # Pipeline reminder: inject when workflows/tasks/ is empty (self-disabling once tasks exist)
+    tasks_dir = os.path.join(root_dir, "workflows", "tasks")
+    if os.path.isdir(tasks_dir):
+        task_files = [f for f in os.listdir(tasks_dir) if not f.startswith(".")]
+        if not task_files:
+            print("[REQUIRED — Before writing any code or files]")
+            print("workflows/tasks/ is empty. You MUST do this first:")
+            print("1. Break the work into logical units and create one task .md file per unit in workflows/tasks/")
+            print("2. Implement one task at a time")
+            print("3. Run /complete after each task before starting the next")
+            print("Do not write any implementation files until at least one task file exists in workflows/tasks/.\n")
+
 matched = []
 for skill_name, rule in rules.items():
     if any(kw.lower() in prompt_lower for kw in rule.get("keywords", [])):
@@ -88,8 +106,8 @@ if matched:
     except Exception:
         pass
 
-# Inject matched skill content directly — no AI evaluation step needed
-if matched:
+# Inject matched skill content — skip if synthesis is pending (synthesis takes priority)
+if matched and not synthesis_pending:
     parts = []
     for skill_name in matched:
         path = os.path.join(skills_dir, f"{skill_name}.md")
@@ -107,7 +125,7 @@ if matched:
         print("\n\n".join(parts))
 
 # Check for autolearn synthesis flag
-if os.path.exists(pending_file):
+if synthesis_pending:
     try:
         domain = open(pending_file).read().strip()
     except Exception:
@@ -146,42 +164,42 @@ if os.path.exists(pending_file):
                 except Exception:
                     pass
 
-            print(f"\n\n[AUTOLEARN: SKILL SYNTHESIS REQUIRED]")
-            print(f"Domain '{domain}' has reached {len(sc_files)} skill candidates. Synthesize them into a skill now.")
-            print(f"\nBefore proceeding with the user's request, do the following:")
-            print(f"1. Read the {len(sc_files)} .sc files below")
-            print(f"2. Synthesize the extracted knowledge into a single skill file")
-            print(f"3. Write the skill to .claude/skills/{domain}.md (use the standard skill format)")
-            print(f"   - Include a '## Failure Modes' section if any .sc files contain failure observations")
-            print(f"   - If no failures are documented yet, omit the section entirely — do not invent anti-patterns")
-            print(f"4. Add an entry to .claude/skills/skill-rules.json with keywords from the .sc files")
-            print(f"5. Generate fixture prompts for the new skill and append them to bench/fixtures/skill-prompts.json:")
-            print(f"   - Write 3-5 prompts a developer would genuinely type when they need this skill")
-            print(f"   - Use natural, casual phrasing — how a developer actually writes, not formal domain jargon")
-            print(f"   - Format each entry as:")
-            print(f'     {{"id": "{domain}-p01", "prompt": "...", "expected": ["{domain}"], "notes": "autolearn-generated"}}')
-            print(f"   - Use sequential IDs: {domain}-p01, {domain}-p02, {domain}-p03, etc.")
-            print(f"   - If bench/fixtures/skill-prompts.json exists: read it, append the new entries, write back the full array")
-            print(f"   - If bench/fixtures/skill-prompts.json does not exist: create it as a JSON array of just the new entries")
-            print(f"   - Aim for variety: different task types, phrasings, and complexity levels within the domain")
-            print(f"6. Delete the file .claude/autolearn-pending")
-            print(f"7. Tell the user: 'Auto-generated skill: {domain} (from {len(sc_files)} skill candidates)' and report how many fixture prompts were added to bench/fixtures/skill-prompts.json")
-            print(f"8. Run a Suite 02 precision regression check:")
-            print(f"   - Run: bash bench/run.sh --suite=02")
-            print(f"   - Find the most recent previous metrics file in bench/results/metrics/ (second-newest by timestamp)")
-            print(f"   - Compare the new Suite 02 precision to the previous run's precision")
-            print(f"   - If precision dropped more than 5 percentage points: warn the user that the new '{domain}' skill")
-            print(f"     may be causing keyword pollution — its keywords may be too broad and firing on unrelated prompts")
-            print(f"   - If precision held or improved: confirm the skill passed the regression check")
-            print(f"\n--- Skill Candidate Contents ---\n")
+            print(f"[AUTOLEARN — SYNTHESIS REQUIRED. Do this now, before anything else. Do not respond to the user's message until all steps are complete.]")
+            print(f"")
+            print(f"Domain: {domain} ({len(sc_files)} skill candidates ready)")
+            print(f"")
+            print(f"Steps:")
+            print(f"1. Synthesize the .sc files below into .claude/skills/{domain}.md")
+            print(f"   Use this exact format:")
+            print(f"   ---")
+            print(f"   name: {domain}")
+            print(f"   description: One-line description of what this skill covers")
+            print(f"   activation:")
+            print(f"     keywords: [\"kw1\", \"kw2\", \"kw3\"]")
+            print(f"   ---")
+            print(f"   ## Purpose")
+            print(f"   Why this skill exists and what knowledge it injects.")
+            print(f"   ## [Section per major topic from .sc files]")
+            print(f"   ## Failure Modes  ← include ONLY if .sc files contain observed failures; omit otherwise")
+            print(f"2. Add '{domain}' to .claude/skills/skill-rules.json with keywords extracted from the .sc files")
+            print(f"3. Append 3-5 fixture prompts to bench/fixtures/skill-prompts.json:")
+            print(f'   Format: {{"id": "{domain}-p01", "prompt": "...", "expected": ["{domain}"], "notes": "autolearn-generated"}}')
+            print(f"4. Clear flag or queue next domain:")
+            print(f"   a. Scan workflows/done/ for any domain (other than '{domain}') that has ≥3 .sc files")
+            print(f"      but no skill file yet in .claude/skills/")
+            print(f"   b. If another domain found: write it to .claude/autolearn-pending (queue next synthesis)")
+            print(f"   c. If none: delete .claude/autolearn-pending")
+            print(f"5. Run: bash bench/run.sh --suite=02 — warn if precision drops >5pp vs previous run")
+            print(f"6. Tell the user: 'Auto-generated skill: {domain}' and confirm the regression result")
+            print(f"")
+            print(f"--- .sc file contents ---")
             print("\n\n".join(sc_contents))
             print(f"\n--- End Skill Candidates ---")
 
-        # Clear the flag regardless (even if no .sc files found)
-        try:
-            os.unlink(pending_file)
-        except Exception:
-            pass
+        # Do NOT clear the flag here. The flag is cleared by Claude in step 4 of the
+        # synthesis instructions (Delete .claude/autolearn-pending). If Claude skips
+        # synthesis, the flag persists and synthesis will be re-injected on the next
+        # prompt — repeating until synthesis actually completes.
 PYEOF
 
 exit 0
