@@ -1,7 +1,8 @@
 # agentic
 
-AI-first infrastructure for Claude Code. Clone into any project to get workflows, skills,
-hooks, and benchmarking out of the box — without allocating a human resource to AI maintenance.
+AI-first infrastructure for Claude Code and Cursor. Clone into any project to get workflows,
+skills, hooks, and benchmarking out of the box — without allocating a human resource to AI
+maintenance.
 
 The core idea: teams should not have to manually configure AI behavior. agentic makes the
 skill library self-improving, self-measuring, and self-correcting over time.
@@ -16,16 +17,25 @@ Claude doesn't reliably know specialized domain knowledge — Terraform patterns
 strategies, WCAG criteria, security vulnerability classes. Skills encode that knowledge and
 inject it exactly when needed.
 
-The `UserPromptSubmit` hook runs on every prompt. It reads the prompt text, matches it
-deterministically against keyword rules in `skill-rules.json`, and injects the relevant
-skill content directly as context — zero overhead if nothing matches, no AI evaluation step.
+**Claude Code**: The `UserPromptSubmit` hook runs on every prompt. It matches the prompt text
+deterministically against keyword rules in `skill-rules.json` and injects the relevant skill
+content directly as context — zero overhead if nothing matches, no AI evaluation step.
 
 ```
 User prompt → keyword match → skill injected → Claude responds with domain expertise
 ```
 
+**Cursor**: A three-layer approach compensates for Cursor's lack of per-prompt context injection:
+
+| Layer | Mechanism | Reliability |
+|-------|-----------|-------------|
+| 1 | `skill-index.md` always in context — model knows which skills exist and when to use them | Deterministic |
+| 2 | `agentRequested` rules per skill — model requests the full skill content when relevant | Probabilistic |
+| 3 | `cursor-skill-injector.js` hook — after any file edit, matches the file path against skill `globs`, injects content automatically | Deterministic |
+
 28 skills ship out of the box across security, data, backend, DevOps, frontend, and content
-domains. See `.claude/skills/` and `.claude/skills/skill-rules.json`.
+domains. Domain skills are auto-generated from completed work via autolearn — you start with
+just `skill-creator` and grow the library as you work.
 
 ### 2. Autolearning — the Self-Improving Skill Library
 
@@ -124,39 +134,62 @@ file is potential training data for the skill library.
 
 ## Setup
 
-```bash
-git clone https://github.com/your-org/agentic
-cd your-project
-cp -r agentic/.claude .
-cp -r agentic/workflows .
-cp agentic/CLAUDE.md .
-bash agentic/setup.sh
+Pre-built distributions live in `ship/`:
+
+```
+ship/
+  claude-code/   ← ready to drop into any project using Claude Code
+  cursor/        ← ready to drop into any project using Cursor
 ```
 
-Or use agentic as a template repository and clone directly into your project root.
+**Claude Code:**
 
-`setup.sh` will:
-- Create `workflows/` directories
-- Verify `.claude/` structure and set hook permissions
-- Check that Claude Code is installed
-- Walk you through optional MCP server setup
+```bash
+cp -r ship/claude-code/.claude your-project/
+cp -r ship/claude-code/workflows your-project/
+cp ship/claude-code/CLAUDE.md your-project/
+cp ship/claude-code/setup.sh your-project/
+cd your-project && bash setup.sh
+```
 
-After setup, open Claude Code and run `/setup` to personalize the infrastructure for your
-project's stack.
+**Cursor:**
+
+```bash
+cp -r ship/cursor/.cursor your-project/
+cp -r ship/cursor/workflows your-project/
+cp ship/cursor/setup.sh your-project/
+cd your-project && bash setup.sh
+```
+
+Or clone the repo and use it as a template, then copy the appropriate `ship/` contents into
+your project root.
+
+After setup, open your AI assistant and run `/setup` to personalize the infrastructure for
+your project's stack.
+
+To rebuild distributions from source:
+
+```bash
+bash buildScripts/build.sh
+```
 
 ---
 
 ## Current Status
 
-All seven benchmark suites pass. The autolearning loop is live — skills grow automatically
+All benchmark suites pass. The autolearning loop is live — skills grow automatically
 from completed work without manual intervention. See `workflows/problems/` for known open
 design questions.
 
-Benchmark results (as of 2026-03-07, 10 E2E tasks):
-- 8/10 tasks: with-infra wins (after re-runs correcting LLM judge variance)
-- Average quality delta: +0.334 (scale 0–5)
-- Skill detection: 98.1% precision, Suite 02
-- Suite 07 (autolearn pipeline): 12/12
+Benchmark results (latest full run, 2026-03-07, 10 E2E tasks):
+- Suite 01 (infrastructure): 24/24 ✓
+- Suite 07 (autolearn pipeline): 12/12 ✓
+- Skill detection: 98.1% precision (Suite 02)
+- E2E quality: 8/10 tasks with-infra wins, average delta +0.334 (scale 0–5)
+
+Platform support:
+- **Claude Code**: full parity — keyword detection, synthesis, autolearn, 8 subagents, 11 commands
+- **Cursor**: 3-layer skill injection, synthesis via sessionStart/afterFileEdit, autolearn, 11 commands. Keyword detection gap documented in `ship/PLATFORM-PARITY.md`.
 
 ---
 
