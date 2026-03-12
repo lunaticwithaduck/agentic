@@ -1,15 +1,19 @@
 # Session Context
 
 > Load this file at the start of a new session for full continuity.
-> Last updated: 2026-03-07
+> Last updated: 2026-03-12 (session 2)
 
 ---
 
 ## What This Project Is
 
-**agentic** — reusable AI-first infrastructure for Claude Code. Clone into any project
-for instant Claude setup: 28 domain-specific skills, 4 hooks, 8 agents, 11 commands,
-workflow pipeline, and a 7-suite benchmark.
+**agentic** — reusable AI-first infrastructure for Claude Code and Cursor. Clone into
+any project for instant AI setup: 28 domain-specific skills, 4 hooks, 8 agents, 11
+commands, workflow pipeline, and a 7-suite benchmark. Ships as pre-built distributions
+for both platforms via `buildScripts/build.sh` → `ship/claude-code/` and `ship/cursor/`.
+
+**Version: 0.1.0** — first client-ready release. `VERSION` file at repo root, stamped
+into `ship/*/.version` on every build. `CHANGELOG.md` at repo root tracks releases.
 
 ---
 
@@ -27,7 +31,7 @@ methodology; skills should inject domain knowledge it lacks reliably.
 (OWASP classes, SQL indexing patterns, WCAG criteria, Dockerfile best practices).
 They do NOT encode process Claude already knows.
 
-**Skill format now includes `## Failure Modes` section** — populated only from observed
+**Skill format includes `## Failure Modes` section** — populated only from observed
 failures, never inferred. Empty if no real failures documented yet.
 
 Categories: Security(4), Data(4), Backend(3), DevOps(6), Frontend(4), Content(2),
@@ -35,90 +39,98 @@ Utilities(3), Design(1), E2E Evaluation(1).
 
 ---
 
-## Autolearn Pipeline (Skill Candidating + Decay)
+## Multi-Platform Ship (2026-03-12)
 
-### Skill Candidating (.sc files) — IMPLEMENTED + LIVE VALIDATED
+agentic now ships to two platforms. Pre-built distributions in `ship/`:
 
-When `/complete` runs, Claude optionally generates a `.sc` (skill candidate) file alongside
-the done file in `workflows/done/`. The `.sc` captures domain-specific knowledge applied
-during the task — concrete patterns, facts, or standards worth encoding as a reusable skill.
+```
+ship/
+  claude-code/   — full infra: 4 hooks, skill-creator + skill-rules.json, 8 agents,
+                   11 commands, CLAUDE.md, setup.sh
+  cursor/        — .cursor/hooks/ (5 hooks), .cursor/rules/ (agent-instructions.mdc,
+                   skill-index.mdc, skill-creator.mdc), 11 commands, hooks.json, setup.sh
+```
 
-**Architecture:**
-1. `/complete` generates `.sc` alongside done file when domain knowledge was applied
-   - Also asks: "Did an existing skill give wrong/incomplete guidance?" → captures failure
-     modes in `.sc` or Outcome section (negative signal capture, 2026-03-07)
-2. `post-write.sh` (PostToolUse) detects `.sc` writes, counts by domain, flags at N=3
-   by writing `.claude/autolearn-pending`
-3. `skill-detector.sh` (UserPromptSubmit) checks flag on next prompt, injects synthesis
-   instructions so Claude generates the skill within normal conversation flow
-4. Claude writes skill to `.claude/skills/`, updates `skill-rules.json`,
-   writes fixture prompts to `bench/fixtures/skill-prompts.json`,
-   runs Suite 02 precision regression check, flag is cleared
+Rebuild: `bash buildScripts/build.sh`
 
-**Synthesis instruction steps (in skill-detector.sh):**
-1. Read .sc files
-2. Synthesize into skill file (include `## Failure Modes` if failures documented)
-3. Write `.claude/skills/{domain}.md`
-4. Add entry to `skill-rules.json`
-5. Write 3–5 fixture prompts to `bench/fixtures/skill-prompts.json`
-6. Delete `.claude/autolearn-pending`
-7. Tell user skill was generated + fixture count
-8. Run `bash bench/run.sh --suite=02`, compare precision to previous run,
-   warn if precision dropped >5% (keyword pollution detection)
+### Hook Architecture
 
-**Key files:**
-- `.claude/commands/complete.md` — step 8 handles .sc generation + negative signal question
-- `.claude/hooks/post-write.sh` — .sc detection and domain counting
-- `.claude/hooks/skill-detector.sh` — synthesis injection + skill usage tracking
+All hook logic lives in `.cjs` files (CommonJS explicitly — works in any project
+regardless of `"type": "module"` in package.json). `.sh` files are thin shims.
 
-**Live validation (2026-03-07):**
-- First full cycle ran end-to-end: 3 `e2e-evaluation` .sc files → synthesis triggered →
-  skill written → 5 fixture prompts appended → Suite 02 precision held at 98.1% (0.0pp delta)
-- eq02 re-run post security-audit fix: −1.5 → +0.5 (2-point swing, severity rating guide worked)
+```
+.claude/hooks/
+  skill-detector.cjs    — UserPromptSubmit: keyword matching → skill injection + synthesis
+  post-write.cjs        — PostToolUse: JSON validation + .sc domain counting
+  block-secrets.cjs     — PreToolUse: secrets guard (platform-aware: JSON output on Cursor)
+  post-stop.cjs         — Stop hook placeholder
+  *.sh                  — shims: exec node "$(dirname ...)/hook.cjs"
+```
 
-### Skill Decay — IMPLEMENTED
+`post-write.cjs` and `block-secrets.cjs` are platform-aware: they detect `.cursor` vs
+`.claude` in `__dirname` and behave accordingly (different output format, different paths).
 
-Usage tracking via `.claude/skill-usage.json` (sidecar, gitignored):
-- `skill-detector.sh` writes `{skill_name: {last_used, used_count}}` on every skill fire
-- `/clean` reports stale skills (90+ days without firing) and never-fired skills
-- `/status` shows Skill Health section (active/stale/never-fired counts)
-- `/clean apply` offers to archive stale skills to `.claude/skills/archived/`
+### Cursor 3-Layer Skill Injection
 
-### Negative Signal Gap — PARTIALLY ADDRESSED (2026-03-07)
+Cursor's `beforeSubmitPrompt` cannot inject context (confirmed API gap). Workaround:
 
-Five approaches evaluated via 4 independent subagents (architect, researcher, implementer,
-auditor). Three built, two rejected, one deferred.
+| Layer | Mechanism | Reliability |
+|-------|-----------|-------------|
+| 1 | `skill-index.mdc` always in context — lists all available skills + keywords | Deterministic |
+| 2 | `agentRequested` rules per skill — model requests when relevant | Probabilistic |
+| 3 | `cursor-skill-injector.cjs` afterFileEdit — matches file against rule `globs:`, injects | Deterministic |
 
-**Built:**
-- Failure modes section in skill format (static, format-only)
-- `/complete` now asks the negative question (human-annotated at highest-fidelity moment)
-- Suite 02 precision regression after synthesis (automated, deterministic)
+`skill-index.mdc` lists **only shipped rules** (just skill-creator at install, grows via
+autolearn). The old bug (listing all 28 skills when only skill-creator shipped) is fixed.
 
-**Rejected:** Keyword correction detection (30–50% FP rate), Stop hook logging (no conversation access)
+### Cursor-Specific Hooks
 
-**Deferred:** `.sc-negative` full pipeline — revisit when first auto-generated skill exists
-and `/complete` has produced a corpus of failure observations.
+```
+buildScripts/src/cursor-hooks/
+  cursor-skill-injector.cjs  — afterFileEdit: scans .cursor/rules/*.mdc globs, injects matches
+  cursor-session-start.cjs   — sessionStart: checks .cursor/autolearn-pending, injects synthesis
+```
 
-Full analysis + decision log: `workflows/problems/negative-signal-gap.md`
+### Platform Parity Doc
 
-### Open Autolearn Problems (in `workflows/problems/`)
-
-- **autolearn-quality-verification** — no cheap quality proxy for generated skills
-- **autolearn-saturation** — loop runs indefinitely with diminishing returns
-- **autolearn-cold-start** — no signal on fresh projects (mitigable)
-- **negative-signal-gap** — partially addressed (see above)
-- **skill-scope-boundary** — project-specific vs. general knowledge conflation
-- **skill-decay-knowledge-staleness** — deeper issues beyond usage tracking
+`ship/PLATFORM-PARITY.md` — honest comparison table of Claude Code vs Cursor features.
 
 ---
 
-## Skill Detection — Deterministic Keyword Matching
+## Autolearn Pipeline (Skill Candidating + Decay)
 
-`skill-detector.sh` (UserPromptSubmit hook) reads the prompt, matches against keywords
-in `skill-rules.json`, and injects matched skill `.md` content directly as context.
-No AI evaluation step — deterministic, zero overhead when no skills match.
+### Skill Candidating (.sc files) — LIVE VALIDATED
 
-Verified by suite 02 (precision/recall/F1 against fixture in `bench/fixtures/skill-prompts.json`).
+1. `/complete` generates `.sc` alongside done file when domain knowledge was applied
+2. `post-write.cjs` detects `.sc` writes, counts by domain, flags at N=3 by writing
+   `{.claude|.cursor}/autolearn-pending` (platform-aware path)
+3. `skill-detector.cjs` (Claude Code) or `cursor-session-start.cjs` / `cursor-skill-injector.cjs`
+   (Cursor) injects synthesis instructions on next prompt/session/file-edit
+4. Claude writes skill, updates skill-rules.json, writes fixtures, runs Suite 02,
+   clears flag, appends entry to skill-index.mdc
+
+**Live validation (2026-03-07):** First full cycle: 3 `e2e-evaluation` .sc files →
+synthesis → skill written → 5 fixture prompts → Suite 02 precision held at 98.1%.
+
+### Skill Decay — IMPLEMENTED
+
+Usage tracking via `.claude/skill-usage.json` (gitignored).
+`/clean` reports stale (90+ days) and never-fired skills. `/status` shows Skill Health.
+
+### Negative Signal Gap — PARTIALLY ADDRESSED
+
+Built: Failure Modes section in skill format, `/complete` negative question,
+Suite 02 regression after synthesis. Rejected: keyword correction detection,
+Stop hook logging. Deferred: `.sc-negative` pipeline.
+
+---
+
+## Skill Detection (Claude Code)
+
+`skill-detector.cjs` (UserPromptSubmit): keyword match against `skill-rules.json` →
+injects matched skill `.md` content as context. Deterministic, zero overhead when no match.
+
+Verified by Suite 02 (precision/recall/F1). Latest: 98.1% precision.
 
 ---
 
@@ -126,32 +138,24 @@ Verified by suite 02 (precision/recall/F1 against fixture in `bench/fixtures/ski
 
 | Suite | What it tests | Last result |
 |-------|--------------|-------------|
-| 01-infrastructure | File structure, hooks, skill coverage | 24/24 |
-| 02-skill-detection | Precision/recall of skill auto-detection | 98.1% precision, high F1 |
-| 03-hook-security | Block/allow corpus for secrets hook | 100% |
+| 01-infrastructure | File structure, hooks, skill coverage | 24/24 ✓ |
+| 02-skill-detection | Precision/recall of skill auto-detection | 98.1% precision |
+| 03-hook-security | Block/allow corpus for secrets hook | 89/89 ✓ |
 | 04-task-quality | E2E quality: with-infra vs vanilla | 70% win rate, avg +0.334 (10 tasks) |
 | 05-keyword-overlap | Skill keyword duplication | 100% |
 | 06-token-cost | Output token overhead | avg 1.19x ratio |
-| 07-skill-candidating | Autolearn pipeline integrity (deterministic) | 12/12 |
+| 07-skill-candidating | Autolearn pipeline integrity (deterministic) | 12/12 ✓ |
 
 Run all: `bash bench/run.sh`
 Run single: `bash bench/run.sh --suite=07`
 Must run from a real terminal (not inside Claude Code) for suites 04 and 06.
 
+**Suite 07 note:** sandbox in the test copies both `.sh` shims and `.cjs` implementations —
+needed after the .js → .cjs rename. Both must be present for the sandbox to work.
+
 ---
 
-## Suite 04 Latest Results (2026-03-07, re-runs)
-
-**eq02 fixed:** security-audit skill now has CRITICAL/HIGH/MEDIUM/LOW severity guide +
-common misratings list. Re-run confirmed: −1.5 → +0.5 (severity rating guide worked).
-
-**eq07 resolved:** Was reported as vanilla win (−0.25). Fresh re-run showed infra WIN (+0.5).
-February result was LLM judge variance — no skill change needed.
-
-**eq04 accepted loss:** Rubric calibration issue. Haiku judge applies leniency when behavior
-change "fixes a latent bug." Accepted — not a skill problem.
-
-**eq09 open:** Silent failure (empty result directory). Likely subprocess timeout. Not yet fixed.
+## Suite 04 Latest Results (2026-03-07)
 
 | Task | Skills | Winner | Δ score | Notes |
 |------|--------|--------|---------|-------|
@@ -168,88 +172,82 @@ change "fixes a latent bug." Accepted — not a skill problem.
 
 ---
 
-## Agent Self-Completion Convention (2026-03-07)
+## /complete Command Convention
 
-CLAUDE.md convention 7 updated to both halves:
-1. **Create** tasks in `workflows/tasks/` before starting multi-step work
-2. **Self-complete** each task with `/complete` when done — do not wait to be asked
+Done files keep their original task filename — no sequential NN- prefix (would cause
+merge conflicts on teams). Date-based names are already unique.
 
-First version only said "self-complete when done" — missed the create step, so tasks were
-never created and the pipeline was never fed. Discovered via webhook-relay sandbox test
-(prompt 1 built the app correctly but zero tasks/zero .sc files).
-
----
-
-## Sandbox Testing (temp/webhook-relay)
-
-Experiment to validate autolearn pipeline end-to-end on a real project — **COMPLETE**.
-
-- `temp/webhook-relay/` has full agentic infra installed, app fully built (18 tasks, all done)
-- Skills auto-generated: `fastapi` (synthesized), `sqlite` (synthesized 2026-03-11)
-- Pipeline works: tasks created, .sc files generated, synthesis triggered, skills written
-- `logging-strategy` has 2 .sc files — needs one more to trigger synthesis
-
-**Git root edge case found (2026-03-11):**
-- The sandbox lives inside the agentic git repo → hooks computed ROOT_DIR as `agentic/`
-  instead of `temp/webhook-relay/` → counted .sc files in wrong done/ dir → flag never set
-- Fix: `git init` in `temp/webhook-relay/` — confirmed hook then writes to correct location
-- This is NOT a bug in normal installations (copying agentic into a project that IS the git root)
-- Edge case: running agentic as a subdirectory of another git repo. Document, don't engineer.
+Skill candidating: `/complete` asks the negative question ("did an existing skill give
+wrong guidance?") and generates `.sc` file if domain knowledge was applied. `.sc` goes
+to `workflows/done/[original-filename].sc`.
 
 ---
 
 ## Open Issues / Next Steps
 
-- **eq09 silent failure** — subprocess timeout, empty result directory, not yet fixed
-- **"bench" keyword breadth** — `e2e-evaluation` skill fires on any prompt with "bench" (too noisy)
-- **task-pipeline-enforcement** — approach 3 (`[REQUIRED]` hard instruction) deployed and likely working (sandbox has 18 tasks); formal close pending — see `workflows/problems/task-pipeline-enforcement.md`
-- **`.sc-negative` pipeline** — deferred until positive path has more data
-- **Federated Skill Commons** — explicitly deferred, too early
+**No tasks pending** — `workflows/tasks/` is empty.
 
----
+**Known open problems (`workflows/problems/`):**
+- `cursor-commands-not-adapted.md` — commands reference `.claude/` paths and subagent
+  features; low severity but misleading. Fix: `buildScripts/src/cursor-commands/` overrides
+- `cursor-port-limitations.md` — `beforeSubmitPrompt` cannot inject context (Cursor API gap)
+- `negative-signal-gap.md` — partially addressed
+- `autolearn-quality-verification.md`, `autolearn-saturation.md`, `skill-decay-knowledge-staleness.md`,
+  `skill-scope-boundary.md`, `bench-coupling-drift.md`
 
-## Pipeline State
+**Ideas (`workflows/ideas/`):**
+- `build-and-bench-versioning.md` — internal build manifest (git sha + bench run linkage)
+- `agentic-versioning.md` — user-facing semver; informally at v0.1.0 now
+- `cursor-session-start-stack-detection.md` — project scanning as a skill injection layer
+- `2026-02-25-ci-workflow-for-bench.md`, `2026-03-01-federated-skill-commons.md`,
+  `2026-02-28-self-improving-skill-library.md`
 
-**Ideas (3):**
-- CI workflow for bench (high, 2026-02-25)
-- Federated Skill Commons (high, 2026-03-01)
-- Self-improving skill library (medium, 2026-02-28)
+**Workflow enforcement (2026-03-12 session 2):**
+`CLAUDE.md` and `agent-instructions.mdc` now have an explicit `## Task Pipeline — REQUIRED`
+section above Conventions. It names TodoWrite, in-chat checklists, and built-in task UIs as
+invalid substitutes. Enforcement is still instructional not mechanical (can't hard-block text
+generation), but the anti-pattern callout is now impossible to miss.
 
-**Tasks (0):** Clear.
+**eq09 silent failure** — subprocess timeout, empty result directory, not yet investigated.
 
-**Done (9):**
-- Suite 07 skill candidating pipeline (2026-03-07)
-- Autolearn live validation (deferred/done, 2026-03-07)
-- Bench infra isolated tempdir, Suite 04 expansion, Suite 06 token cost (2026-02-28)
-- Deterministic skill prefilter, Skill candidating, Skill decay (2026-03-01)
-- bench/CLAUDE.md guardrail (2026-02-26)
+**First client is on Cursor** — ship/cursor/ is the active distribution. All known
+Cursor-specific bugs fixed as of 2026-03-12 session 2.
 
 ---
 
 ## Key File Paths
 
 ```
-.claude/skills/               — 28 skill .md files (now with ## Failure Modes section)
-.claude/skills/skill-rules.json — keyword triggers for all skills
-.claude/skill-usage.json      — runtime usage tracking (gitignored)
-.claude/autolearn-pending     — synthesis flag (gitignored)
-.claude/hooks/skill-detector.sh — core: detection + usage tracking + synthesis injection
-.claude/hooks/post-write.sh   — JSON validation + .sc domain counting
-.claude/hooks/post-stop.sh    — Stop hook placeholder (no conversation access)
-.claude/hooks/block-secrets.sh — PreToolUse secrets guard
-.claude/commands/complete.md  — includes negative signal question in step 8
-.claude/commands/              — 11 slash command definitions
-.claude/agents/                — 8 agent role definitions
-bench/fixtures/skill-prompts.json — detection fixtures (auto-appended on synthesis)
-bench/e2e/tasks.json          — 10 E2E task definitions (eq01–eq10)
-bench/e2e/compare.py          — Suite 04 engine
-bench/e2e/token_compare.py    — Suite 06 engine
+VERSION                              — current version (0.1.0)
+CHANGELOG.md                         — release history
+ship/claude-code/                    — Claude Code distribution
+ship/cursor/                         — Cursor distribution
+ship/PLATFORM-PARITY.md             — honest Claude Code vs Cursor comparison
+buildScripts/build.sh                — builds both ship targets (reads VERSION)
+buildScripts/lib/build-claude-code.sh
+buildScripts/lib/build-cursor.sh
+buildScripts/lib/convert-skill.js    — converts agentic skill format → Cursor rule format
+buildScripts/lib/generate-skill-index.js  — builds skill-index.md from shipped rules only
+buildScripts/lib/generate-hooks-json.js   — builds .cursor/hooks.json
+buildScripts/src/cursor-hooks/       — Cursor-specific hook sources (.cjs)
+buildScripts/src/cursor-rules/       — agent-instructions.mdc source
+buildScripts/src/cursor-setup.sh     — Cursor-specific setup.sh source
+.claude/skills/                      — 28 skill .md files
+.claude/skills/skill-rules.json      — keyword triggers for all skills
+.claude/skill-usage.json             — runtime usage tracking (gitignored)
+.claude/autolearn-pending            — synthesis flag (gitignored)
+.claude/hooks/*.cjs                  — hook implementations (CommonJS, platform-aware)
+.claude/hooks/*.sh                   — shims delegating to .cjs
+.claude/commands/complete.md         — includes negative signal question in step 8
+.claude/commands/                    — 11 slash command definitions
+.claude/agents/                      — 8 agent role definitions
+bench/fixtures/skill-prompts.json    — detection fixtures (auto-appended on synthesis)
+bench/e2e/tasks.json                 — 10 E2E task definitions (eq01–eq10)
 bench/suites/07-skill-candidating.sh — 12 deterministic autolearn pipeline tests
-temp/webhook-relay/           — sandbox project (gitignored), testing autolearn e2e
-workflows/ideas/              — 3 ideas pending
-workflows/tasks/              — 0 tasks pending
-workflows/done/               — 9 completed tasks
-workflows/problems/           — 6 open design problems
+workflows/ideas/                     — ideas pending
+workflows/tasks/                     — empty (all tasks complete)
+workflows/done/                      — completed tasks (date-prefixed filenames)
+workflows/problems/                  — open design problems
 ```
 
 ---

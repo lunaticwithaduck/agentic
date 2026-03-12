@@ -3,25 +3,25 @@
   "hooks": {
     "sessionStart": [
       {
-        "command": "node .cursor/hooks/cursor-session-start.js"
+        "command": "node .cursor/hooks/cursor-session-start.cjs"
       }
     ],
     "afterFileEdit": [
       {
-        "command": "node .cursor/hooks/post-write.js"
+        "command": "node .cursor/hooks/post-write.cjs"
       },
       {
-        "command": "node .cursor/hooks/cursor-skill-injector.js"
+        "command": "node .cursor/hooks/cursor-skill-injector.cjs"
       }
     ],
     "beforeShellExecution": [
       {
-        "command": "node .cursor/hooks/block-secrets.js"
+        "command": "node .cursor/hooks/block-secrets.cjs"
       }
     ],
     "stop": [
       {
-        "command": "node .cursor/hooks/post-stop.js"
+        "command": "node .cursor/hooks/post-stop.cjs"
       }
     ]
   }

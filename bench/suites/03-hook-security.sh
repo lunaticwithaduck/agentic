@@ -10,8 +10,8 @@ SUITE_PASSED=0
 SUITE_FAILED=0
 
 # Prefer .js hook (Node, cross-platform); fall back to .sh
-if [ -f "$ROOT_DIR/.claude/hooks/block-secrets.js" ]; then
-  HOOK_CMD="node $ROOT_DIR/.claude/hooks/block-secrets.js"
+if [ -f "$ROOT_DIR/.claude/hooks/block-secrets.cjs" ]; then
+  HOOK_CMD="node $ROOT_DIR/.claude/hooks/block-secrets.cjs"
 elif [ -f "$ROOT_DIR/.claude/hooks/block-secrets.sh" ] && [ -x "$ROOT_DIR/.claude/hooks/block-secrets.sh" ]; then
   HOOK_CMD="bash $ROOT_DIR/.claude/hooks/block-secrets.sh"
 else

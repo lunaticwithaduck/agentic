@@ -3,7 +3,7 @@
 // cursor-skill-injector.js — Cursor afterFileEdit hook
 //
 // Fires on every file edit. Does two things:
-//   1. File-pattern skill injection: scans .cursor/rules/*.md for rules with
+//   1. File-pattern skill injection: scans .cursor/rules/*.mdc for rules with
 //      matching globs, injects relevant rule content as additional_context.
 //   2. Synthesis re-injection: if autolearn-pending exists, injects synthesis
 //      instructions so they persist throughout the session.
@@ -97,12 +97,12 @@ process.stdin.on('end', () => {
   const rulesDir = path.join(root, '.cursor', 'rules');
   const pendingFile = path.join(root, '.cursor', 'autolearn-pending');
 
-  // Scan .cursor/rules/*.md for rules with matching globs
+  // Scan .cursor/rules/*.mdc for rules with matching globs
   const skillParts = [];
   if (filePath) {
     let ruleFiles = [];
     try {
-      ruleFiles = fs.readdirSync(rulesDir).filter(f => f.endsWith('.md'));
+      ruleFiles = fs.readdirSync(rulesDir).filter(f => f.endsWith('.mdc'));
     } catch (e) {}
 
     for (const ruleFile of ruleFiles) {
@@ -114,7 +114,7 @@ process.stdin.on('end', () => {
       if (globs.length === 0) continue;
 
       if (globs.some(pat => matchesGlob(filePath, pat))) {
-        const skillName = ruleFile.replace(/\.md$/, '');
+        const skillName = ruleFile.replace(/\.mdc$/, '');
         skillParts.push(`[AUTO-ACTIVATED SKILL: ${skillName}]\n${content}\n[END SKILL: ${skillName}]`);
       }
     }
@@ -170,7 +170,7 @@ process.stdin.on('end', () => {
           `Domain: ${domain} (${scFiles.length} skill candidates ready)`,
           ``,
           `Steps:`,
-          `1. Synthesize the .sc files below into .cursor/rules/${domain}.md`,
+          `1. Synthesize the .sc files below into .cursor/rules/${domain}.mdc`,
           `   Use this exact format:`,
           `   ---`,
           `   description: Apply when the user asks about [domain keywords]`,
@@ -181,7 +181,7 @@ process.stdin.on('end', () => {
           `   Why this skill exists and what knowledge it injects.`,
           `   ## [Section per major topic from .sc files]`,
           `   ## Failure Modes  ← include ONLY if .sc files contain observed failures; omit otherwise`,
-          `2. Add '${domain}' to .cursor/rules/skill-index.md — add a row to the skills table with keywords extracted from the .sc files`,
+          `2. Add '${domain}' to .cursor/rules/skill-index.mdc — add a row to the skills table with keywords extracted from the .sc files`,
           `3. Append 3-5 fixture prompts to bench/fixtures/skill-prompts.json:`,
           `   Format: {"id": "${domain}-p01", "prompt": "...", "expected": ["${domain}"], "notes": "autolearn-generated"}`,
           `4. Clear flag or queue next domain:`,

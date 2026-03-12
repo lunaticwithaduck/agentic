@@ -22,13 +22,8 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
      Completed on [date]. [Ask user for a brief summary of what was done]
      ```
 7. Move the file:
-   - Determine the output filename for `workflows/done/`:
-     - Scan `workflows/done/` for files with a leading numeric prefix (`NN-`)
-     - Take the highest number found, add 1, zero-pad to 2 digits
-     - If the task filename already starts with a number prefix, strip it first
-     - Output filename: `[NN]-[stem].md` (e.g. `19-access-logging-middleware.md`)
-     - If `workflows/done/` has no numbered files yet, start at `01`
-   - Write the updated content to `workflows/done/[NN-stem].md`
+   - Keep the original task filename — use it as-is in `workflows/done/`
+   - Write the updated content to `workflows/done/[original-filename].md`
    - Delete the original from `workflows/tasks/[filename]`
 8. Skill Candidating:
    - Review the task outcome and the work that was done
@@ -38,7 +33,7 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
      qualify. Only specialized domain knowledge (SQL patterns, security vulnerability classes,
      IaC syntax, WCAG criteria, etc.) qualifies.
    - If YES and the knowledge isn't already covered by an existing skill in `.claude/skills/`:
-     - Generate a `.sc` file at `workflows/done/[NN-stem].sc` (same prefix as the done file)
+     - Generate a `.sc` file at `workflows/done/[original-filename].sc` (same stem as the done file)
      - Frontmatter: `domain` — choose the name as follows:
          1. Scan `workflows/done/` for existing `.sc` files and extract their `domain:` values
          2. If an existing domain covers the same technology area, use that **exact name**

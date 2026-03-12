@@ -93,6 +93,26 @@ multi-agent workflows for larger work items.
 | `/clean [mode]` | Clean up stale items in the project |
 | `/bench` | Show latest benchmark results |
 
+## Task Pipeline — REQUIRED
+
+**This is not optional.** Before starting any multi-step work, you MUST:
+
+1. Create a task file in `workflows/tasks/` — one file per logical unit of work
+2. Implement the task
+3. Run `/complete` on it before moving to the next task
+
+**What does NOT count as task tracking:**
+- TodoWrite or any in-memory task list
+- In-chat markdown checklists (`- [ ] step 1`)
+- Mental notes or planned-out responses
+- Any mechanism that doesn't write a file to `workflows/tasks/`
+
+The only valid task record is a `.md` file in `workflows/tasks/`. Everything else evaporates between sessions and defeats the purpose.
+
+**Why it matters:** The pipeline is how skill candidates (`.sc` files) are generated, how decisions are recorded, and how the project's memory persists across sessions. Skipping it doesn't save time — it breaks the system.
+
+The human manages their work in external tools (JIRA, Linear, etc.). `workflows/` exists for you.
+
 ## Conventions
 
 1. **Use subagents for parallel work** - When multiple independent changes are needed,
@@ -104,10 +124,6 @@ multi-agent workflows for larger work items.
 4. **Plan before coding** - Always read existing code and create a plan before implementing
 5. **Test everything** - Write tests alongside features, not after
 6. **Document decisions** - Record open problems in `workflows/problems/`, completed decisions in `workflows/done/`
-7. **Self-manage the task pipeline** - The workflow pipeline is agent-facing infrastructure, not human-facing.
-   Before implementing multi-step work, break it into tasks and create them in `workflows/tasks/` (one per
-   logical unit of work). Implement one task at a time, then run `/complete` on it before moving to the next.
-   Do not wait to be asked — the human works from external tools (JIRA, Linear, etc.); `workflows/` exists for you.
 
 ## Project-Specific Configuration
 

@@ -13,6 +13,8 @@ SUITE_FAILED=0
 
 _S07_POST_WRITE="$ROOT_DIR/.claude/hooks/post-write.sh"
 _S07_DETECTOR="$ROOT_DIR/.claude/hooks/skill-detector.sh"
+_S07_POST_WRITE_CJS="$ROOT_DIR/.claude/hooks/post-write.cjs"
+_S07_DETECTOR_CJS="$ROOT_DIR/.claude/hooks/skill-detector.cjs"
 
 # ── Guard: hooks must exist ────────────────────────────────────────────────────
 _s07_guard_ok=true
@@ -48,11 +50,11 @@ cp "$_S07_POST_WRITE" "$_S07_HOOKS/post-write.sh"
 cp "$_S07_DETECTOR"   "$_S07_HOOKS/skill-detector.sh"
 chmod +x "$_S07_HOOKS/post-write.sh" "$_S07_HOOKS/skill-detector.sh"
 
-# Copy JS implementations — .sh files are now shims that delegate to .js
-for _s07_js in post-write.js skill-detector.js; do
-  [ -f "$ROOT_DIR/.claude/hooks/$_s07_js" ] && cp "$ROOT_DIR/.claude/hooks/$_s07_js" "$_S07_HOOKS/$_s07_js"
+# Copy CJS implementations — .sh files are shims that delegate to .cjs
+for _s07_cjs in post-write.cjs skill-detector.cjs; do
+  [ -f "$ROOT_DIR/.claude/hooks/$_s07_cjs" ] && cp "$ROOT_DIR/.claude/hooks/$_s07_cjs" "$_S07_HOOKS/$_s07_cjs"
 done
-unset _s07_js
+unset _s07_cjs
 
 # Minimal empty skill-rules.json — isolates tests from the real skill library
 echo '{}' > "$_S07_RULES"
@@ -381,7 +383,7 @@ fi
 # ── Cleanup ────────────────────────────────────────────────────────────────────
 rm -rf "$_S07_TMP"
 unset -f _s07_sc 2>/dev/null || true
-unset _S07_POST_WRITE _S07_DETECTOR _S07_TMP _S07_DONE _S07_SKILLS _S07_HOOKS \
+unset _S07_POST_WRITE _S07_DETECTOR _S07_POST_WRITE_CJS _S07_DETECTOR_CJS _S07_TMP _S07_DONE _S07_SKILLS _S07_HOOKS \
       _S07_PENDING _S07_RULES _S07_OUT _S07_FMT _S07_RULES_RESULT \
       _S07_FIXTURES _S07_FIXTURE_FILE _S07_FIXTURE_RESULT \
       _s07_flagged 2>/dev/null || true

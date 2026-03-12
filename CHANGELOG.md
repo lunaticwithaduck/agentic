@@ -9,6 +9,22 @@ Versioning follows [Semantic Versioning](https://semver.org): MAJOR.MINOR.PATCH.
 
 ---
 
+## [0.1.1] — 2026-03-12
+
+### Fixed
+- **`.mdc` rule extensions** — all Cursor rule files renamed from `.md` to `.mdc`
+  (`agent-instructions`, `skill-creator`, `skill-index`); `cursor-skill-injector.cjs`
+  updated to scan `*.mdc`; synthesis instructions tell Claude to write `${domain}.mdc`;
+  build script and verification checks updated throughout
+- **`/setup` platform-aware** — detects `CLAUDE.md` vs `.cursor/rules/agent-instructions.mdc`
+  at Step 0; Steps 3/4/5 branch per platform; MCP step skipped for Cursor; correct hook
+  file paths referenced per platform
+- **Workflow enforcement strengthened** — `CLAUDE.md` and `agent-instructions.mdc` now have
+  an explicit `## Task Pipeline — REQUIRED` section naming TodoWrite, in-chat checklists,
+  and built-in task UIs as invalid substitutes for `workflows/tasks/` files
+
+---
+
 ## [0.1.0] — 2026-03-12
 
 ### Added

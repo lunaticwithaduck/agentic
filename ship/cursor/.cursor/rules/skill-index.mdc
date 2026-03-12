@@ -1,0 +1,14 @@
+---
+description: Skill index — always active
+alwaysApply: true
+---
+
+# Available Skills
+
+When any of the following topics appear in the conversation, you have expert domain knowledge available as a Cursor rule. Request the relevant skill and apply its guidance.
+
+| Skill | Trigger keywords |
+|---|---|
+| skill-creator | create skill, new skill, add skill, custom skill, skill template |
+
+To use a skill: type `@[skill-name]` to attach it, or the model will request it automatically based on context.

@@ -2,7 +2,15 @@ Interactive setup to personalize the agentic infrastructure for a new project.
 
 ## Instructions
 
-Walk the user through configuring agentic for their specific project. Ask questions one section at a time, then apply changes.
+### Step 0: Detect Platform
+
+Before asking any questions, detect which platform this install is running on:
+
+- If `CLAUDE.md` exists in the project root → **Claude Code mode**
+- If `.cursor/rules/agent-instructions.mdc` exists → **Cursor mode**
+
+Store this for use in Steps 3, 4, and 5. If both exist, prefer Claude Code mode and note it.
+If neither exists, tell the user agentic doesn't appear to be installed and stop.
 
 ### Step 1: Project Basics
 Ask the user:
@@ -26,8 +34,13 @@ Based on the language/framework, suggest appropriate post-write hooks:
 
 Ask: "Would you like me to configure these hooks?"
 
-### Step 4: MCP Servers
-Ask: "Would you like to set up any MCP servers?"
+**Claude Code**: The hook to update is `.claude/hooks/post-write.sh`
+**Cursor**: The hook to update is `.cursor/hooks/post-write.cjs`
+
+### Step 4: MCP Servers (Claude Code only)
+*Skip this step entirely for Cursor — `claude mcp add` is a Claude Code CLI command with no Cursor equivalent.*
+
+**Claude Code only**: Ask: "Would you like to set up any MCP servers?"
 - context7 (library documentation lookup)
 - filesystem (enhanced file access)
 - Custom (let user specify)
@@ -35,14 +48,18 @@ Ask: "Would you like to set up any MCP servers?"
 If yes, provide the `claude mcp add` commands they should run.
 
 ### Step 5: Apply Changes
-After gathering all information:
-1. Update `CLAUDE.md` with project-specific sections:
-   - Fill in Language/Framework
-   - Fill in Build/Test/Lint commands
-   - Fill in Key Directories
-2. Update `.claude/hooks/post-write.sh` with language-specific linting
+After gathering all information, apply changes to the platform-appropriate files:
+
+**Claude Code**:
+1. Update `CLAUDE.md` — fill in Language/Framework, Build/Test/Lint commands, Key Directories
+2. Update `.claude/hooks/post-write.sh` with language-specific linting (if user said yes in Step 3)
 3. Update `.claude/settings.json` permissions if needed
 4. Confirm all changes made
+
+**Cursor**:
+1. Update `.cursor/rules/agent-instructions.mdc` — fill in Language/Framework, Build/Test/Lint commands, Key Directories
+2. Update `.cursor/hooks/post-write.cjs` with language-specific linting (if user said yes in Step 3)
+3. Confirm all changes made (no settings.json equivalent in Cursor)
 
 ### Step 6: Verify
 - Run the test command to verify it works

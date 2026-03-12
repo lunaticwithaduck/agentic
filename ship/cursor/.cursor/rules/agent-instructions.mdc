@@ -70,6 +70,26 @@ Commands live in `.cursor/commands/`. Use them to manage the workflow pipeline:
 | `clean [mode]` | Clean up stale items in the project |
 | `bench` | Show latest benchmark results |
 
+## Task Pipeline — REQUIRED
+
+**This is not optional.** Before starting any multi-step work, you MUST:
+
+1. Create a task file in `workflows/tasks/` — one file per logical unit of work
+2. Implement the task
+3. Run the `complete` command on it before moving to the next task
+
+**What does NOT count as task tracking:**
+- In-chat markdown checklists (`- [ ] step 1`)
+- Mental notes or planned-out responses
+- Cursor's built-in task or TODO panels
+- Any mechanism that doesn't write a file to `workflows/tasks/`
+
+The only valid task record is a `.md` file in `workflows/tasks/`. Everything else evaporates between sessions and defeats the purpose.
+
+**Why it matters:** The pipeline is how skill candidates (`.sc` files) are generated, how decisions are recorded, and how the project's memory persists across sessions. Skipping it doesn't save time — it breaks the system.
+
+The human manages their work in external tools (JIRA, Linear, etc.). `workflows/` exists for you.
+
 ## Conventions
 
 1. **Use skills for domain expertise** - Skills inject knowledge for specialized domains (security, SQL, infra, a11y); for general coding tasks no skill activation is needed
@@ -77,7 +97,6 @@ Commands live in `.cursor/commands/`. Use them to manage the workflow pipeline:
 3. **Plan before coding** - Always read existing code and create a plan before implementing
 4. **Test everything** - Write tests alongside features, not after
 5. **Document decisions** - Record open problems in `workflows/problems/`, completed decisions in `workflows/done/`
-6. **Self-manage the task pipeline** - The workflow pipeline is agent-facing infrastructure, not human-facing. Before implementing multi-step work, break it into tasks and create them in `workflows/tasks/` (one per logical unit of work). Implement one task at a time, then run `complete` on it before moving to the next. Do not wait to be asked — the human works from external tools (JIRA, Linear, etc.); `workflows/` exists for you.
 
 ## Project-Specific Configuration
 
