@@ -1,5 +1,3 @@
 #!/usr/bin/env bash
-# post-stop.sh - Stop hook (runs after each Claude response)
-# Placeholder for post-response validation.
-
-exit 0
+# Shim — delegates to the JS implementation
+exec node "$(dirname "${BASH_SOURCE[0]}")/post-stop.js"

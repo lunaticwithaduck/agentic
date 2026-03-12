@@ -1,7 +1,8 @@
 ---
 title: Hook dual-runtime maintenance burden
-status: open
+status: solved
 opened: 2026-03-12
+closed: 2026-03-12
 ---
 
 ## Problem
