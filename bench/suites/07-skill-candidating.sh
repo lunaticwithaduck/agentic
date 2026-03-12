@@ -48,6 +48,12 @@ cp "$_S07_POST_WRITE" "$_S07_HOOKS/post-write.sh"
 cp "$_S07_DETECTOR"   "$_S07_HOOKS/skill-detector.sh"
 chmod +x "$_S07_HOOKS/post-write.sh" "$_S07_HOOKS/skill-detector.sh"
 
+# Copy JS implementations — .sh files are now shims that delegate to .js
+for _s07_js in post-write.js skill-detector.js; do
+  [ -f "$ROOT_DIR/.claude/hooks/$_s07_js" ] && cp "$ROOT_DIR/.claude/hooks/$_s07_js" "$_S07_HOOKS/$_s07_js"
+done
+unset _s07_js
+
 # Minimal empty skill-rules.json — isolates tests from the real skill library
 echo '{}' > "$_S07_RULES"
 
