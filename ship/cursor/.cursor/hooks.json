@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "node .cursor/hooks/cursor-session-start.js"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/post-write.js"
+      },
+      {
+        "command": "node .cursor/hooks/cursor-skill-injector.js"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/block-secrets.js"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/post-stop.js"
+      }
+    ]
+  }
+}

@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# build-cursor.sh — builds ship/cursor/ distribution target
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# If REPO_ROOT is not set by parent build.sh, derive it from script location
+REPO_ROOT="${REPO_ROOT:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
+SHIP_DIR="${REPO_ROOT}/ship/cursor"
+BUILD_SRC="${REPO_ROOT}/buildScripts/src"
+BUILD_LIB="${REPO_ROOT}/buildScripts/lib"
+CLAUDE_DIR="${REPO_ROOT}/.claude"
+
+echo "  [cursor] Repo root : ${REPO_ROOT}"
+echo "  [cursor] Ship dir  : ${SHIP_DIR}"
+
+# ---------------------------------------------------------------------------
+# 1. Create directory structure
+# ---------------------------------------------------------------------------
+echo "  [cursor] Creating directory structure..."
+mkdir -p \
+  "${SHIP_DIR}/.cursor/hooks" \
+  "${SHIP_DIR}/.cursor/rules" \
+  "${SHIP_DIR}/.cursor/commands" \
+  "${SHIP_DIR}/workflows/ideas" \
+  "${SHIP_DIR}/workflows/tasks" \
+  "${SHIP_DIR}/workflows/done" \
+  "${SHIP_DIR}/workflows/problems"
+
+# ---------------------------------------------------------------------------
+# 2. Copy shared JS hooks from .claude/hooks/
+# ---------------------------------------------------------------------------
+echo "  [cursor] Copying shared hooks..."
+for hook in block-secrets.js post-write.js post-stop.js; do
+  src="${CLAUDE_DIR}/hooks/${hook}"
+  if [ -f "${src}" ]; then
+    cp "${src}" "${SHIP_DIR}/.cursor/hooks/${hook}"
+    echo "  [cursor]   Copied ${hook}"
+  else
+    echo "  [cursor]   WARNING: ${hook} not found at ${src}"
+  fi
+done
+
+# ---------------------------------------------------------------------------
+# 3. Copy Cursor-specific hooks from buildScripts/src/cursor-hooks/
+# ---------------------------------------------------------------------------
+echo "  [cursor] Copying Cursor-specific hooks..."
+for hook in cursor-skill-injector.js cursor-session-start.js; do
+  src="${BUILD_SRC}/cursor-hooks/${hook}"
+  if [ -f "${src}" ]; then
+    cp "${src}" "${SHIP_DIR}/.cursor/hooks/${hook}"
+    echo "  [cursor]   Copied ${hook}"
+  else
+    echo "  [cursor]   ERROR: ${hook} not found at ${src}"
+    exit 1
+  fi
+done
+
+# ---------------------------------------------------------------------------
+# 4. Generate hooks.json
+# ---------------------------------------------------------------------------
+echo "  [cursor] Generating hooks.json..."
+node "${BUILD_LIB}/generate-hooks-json.js" \
+  "${SHIP_DIR}/.cursor/hooks.json"
+
+# Verify it is valid JSON
+node -e "JSON.parse(require('fs').readFileSync('${SHIP_DIR}/.cursor/hooks.json', 'utf8')); console.log('  [cursor]   hooks.json is valid JSON');"
+
+# ---------------------------------------------------------------------------
+# 5. Convert skill-creator to Cursor rule format
+# ---------------------------------------------------------------------------
+echo "  [cursor] Converting skill-creator skill..."
+node "${BUILD_LIB}/convert-skill.js" \
+  "${CLAUDE_DIR}/skills/skill-creator.md" \
+  "${SHIP_DIR}/.cursor/rules/skill-creator.md"
+
+# ---------------------------------------------------------------------------
+# 6. Generate skill-index.md (always-on rule)
+# ---------------------------------------------------------------------------
+echo "  [cursor] Generating skill-index.md..."
+node "${BUILD_LIB}/generate-skill-index.js" \
+  "${CLAUDE_DIR}/skills/skill-rules.json" \
+  "${SHIP_DIR}/.cursor/rules/skill-index.md"
+
+# ---------------------------------------------------------------------------
+# 7. Copy agent-instructions.md
+# ---------------------------------------------------------------------------
+echo "  [cursor] Copying agent-instructions.md..."
+cp "${BUILD_SRC}/cursor-rules/agent-instructions.md" \
+   "${SHIP_DIR}/.cursor/rules/agent-instructions.md"
+
+# ---------------------------------------------------------------------------
+# 8. Copy all commands from .claude/commands/
+# ---------------------------------------------------------------------------
+echo "  [cursor] Copying commands..."
+if [ -d "${CLAUDE_DIR}/commands" ]; then
+  cmd_count=0
+  for cmd in "${CLAUDE_DIR}/commands"/*.md; do
+    [ -f "${cmd}" ] || continue
+    cp "${cmd}" "${SHIP_DIR}/.cursor/commands/"
+    cmd_count=$((cmd_count + 1))
+  done
+  echo "  [cursor]   Copied ${cmd_count} command(s)"
+else
+  echo "  [cursor]   WARNING: .claude/commands/ not found"
+fi
+
+# ---------------------------------------------------------------------------
+# 9. Copy setup.sh if it exists
+# ---------------------------------------------------------------------------
+if [ -f "${REPO_ROOT}/setup.sh" ]; then
+  echo "  [cursor] Copying setup.sh..."
+  cp "${REPO_ROOT}/setup.sh" "${SHIP_DIR}/setup.sh"
+else
+  echo "  [cursor]   (no setup.sh found — skipping)"
+fi
+
+# ---------------------------------------------------------------------------
+# 10. Create workflow .gitkeep files
+# ---------------------------------------------------------------------------
+echo "  [cursor] Creating workflow .gitkeep files..."
+for dir in ideas tasks done problems; do
+  touch "${SHIP_DIR}/workflows/${dir}/.gitkeep"
+done
+
+# ---------------------------------------------------------------------------
+# Verify output
+# ---------------------------------------------------------------------------
+echo "  [cursor] Verifying output..."
+
+# Verify hooks.json has required event names
+node -e "
+  const h = JSON.parse(require('fs').readFileSync('${SHIP_DIR}/.cursor/hooks.json', 'utf8'));
+  const required = ['sessionStart', 'afterFileEdit', 'beforeShellExecution', 'stop'];
+  for (const ev of required) {
+    if (!h.hooks[ev]) { console.error('  [cursor] ERROR: missing hook event: ' + ev); process.exit(1); }
+  }
+  console.log('  [cursor]   All required hook events present');
+"
+
+# Verify skill-index.md has alwaysApply: true
+if grep -q "alwaysApply: true" "${SHIP_DIR}/.cursor/rules/skill-index.md"; then
+  echo "  [cursor]   skill-index.md has alwaysApply: true"
+else
+  echo "  [cursor]   ERROR: skill-index.md missing alwaysApply: true"
+  exit 1
+fi
+
+# Verify skill-creator.md has correct Cursor frontmatter (alwaysApply: false, no top-level activation:)
+node -e "
+  const content = require('fs').readFileSync('${SHIP_DIR}/.cursor/rules/skill-creator.md', 'utf8');
+  // Extract only the frontmatter (between first and second ---)
+  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) { console.error('  [cursor]   ERROR: skill-creator.md has no frontmatter'); process.exit(1); }
+  const fm = match[1];
+  if (fm.includes('activation:')) { console.error('  [cursor]   ERROR: skill-creator.md frontmatter still has activation: block'); process.exit(1); }
+  if (!fm.includes('alwaysApply:')) { console.error('  [cursor]   ERROR: skill-creator.md frontmatter missing alwaysApply field'); process.exit(1); }
+  console.log('  [cursor]   skill-creator.md has correct Cursor frontmatter');
+"
+
+file_count=$(find "${SHIP_DIR}" -type f | wc -l | tr -d ' ')
+echo "  [cursor] Done. ${file_count} files in ship/cursor/"

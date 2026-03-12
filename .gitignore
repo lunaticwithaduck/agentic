@@ -43,3 +43,4 @@ bench/results/e2e/
 
 # Sandbox projects (local experiments, not part of the repo)
 temp/
+experiments/*
