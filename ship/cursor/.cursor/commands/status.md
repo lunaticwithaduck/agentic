@@ -10,7 +10,7 @@ Show an overview of the entire workflow pipeline.
 3. Display a formatted status report:
 
 ```
-## Workflow Status
+## Workflow Status  (agentic v[version from VERSION file, or "unknown" if not found])
 
 ### Ideas ([count] items)
 | Priority | Title | Created |

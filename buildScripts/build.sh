@@ -6,7 +6,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 SHIP_DIR="${REPO_ROOT}/ship"
 
+VERSION="$(tr -d '[:space:]' < "${REPO_ROOT}/VERSION")"
+
 echo "==> Agentic distribution build"
+echo "    Version   : ${VERSION}"
 echo "    Repo root : ${REPO_ROOT}"
 echo "    Ship dir  : ${SHIP_DIR}"
 echo ""
@@ -79,5 +82,10 @@ if [ "${CLAUDE_CODE_STATUS}" -ne 0 ] || [ "${CURSOR_STATUS}" -ne 0 ]; then
   echo "==> Build FAILED"
   exit 1
 fi
+
+# Stamp version into each ship target
+echo "${VERSION}" > "${SHIP_DIR}/claude-code/.version"
+echo "${VERSION}" > "${SHIP_DIR}/cursor/.version"
+echo "==> Stamped version ${VERSION} into ship targets"
 
 echo "==> Build complete"
