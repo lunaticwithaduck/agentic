@@ -105,13 +105,15 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 9. Copy setup.sh if it exists
+# 9. Copy Cursor-specific setup.sh
 # ---------------------------------------------------------------------------
-if [ -f "${REPO_ROOT}/setup.sh" ]; then
-  echo "  [cursor] Copying setup.sh..."
-  cp "${REPO_ROOT}/setup.sh" "${SHIP_DIR}/setup.sh"
+echo "  [cursor] Copying setup.sh..."
+if [ -f "${BUILD_SRC}/cursor-setup.sh" ]; then
+  cp "${BUILD_SRC}/cursor-setup.sh" "${SHIP_DIR}/setup.sh"
+  chmod +x "${SHIP_DIR}/setup.sh"
 else
-  echo "  [cursor]   (no setup.sh found — skipping)"
+  echo "  [cursor]   ERROR: buildScripts/src/cursor-setup.sh not found"
+  exit 1
 fi
 
 # ---------------------------------------------------------------------------
