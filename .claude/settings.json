@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/skill-detector.sh"
+            "command": "node .claude/hooks/skill-detector.js"
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/block-secrets.sh \"$TOOL_INPUT\""
+            "command": "node .claude/hooks/block-secrets.js"
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/post-write.sh \"$TOOL_INPUT\""
+            "command": "node .claude/hooks/post-write.js"
           }
         ]
       }
@@ -37,7 +37,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/post-stop.sh"
+            "command": "node .claude/hooks/post-stop.js"
           }
         ]
       }
@@ -49,9 +49,7 @@
       "Bash(npm *)",
       "Bash(npx *)",
       "Bash(ls *)",
-      "Bash(mkdir *)",
-      "Bash(bash .claude/hooks/post-write.sh *)",
-      "Bash(bash */hooks/post-write.sh *)"
+      "Bash(mkdir *)"
     ]
   }
 }

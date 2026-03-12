@@ -153,27 +153,13 @@ else
 fi
 
 # --- 9. Hook detector sync ---
+# The detector reads skill-rules.json dynamically — skill coverage is already
+# verified in section 6. Here we just confirm the detector file exists.
 echo "[9] Hook detector sync"
-DETECTOR="$ROOT_DIR/.claude/hooks/skill-detector.sh"
-if [ -f "$DETECTOR" ]; then
-  DETECTOR_CONTENT="$(cat "$DETECTOR")"
-  MISSING_FROM_DETECTOR=""
-  for skill in "$SKILL_DIR"/*.md; do
-    [ -f "$skill" ] || continue
-    name="$(basename "$skill" .md)"
-    if echo "$DETECTOR_CONTENT" | grep -q "$name"; then
-      : # found
-    else
-      MISSING_FROM_DETECTOR="$MISSING_FROM_DETECTOR $name"
-    fi
-  done
-  if [ -z "$MISSING_FROM_DETECTOR" ]; then
-    pass "All skills are referenced in skill-detector.sh"
-  else
-    fail "Skills missing from skill-detector.sh:$MISSING_FROM_DETECTOR"
-  fi
+if [ -f "$ROOT_DIR/.claude/hooks/skill-detector.js" ] || [ -f "$ROOT_DIR/.claude/hooks/skill-detector.sh" ]; then
+  pass "skill-detector hook exists (coverage verified via skill-rules.json in section 6)"
 else
-  fail "skill-detector.sh not found"
+  fail "skill-detector hook not found (.js or .sh)"
 fi
 
 # --- Summary ---

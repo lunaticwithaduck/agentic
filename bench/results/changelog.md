@@ -4,6 +4,48 @@ Tracks each benchmark run. Newest entries first.
 
 ---
 
+## 2026-03-12T11:49:22Z  |  sha: `72b9cc2`  |  [results](metrics/2026-03-12_11-49-22.md)
+
+**Score:** 100.0%  (prev: 91.7%, ++8.3% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 100.0% | +8.3% ↑ |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-03-12T11:02:24Z  |  sha: `72b9cc2`  |  [results](metrics/2026-03-12_11-02-24.md)
+
+**Score:** 91.7%  (prev: 97.8%, -6.2% ↓)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 91.7% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
+## 2026-03-12T08:59:57Z  |  sha: `72b9cc2`  |  [results](metrics/2026-03-12_08-59-57.md)
+
+**Score:** 97.8%  (prev: 68.3%, ++29.5% ↑)
+
+| Suite | Score | Δ |
+|-------|-------|---|
+| 01-infrastructure | 91.7% | +0.0% → |
+| 02-skill-detection | 100.0% | +0.0% → |
+| 03-hook-security | 100.0% | +47.2% ↑ |
+| 04-task-quality | 75.0% | -25.0% ↓ |
+| 05-keyword-overlap | 100.0% | +0.0% → |
+| 06-token-cost | 100.0% | +0.0% → |
+| 07-skill-candidating | 100.0% | +0.0% → |
+
+> **Notes:** <!-- What was attempted. What changed. What worked or didn't. -->
+> _No notes recorded — edit this entry to document the experiment._
+
+---
 ## 2026-03-11T18:10:23Z  |  sha: `363047d`  |  [results](metrics/2026-03-11_18-10-23.md)
 
 **Score:** 68.3%  (prev: 100.0%, -31.6% ↓)

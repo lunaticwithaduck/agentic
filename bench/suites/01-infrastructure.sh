@@ -122,23 +122,14 @@ PYEOF
   fi
 fi
 
-# ── skill-detector.sh references all skills ───────────────────────────────────
-DETECTOR="$ROOT_DIR/.claude/hooks/skill-detector.sh"
-if [ -f "$DETECTOR" ] && [ -f "$RULES" ]; then
-  DETECTOR_CONTENT=$(cat "$DETECTOR")
-  missing_from_detector=()
-  for skill in "$SKILL_DIR"/*.md; do
-    [ -f "$skill" ] || continue
-    name="$(basename "$skill" .md)"
-    if ! echo "$DETECTOR_CONTENT" | grep -q "$name"; then
-      missing_from_detector+=("$name")
-    fi
-  done
-  if [ "${#missing_from_detector[@]}" -eq 0 ]; then
-    print_pass "skill-detector.sh references all skill names"
-  else
-    print_fail "skill-detector.sh missing: ${missing_from_detector[*]}"
-  fi
+# ── skill-detector hook exists ────────────────────────────────────────────────
+# The detector reads skill-rules.json dynamically — no skill names are hardcoded.
+# Coverage is already verified above (all skills have a skill-rules.json entry).
+# Here we just confirm the detector file exists (.js or .sh).
+if [ -f "$ROOT_DIR/.claude/hooks/skill-detector.js" ] || [ -f "$ROOT_DIR/.claude/hooks/skill-detector.sh" ]; then
+  print_pass "skill-detector hook exists (coverage via skill-rules.json)"
+else
+  print_fail "skill-detector hook not found (.js or .sh)"
 fi
 
 # ── Agent count ───────────────────────────────────────────────────────────────

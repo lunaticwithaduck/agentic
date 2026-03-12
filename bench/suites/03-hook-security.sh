@@ -9,20 +9,18 @@ print_suite "03 · Hook Security"
 SUITE_PASSED=0
 SUITE_FAILED=0
 
-HOOK="$ROOT_DIR/.claude/hooks/block-secrets.sh"
+# Prefer .js hook (Node, cross-platform); fall back to .sh
+if [ -f "$ROOT_DIR/.claude/hooks/block-secrets.js" ]; then
+  HOOK_CMD="node $ROOT_DIR/.claude/hooks/block-secrets.js"
+elif [ -f "$ROOT_DIR/.claude/hooks/block-secrets.sh" ] && [ -x "$ROOT_DIR/.claude/hooks/block-secrets.sh" ]; then
+  HOOK_CMD="bash $ROOT_DIR/.claude/hooks/block-secrets.sh"
+else
+  print_fail "block-secrets hook not found (.js or executable .sh) — skipping suite"
+  SUITE_JSON="{}"
+  return 0
+fi
+
 FIXTURES="$ROOT_DIR/bench/fixtures/hook-commands.json"
-
-if [ ! -f "$HOOK" ]; then
-  print_fail "block-secrets.sh not found — skipping suite"
-  SUITE_JSON="{}"
-  return 0
-fi
-
-if [ ! -x "$HOOK" ]; then
-  print_fail "block-secrets.sh is not executable — skipping suite"
-  SUITE_JSON="{}"
-  return 0
-fi
 
 if [ ! -f "$FIXTURES" ]; then
   print_skip "bench/fixtures/hook-commands.json not found — skipping suite"
@@ -61,7 +59,7 @@ while IFS='|' read -r id cmd reason; do
   # Escape cmd for JSON embedding
   json_input="{\"command\":$(python3 -c "import json,sys; print(json.dumps(sys.argv[1]))" "$cmd")}"
   exit_code=0
-  bash "$HOOK" "$json_input" > /dev/null 2>&1 || exit_code=$?
+  echo "$json_input" | $HOOK_CMD > /dev/null 2>&1 || exit_code=$?
   if [ "$exit_code" -eq 2 ]; then
     block_passed=$((block_passed + 1))
     SUITE_PASSED=$((SUITE_PASSED + 1))
@@ -93,7 +91,7 @@ while IFS='|' read -r id cmd reason; do
   [ -z "$id" ] && continue
   json_input="{\"command\":$(python3 -c "import json,sys; print(json.dumps(sys.argv[1]))" "$cmd")}"
   exit_code=0
-  bash "$HOOK" "$json_input" > /dev/null 2>&1 || exit_code=$?
+  echo "$json_input" | $HOOK_CMD > /dev/null 2>&1 || exit_code=$?
   if [ "$exit_code" -eq 0 ]; then
     allow_passed=$((allow_passed + 1))
     SUITE_PASSED=$((SUITE_PASSED + 1))
