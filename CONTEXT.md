@@ -235,7 +235,7 @@ CHANGELOG.md                         — release history
 ship/claude-code/                    — Claude Code distribution
 ship/cursor/                         — Cursor distribution
 ship/copilot/                        — GitHub Copilot distribution (new)
-ship/PLATFORM-PARITY.md             — Claude Code vs Cursor vs Copilot comparison
+README.md                            — platform parity table (Claude Code vs Cursor vs Copilot)
 buildScripts/build.sh                — builds all three ship targets (reads VERSION)
 buildScripts/lib/build-claude-code.sh
 buildScripts/lib/build-cursor.sh

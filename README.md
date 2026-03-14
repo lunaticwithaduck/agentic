@@ -203,9 +203,17 @@ Benchmark results (latest full run, 2026-03-07, 10 E2E tasks):
 - E2E quality: 8/10 tasks with-infra wins, average delta +0.334 (scale 0–5)
 
 Platform support:
-- **Claude Code**: full parity — keyword detection, synthesis, autolearn, 8 subagents, 11 commands
-- **Cursor**: 3-layer skill injection, synthesis via sessionStart/afterFileEdit, autolearn, 11 commands. Keyword detection gap documented in `ship/PLATFORM-PARITY.md`.
-- **GitHub Copilot** *(new — v0.1.1)*: deterministic UserPromptSubmit hook, workflow enforcement, 11 prompts, 8 agents, autolearn. See `ship/PLATFORM-PARITY.md`.
+
+| Feature | Claude Code | Cursor | GitHub Copilot |
+|---------|-------------|--------|----------------|
+| Skill detection | ✅ Deterministic (UserPromptSubmit keyword match) | ⚠️ 3-layer (index + agentRequested + glob afterFileEdit) | ✅ Deterministic (UserPromptSubmit keyword match) |
+| Skill injection | ✅ Full content injected as context | ✅ Full content injected after file edit | ✅ Full content injected as context |
+| Workflow enforcement | ✅ Hook + CLAUDE.md | ✅ Hook + workflow-gate.mdc (alwaysApply) | ✅ Hook + workflow-gate.instructions.md |
+| Autolearn pipeline | ✅ Full cycle | ✅ Full cycle (sessionStart + afterFileEdit) | ✅ Full cycle (UserPromptSubmit) |
+| Commands | ✅ 11 slash commands | ✅ 11 slash commands | ✅ 11 prompt files |
+| Agents | ✅ 8 subagent definitions | ❌ No native agent support | ✅ 8 agent files |
+| Secrets blocking | ✅ PreToolUse hook | ✅ beforeShellExecution hook | ✅ PreToolUse hook |
+| Hooks verified | ✅ | ✅ | ⚠️ Pending VS Code integration test |
 
 ---
 
