@@ -97,6 +97,29 @@ process.stdin.on('end', () => {
   const rulesDir = path.join(root, '.cursor', 'rules');
   const pendingFile = path.join(root, '.cursor', 'autolearn-pending');
 
+  // Workflow state check — skip if the edit itself is creating a task file
+  let workflowContext = '';
+  const isTaskFile = filePath && filePath.replace(/\\/g, '/').includes('workflows/tasks/');
+  if (!isTaskFile) {
+    try {
+      const tasksDir = path.join(root, 'workflows', 'tasks');
+      if (fs.existsSync(tasksDir)) {
+        const taskFiles = fs.readdirSync(tasksDir).filter(f => !f.startsWith('.'));
+        if (taskFiles.length === 0) {
+          workflowContext = [
+            '[STOP — No task file exists]',
+            'You edited a file without first creating a task.',
+            'Create workflows/tasks/YYYY-MM-DD-descriptive-name.md now, then continue.',
+            'Do not make further changes until a task file exists in workflows/tasks/.',
+          ].join('\n');
+        } else {
+          const names = taskFiles.join(', ');
+          workflowContext = `Open task(s): ${names}. Run /complete when done before starting new work.`;
+        }
+      }
+    } catch (e) {}
+  }
+
   // Scan .cursor/rules/*.mdc for rules with matching globs
   const skillParts = [];
   if (filePath) {
@@ -204,6 +227,10 @@ process.stdin.on('end', () => {
 
   // Build output
   const parts = [];
+
+  if (workflowContext) {
+    parts.push(workflowContext);
+  }
 
   if (skillParts.length > 0) {
     const label = skillParts.length === 1 ? 'skill was' : 'skills were';

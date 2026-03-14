@@ -113,6 +113,31 @@ The only valid task record is a `.md` file in `workflows/tasks/`. Everything els
 
 The human manages their work in external tools (JIRA, Linear, etc.). `workflows/` exists for you.
 
+### Task File Template
+
+Every task file must follow this structure:
+
+```markdown
+---
+title: Short description
+created: YYYY-MM-DD
+status: in-progress
+---
+
+## Goal
+What needs to be done and why.
+
+## Steps
+- [ ] Step 1
+- [ ] Step 2
+
+## Completion
+When all steps above are done:
+Run `/complete workflows/tasks/THIS-FILENAME.md` before starting any new work.
+```
+
+The `## Completion` section is mandatory — it must be the last section in every task file.
+
 ## Conventions
 
 1. **Use subagents for parallel work** - When multiple independent changes are needed,

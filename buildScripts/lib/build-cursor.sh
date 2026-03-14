@@ -101,11 +101,18 @@ rm -f "${_SKILL_INDEX_TMP}"
 unset _SHIPPED_RULES _SKILL_INDEX_TMP
 
 # ---------------------------------------------------------------------------
-# 7. Copy agent-instructions.md
+# 7. Copy cursor-specific rules from buildScripts/src/cursor-rules/
 # ---------------------------------------------------------------------------
-echo "  [cursor] Copying agent-instructions.mdc..."
-cp "${BUILD_SRC}/cursor-rules/agent-instructions.mdc" \
-   "${SHIP_DIR}/.cursor/rules/agent-instructions.mdc"
+echo "  [cursor] Copying cursor-specific rules..."
+for rule in agent-instructions.mdc workflow-gate.mdc; do
+  src="${BUILD_SRC}/cursor-rules/${rule}"
+  if [ -f "${src}" ]; then
+    cp "${src}" "${SHIP_DIR}/.cursor/rules/${rule}"
+    echo "  [cursor]   Copied ${rule}"
+  else
+    echo "  [cursor]   WARNING: ${rule} not found at ${src}"
+  fi
+done
 
 # ---------------------------------------------------------------------------
 # 8. Copy all commands from .claude/commands/

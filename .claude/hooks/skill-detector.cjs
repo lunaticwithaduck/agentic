@@ -46,18 +46,24 @@ process.stdin.on('end', () => {
   const promptLower = prompt.toLowerCase();
   const synthesisPending = fs.existsSync(pendingFile);
 
-  // Pipeline reminder: inject when workflows/tasks/ is empty (self-disabling once tasks exist)
+  // Pipeline reminder: inject based on workflows/tasks/ state
   if (!synthesisPending) {
     const tasksDir = path.join(ROOT_DIR, 'workflows', 'tasks');
     if (fs.existsSync(tasksDir)) {
       const taskFiles = fs.readdirSync(tasksDir).filter(f => !f.startsWith('.'));
       if (taskFiles.length === 0) {
+        // Empty — enforce creation before any work begins
         process.stdout.write('[REQUIRED — Before writing any code or files]\n');
         process.stdout.write('workflows/tasks/ is empty. You MUST do this first:\n');
         process.stdout.write('1. Break the work into logical units and create one task .md file per unit in workflows/tasks/\n');
         process.stdout.write('2. Implement one task at a time\n');
         process.stdout.write('3. Run /complete after each task before starting the next\n');
         process.stdout.write('Do not write any implementation files until at least one task file exists in workflows/tasks/.\n\n');
+      } else {
+        // Non-empty — soft nudge to complete before starting new work
+        const names = taskFiles.join(', ');
+        process.stdout.write(`Open task(s) in workflows/tasks/: ${names}\n`);
+        process.stdout.write('Run /complete on any finished tasks before starting new work.\n\n');
       }
     }
   }
