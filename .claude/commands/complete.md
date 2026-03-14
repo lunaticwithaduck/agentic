@@ -25,37 +25,45 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
    - Keep the original task filename — use it as-is in `workflows/done/`
    - Write the updated content to `workflows/done/[original-filename].md`
    - Delete the original from `workflows/tasks/[filename]`
-8. Skill Candidating:
-   - Review the task outcome and the work that was done
-   - Ask yourself: "Did this task involve domain-specific knowledge — concrete facts,
-     patterns, standards, or anti-patterns — that Claude doesn't reliably know on its own?"
-   - Apply the skill design principle: methodology (debugging, refactoring, testing) does NOT
-     qualify. Only specialized domain knowledge (SQL patterns, security vulnerability classes,
-     IaC syntax, WCAG criteria, etc.) qualifies.
-   - If YES and the knowledge isn't already covered by an existing skill in `.claude/skills/`:
-     - Generate a `.sc` file at `workflows/done/[original-filename].sc` (same stem as the done file)
-     - Frontmatter: `domain` — choose the name as follows:
-         1. Scan `workflows/done/` for existing `.sc` files and extract their `domain:` values
-         2. If an existing domain covers the same technology area, use that **exact name**
-         3. Only coin a new name if no existing domain overlaps — use the broad technology/standard,
-            NOT a sub-topic: `graphql` not `graphql-schema`, `postgres` not `postgres-indexing`,
-            `react` not `react-hooks`; hyphenate multi-word names: `rate-limiting`, `ci-cd`
-       `source_task` (the done filename), `date` (today), `keywords` (3-6 trigger words for this domain)
-     - Body: `## Extracted Knowledge` with the specific patterns/facts learned,
-       and `## Proposed Skill Content` with what a skill file would contain
-   - If NO: skip — no `.sc` file needed. Most tasks won't generate one.
-   - Also ask: "Did this task reveal that an *existing* skill gave wrong, incomplete, or
-     misleading guidance?" This is the negative signal question — symmetric to the one above.
-     - If YES: add a `## Failure Modes Observed` section to the `.sc` file (or write a
-       standalone note in the Outcome section of the done file) capturing:
-       - Which skill fired (if known)
-       - What the guidance said or implied
-       - What was actually correct
-       - The specific condition that made the skill wrong (version, scope, edge case, etc.)
-     - Be specific — "the skill was wrong" is not useful. "The skill recommended X but
-       this only applies when Y; in our case Z, so the correct approach was W" is useful.
-     - This is captured for future skill amendment. It will not automatically update the
-       skill today, but it builds the corpus that informs the next synthesis cycle.
+8. Skill Candidating — MANDATORY, cannot be skipped silently:
+   You MUST write out the following evaluation explicitly in your response before deciding:
+
+   **Skill candidate evaluation:**
+   - Technologies/frameworks touched in this task: [list them]
+   - Domain-specific knowledge involved (concrete facts, patterns, anti-patterns): [describe or "none"]
+   - Verdict: GENERATE or SKIP
+   - Reason: [one sentence]
+
+   The verdict must follow these rules:
+   - GENERATE if the task touched a named technology/framework AND involved non-obvious patterns,
+     gotchas, or constraints specific to that technology (e.g. PixiJS TextStyle caching, SQL index
+     types, Dockerfile layer ordering, WCAG contrast ratios)
+   - SKIP only if the task was pure methodology (renaming, restructuring, process) with zero
+     technology-specific knowledge — this should be rare
+   - When in doubt, GENERATE — a weak `.sc` is better than a missing one
+
+   If verdict is GENERATE:
+   - Scan `workflows/done/` for existing `.sc` files and extract their `domain:` values
+   - Reuse an existing domain name if it covers the same technology area
+   - Only coin a new name if no overlap — use broad technology names, NOT sub-topics:
+     `graphql` not `graphql-schema`, `postgres` not `postgres-indexing`, `react` not `react-hooks`
+   - Write `workflows/done/[original-filename].sc` with:
+     - Frontmatter: `domain`, `source_task`, `date`, `keywords` (3-6 trigger words)
+     - `## Extracted Knowledge` — specific patterns/facts learned
+     - `## Proposed Skill Content` — what a skill file would contain
+   - After writing the `.sc` file, arm the synthesis trigger:
+     1. Count all `.sc` files in `workflows/done/` that share the same `domain:` value
+     2. Check whether `.cursor/rules/[domain].mdc` or `.claude/skills/[domain].md` already exists
+     3. If count ≥ 3 AND no skill file exists yet: write the domain name to the appropriate
+        autolearn-pending file (plain text, just the domain name, e.g. `pixi`):
+        - `.cursor/autolearn-pending` — if `.cursor/` directory exists at project root
+        - `.claude/autolearn-pending` — if `.claude/` directory exists at project root
+     4. The next file edit / prompt will then auto-trigger full skill synthesis via the hook
+
+   Also evaluate: "Did this task reveal that an *existing* skill gave wrong or misleading guidance?"
+   - If YES: add `## Failure Modes Observed` to the `.sc` (or the done file Outcome section):
+     - Which skill fired, what it said, what was actually correct, and under what condition it was wrong
+     - "The skill was wrong" is not useful. Be specific about the condition and the correct alternative.
 9. Confirm completion with:
    - Task title
    - Time from creation to completion (if dates are available)

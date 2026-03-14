@@ -11,8 +11,24 @@ Before writing any code or files, a task file MUST exist in `workflows/tasks/`.
 1. Create `workflows/tasks/YYYY-MM-DD-descriptive-name.md` using the task file template
 2. Only then proceed with implementation
 
-**When work is complete:**
-Run `/complete workflows/tasks/FILENAME.md` before starting anything new.
+**When work is complete — MANDATORY last steps (in order):**
+You MUST do ALL of the following before declaring work done or responding with a summary:
+
+1. Write the completed task file to `workflows/done/FILENAME.md` (update `status: done`, add `completed: YYYY-MM-DD`, add a `## Outcome` section)
+2. Delete `workflows/tasks/FILENAME.md`
+3. Write out this `.sc` evaluation explicitly — it cannot be skipped silently:
+   - **Technologies/frameworks touched:** [list them]
+   - **Domain-specific knowledge involved:** [describe concrete patterns/gotchas, or "none"]
+   - **Verdict:** GENERATE or SKIP
+   - **Reason:** [one sentence]
+   - GENERATE if the task touched a named technology AND involved non-obvious patterns or gotchas specific to it
+   - SKIP only for pure methodology (renaming, restructuring, process) — this should be rare
+   - When in doubt, GENERATE — a weak `.sc` is better than a missing one
+   - If GENERATE: write `workflows/done/FILENAME.sc` with `## Extracted Knowledge` and `## Proposed Skill Content`
+4. Only THEN tell the user the work is done
+
+Saying "all done" without physically moving the file is a violation of this rule.
+Promises to do it next time are not acceptable — do it in the same response as the final code change.
 
 The only valid task record is a `.md` file in `workflows/tasks/`.
 In-chat checklists, mental notes, and built-in task panels do not count.
