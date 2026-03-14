@@ -109,4 +109,31 @@ echo "${VERSION}" > "${SHIP_DIR}/cursor/.version"
 echo "${VERSION}" > "${SHIP_DIR}/copilot/.version"
 echo "==> Stamped version ${VERSION} into ship targets"
 
+# ---------------------------------------------------------------------------
+# Build manifest
+# ---------------------------------------------------------------------------
+GIT_SHA="$(git -C "${REPO_ROOT}" rev-parse --short HEAD 2>/dev/null || echo 'unknown')"
+GIT_BRANCH="$(git -C "${REPO_ROOT}" rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown')"
+GIT_DIRTY="$(git -C "${REPO_ROOT}" status --porcelain 2>/dev/null | grep -q . && echo 'true' || echo 'false')"
+BUILT_AT="$(date -u '+%Y-%m-%dT%H:%M:%SZ')"
+BENCH_RUN="$(ls -1 "${REPO_ROOT}/bench/results/metrics/"*.json 2>/dev/null | sort | tail -1 | xargs basename 2>/dev/null | sed 's/\.json$//' || echo 'none')"
+
+cat > "${SHIP_DIR}/.build-manifest.json" <<EOF
+{
+  "built_at": "${BUILT_AT}",
+  "git_sha": "${GIT_SHA}",
+  "git_branch": "${GIT_BRANCH}",
+  "git_dirty": ${GIT_DIRTY},
+  "version": "${VERSION}",
+  "platforms": ["claude-code", "cursor", "copilot"],
+  "file_counts": {
+    "claude-code": ${CC_COUNT},
+    "cursor": ${CUR_COUNT},
+    "copilot": ${COP_COUNT}
+  },
+  "bench_run": "${BENCH_RUN}"
+}
+EOF
+echo "==> Build manifest written to ship/.build-manifest.json"
+
 echo "==> Build complete"

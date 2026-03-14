@@ -1,0 +1,14 @@
+{
+  "built_at": "2026-03-14T21:07:02Z",
+  "git_sha": "cdbd3ac",
+  "git_branch": "develop",
+  "git_dirty": true,
+  "version": "0.1.2",
+  "platforms": ["claude-code", "cursor", "copilot"],
+  "file_counts": {
+    "claude-code": 33,
+    "cursor": 26,
+    "copilot": 33
+  },
+  "bench_run": "2026-03-14_20-50-40"
+}
