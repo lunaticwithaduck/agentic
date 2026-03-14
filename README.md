@@ -1,8 +1,8 @@
 # agentic
 
-AI-first infrastructure for Claude Code and Cursor. Clone into any project to get workflows,
-skills, hooks, and benchmarking out of the box — without allocating a human resource to AI
-maintenance.
+AI-first infrastructure for Claude Code, Cursor, and GitHub Copilot. Clone into any project
+to get workflows, skills, hooks, and benchmarking out of the box — without allocating a human
+resource to AI maintenance.
 
 The core idea: teams should not have to manually configure AI behavior. agentic makes the
 skill library self-improving, self-measuring, and self-correcting over time.
@@ -24,6 +24,11 @@ content directly as context — zero overhead if nothing matches, no AI evaluati
 ```
 User prompt → keyword match → skill injected → Claude responds with domain expertise
 ```
+
+**GitHub Copilot (VS Code agent mode)**: Same deterministic hook as Claude Code — a
+`UserPromptSubmit` hook (`skill-detector.cjs`) runs on every prompt, keyword-matches against
+`skill-rules.json`, and injects matched skills as context. Skill content lives in
+`.github/skills/<name>/SKILL.md` (directory-based format).
 
 **Cursor**: A three-layer approach compensates for Cursor's lack of per-prompt context injection:
 
@@ -140,6 +145,7 @@ Pre-built distributions live in `ship/`:
 ship/
   claude-code/   ← ready to drop into any project using Claude Code
   cursor/        ← ready to drop into any project using Cursor
+  copilot/       ← ready to drop into any project using GitHub Copilot (VS Code)
 ```
 
 **Claude Code:**
@@ -158,6 +164,15 @@ cd your-project && bash setup.sh
 cp -r ship/cursor/.cursor your-project/
 cp -r ship/cursor/workflows your-project/
 cp ship/cursor/setup.sh your-project/
+cd your-project && bash setup.sh
+```
+
+**GitHub Copilot:**
+
+```bash
+cp -r ship/copilot/.github your-project/
+cp -r ship/copilot/workflows your-project/
+cp ship/copilot/setup.sh your-project/
 cd your-project && bash setup.sh
 ```
 
@@ -190,6 +205,7 @@ Benchmark results (latest full run, 2026-03-07, 10 E2E tasks):
 Platform support:
 - **Claude Code**: full parity — keyword detection, synthesis, autolearn, 8 subagents, 11 commands
 - **Cursor**: 3-layer skill injection, synthesis via sessionStart/afterFileEdit, autolearn, 11 commands. Keyword detection gap documented in `ship/PLATFORM-PARITY.md`.
+- **GitHub Copilot** *(new — v0.1.1)*: deterministic UserPromptSubmit hook, workflow enforcement, 11 prompts, 8 agents, autolearn. See `ship/PLATFORM-PARITY.md`.
 
 ---
 

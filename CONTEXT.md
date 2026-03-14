@@ -1,19 +1,19 @@
 # Session Context
 
 > Load this file at the start of a new session for full continuity.
-> Last updated: 2026-03-12 (session 2)
+> Last updated: 2026-03-14 (session 3)
 
 ---
 
 ## What This Project Is
 
-**agentic** — reusable AI-first infrastructure for Claude Code and Cursor. Clone into
-any project for instant AI setup: 28 domain-specific skills, 4 hooks, 8 agents, 11
-commands, workflow pipeline, and a 7-suite benchmark. Ships as pre-built distributions
-for both platforms via `buildScripts/build.sh` → `ship/claude-code/` and `ship/cursor/`.
+**agentic** — reusable AI-first infrastructure for Claude Code, Cursor, and GitHub Copilot.
+Clone into any project for instant AI setup: 28 domain-specific skills, 4 hooks, 8 agents, 11
+commands, workflow pipeline, and a 7-suite benchmark. Ships as pre-built distributions for
+three platforms via `buildScripts/build.sh` → `ship/claude-code/`, `ship/cursor/`, `ship/copilot/`.
 
-**Version: 0.1.0** — first client-ready release. `VERSION` file at repo root, stamped
-into `ship/*/.version` on every build. `CHANGELOG.md` at repo root tracks releases.
+**Version: 0.1.1** — adds GitHub Copilot as a third ship target. `VERSION` file at repo root,
+stamped into `ship/*/.version` on every build. `CHANGELOG.md` at repo root tracks releases.
 
 ---
 
@@ -39,9 +39,9 @@ Utilities(3), Design(1), E2E Evaluation(1).
 
 ---
 
-## Multi-Platform Ship (2026-03-12)
+## Multi-Platform Ship (2026-03-14)
 
-agentic now ships to two platforms. Pre-built distributions in `ship/`:
+agentic ships to three platforms. Pre-built distributions in `ship/`:
 
 ```
 ship/
@@ -49,6 +49,9 @@ ship/
                    11 commands, CLAUDE.md, setup.sh
   cursor/        — .cursor/hooks/ (5 hooks), .cursor/rules/ (agent-instructions.mdc,
                    skill-index.mdc, skill-creator.mdc), 11 commands, hooks.json, setup.sh
+  copilot/       — .github/hooks/ (4 hooks), .github/skills/skill-creator/, skill-rules.json,
+                   copilot-instructions.md, workflow-gate.instructions.md, 11 prompts,
+                   8 agents, setup.sh  [33 files]
 ```
 
 Rebuild: `bash buildScripts/build.sh`
@@ -67,8 +70,10 @@ regardless of `"type": "module"` in package.json). `.sh` files are thin shims.
   *.sh                  — shims: exec node "$(dirname ...)/hook.cjs"
 ```
 
-`post-write.cjs` and `block-secrets.cjs` are platform-aware: they detect `.cursor` vs
-`.claude` in `__dirname` and behave accordingly (different output format, different paths).
+`post-write.cjs` and `block-secrets.cjs` are platform-aware: they detect `.cursor`, `.github`,
+or `.claude` in `__dirname` and behave accordingly (different output format, different paths).
+`post-write.cjs` writes `autolearn-pending` to whichever of `.cursor/`, `.github/`, or `.claude/`
+matches the install — all three platforms are handled.
 
 ### Cursor 3-Layer Skill Injection
 
@@ -103,8 +108,8 @@ buildScripts/src/cursor-hooks/
 
 1. `/complete` generates `.sc` alongside done file when domain knowledge was applied
 2. `post-write.cjs` detects `.sc` writes, counts by domain, flags at N=3 by writing
-   `{.claude|.cursor}/autolearn-pending` (platform-aware path)
-3. `skill-detector.cjs` (Claude Code) or `cursor-session-start.cjs` / `cursor-skill-injector.cjs`
+   `{.claude|.cursor|.github}/autolearn-pending` (platform-aware — all three platforms)
+3. `skill-detector.cjs` (Claude Code / Copilot) or `cursor-session-start.cjs` / `cursor-skill-injector.cjs`
    (Cursor) injects synthesis instructions on next prompt/session/file-edit
 4. Claude writes skill, updates skill-rules.json, writes fixtures, runs Suite 02,
    clears flag, appends entry to skill-index.mdc
@@ -138,7 +143,7 @@ Verified by Suite 02 (precision/recall/F1). Latest: 98.1% precision.
 
 | Suite | What it tests | Last result |
 |-------|--------------|-------------|
-| 01-infrastructure | File structure, hooks, skill coverage | 24/24 ✓ |
+| 01-infrastructure | File structure, hooks, skill coverage | 24/24 ✓ (2026-03-14) |
 | 02-skill-detection | Precision/recall of skill auto-detection | 98.1% precision |
 | 03-hook-security | Block/allow corpus for secrets hook | 89/89 ✓ |
 | 04-task-quality | E2E quality: with-infra vs vanilla | 70% win rate, avg +0.334 (10 tasks) |
@@ -185,53 +190,67 @@ to `workflows/done/[original-filename].sc`.
 
 ## Open Issues / Next Steps
 
-**No tasks pending** — `workflows/tasks/` is empty.
+**Open task:** `workflows/tasks/2026-03-14-copilot-port.md` — parent backlog item, pending
+real-world VS Code hook validation and Suite 01 copilot structure checks.
 
 **Known open problems (`workflows/problems/`):**
 - `cursor-commands-not-adapted.md` — commands reference `.claude/` paths and subagent
   features; low severity but misleading. Fix: `buildScripts/src/cursor-commands/` overrides
 - `cursor-port-limitations.md` — `beforeSubmitPrompt` cannot inject context (Cursor API gap)
+- `cursor-workflow-gate-synthesis-conflict.md` — FIXED in session 3 (synthesisPending guard)
 - `negative-signal-gap.md` — partially addressed
 - `autolearn-quality-verification.md`, `autolearn-saturation.md`, `skill-decay-knowledge-staleness.md`,
   `skill-scope-boundary.md`, `bench-coupling-drift.md`
 
 **Ideas (`workflows/ideas/`):**
 - `build-and-bench-versioning.md` — internal build manifest (git sha + bench run linkage)
-- `agentic-versioning.md` — user-facing semver; informally at v0.1.0 now
+- `agentic-versioning.md` — user-facing semver; now at v0.1.1
 - `cursor-session-start-stack-detection.md` — project scanning as a skill injection layer
 - `2026-02-25-ci-workflow-for-bench.md`, `2026-03-01-federated-skill-commons.md`,
   `2026-02-28-self-improving-skill-library.md`
 
-**Workflow enforcement (2026-03-12 session 2):**
-`CLAUDE.md` and `agent-instructions.mdc` now have an explicit `## Task Pipeline — REQUIRED`
-section above Conventions. It names TodoWrite, in-chat checklists, and built-in task UIs as
-invalid substitutes. Enforcement is still instructional not mechanical (can't hard-block text
-generation), but the anti-pattern callout is now impossible to miss.
+**Workflow enforcement (session 3 — 2026-03-14):**
+Meta-principle validated in client testing: "Rules that describe exact file operations and
+visible written output succeed; rules that describe intent fail."
+Applied across all platforms:
+- `workflow-gate.mdc` / `workflow-gate.instructions.md` — numbered mechanical file ops, hard constraint language
+- `complete.md` step 8 — mandatory written .sc evaluation block, default GENERATE, synthesis trigger
+- `cursor-session-start.cjs` — synthesisPending guard prevents conflicting directives (C1 fix)
+- `cursor-skill-injector.cjs` — isWorkflowFile guard (workflows/ prefix) prevents false STOP on /complete (C2 fix)
+- `agent-instructions.mdc` — mechanical completion steps replacing "run the complete command"
+
+**Unresolved (Copilot):**
+- UserPromptSubmit output format: plain text vs `{"systemMessage":"..."}` JSON — needs VS Code testing
+- Suite 01 has no copilot structure checks yet
 
 **eq09 silent failure** — subprocess timeout, empty result directory, not yet investigated.
-
-**First client is on Cursor** — ship/cursor/ is the active distribution. All known
-Cursor-specific bugs fixed as of 2026-03-12 session 2.
 
 ---
 
 ## Key File Paths
 
 ```
-VERSION                              — current version (0.1.0)
+VERSION                              — current version (0.1.1)
 CHANGELOG.md                         — release history
 ship/claude-code/                    — Claude Code distribution
 ship/cursor/                         — Cursor distribution
-ship/PLATFORM-PARITY.md             — honest Claude Code vs Cursor comparison
-buildScripts/build.sh                — builds both ship targets (reads VERSION)
+ship/copilot/                        — GitHub Copilot distribution (new)
+ship/PLATFORM-PARITY.md             — Claude Code vs Cursor vs Copilot comparison
+buildScripts/build.sh                — builds all three ship targets (reads VERSION)
 buildScripts/lib/build-claude-code.sh
 buildScripts/lib/build-cursor.sh
+buildScripts/lib/build-copilot.sh    — new
 buildScripts/lib/convert-skill.js    — converts agentic skill format → Cursor rule format
+buildScripts/lib/convert-to-prompt.js — converts .claude/commands/*.md → .github/prompts/
+buildScripts/lib/convert-to-agent.js  — converts .claude/agents/*.md → .github/agents/
 buildScripts/lib/generate-skill-index.js  — builds skill-index.md from shipped rules only
 buildScripts/lib/generate-hooks-json.js   — builds .cursor/hooks.json
 buildScripts/src/cursor-hooks/       — Cursor-specific hook sources (.cjs)
-buildScripts/src/cursor-rules/       — agent-instructions.mdc source
+buildScripts/src/cursor-rules/       — agent-instructions.mdc, workflow-gate.mdc sources
 buildScripts/src/cursor-setup.sh     — Cursor-specific setup.sh source
+buildScripts/src/copilot-hooks/      — Copilot UserPromptSubmit hook source
+buildScripts/src/copilot-rules/      — copilot-instructions.md, workflow-gate.instructions.md
+buildScripts/src/copilot-setup.sh    — Copilot-specific setup.sh source
 .claude/skills/                      — 28 skill .md files
 .claude/skills/skill-rules.json      — keyword triggers for all skills
 .claude/skill-usage.json             — runtime usage tracking (gitignored)

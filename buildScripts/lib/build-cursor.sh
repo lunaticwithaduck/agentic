@@ -110,7 +110,8 @@ for rule in agent-instructions.mdc workflow-gate.mdc; do
     cp "${src}" "${SHIP_DIR}/.cursor/rules/${rule}"
     echo "  [cursor]   Copied ${rule}"
   else
-    echo "  [cursor]   WARNING: ${rule} not found at ${src}"
+    echo "  [cursor]   ERROR: ${rule} not found at ${src}"
+    exit 1
   fi
 done
 

@@ -97,10 +97,15 @@ process.stdin.on('end', () => {
   const rulesDir = path.join(root, '.cursor', 'rules');
   const pendingFile = path.join(root, '.cursor', 'autolearn-pending');
 
-  // Workflow state check — skip if the edit itself is creating a task file
+  // Check synthesis early — guards both the workflow block and skill injection
+  const synthesisPending = fs.existsSync(pendingFile);
+
+  // Workflow state check — skip if the edited file is anywhere in workflows/ (prevents
+  // false STOP when /complete writes to workflows/done/) or when synthesis is pending
+  // (prevents conflicting hard-stop directives during autolearn)
   let workflowContext = '';
-  const isTaskFile = filePath && filePath.replace(/\\/g, '/').includes('workflows/tasks/');
-  if (!isTaskFile) {
+  const isWorkflowFile = filePath && filePath.replace(/\\/g, '/').includes('workflows/');
+  if (!isWorkflowFile && !synthesisPending) {
     try {
       const tasksDir = path.join(root, 'workflows', 'tasks');
       if (fs.existsSync(tasksDir)) {
@@ -143,8 +148,7 @@ process.stdin.on('end', () => {
     }
   }
 
-  // Check for synthesis pending
-  const synthesisPending = fs.existsSync(pendingFile);
+  // Synthesis context
   let synthesisContext = '';
 
   if (synthesisPending) {

@@ -39,9 +39,12 @@ process.stdin.on('end', () => {
   if (!normalizedPath.match(/workflows\/done\/[^/]+\.sc$/)) process.exit(0);
 
   const doneDir = path.join(ROOT_DIR, 'workflows', 'done');
-  // Detect platform: running from .cursor/hooks/ or .claude/hooks/
-  const isCursor = path.basename(path.dirname(__dirname)) === '.cursor';
-  const pendingFile = path.join(ROOT_DIR, isCursor ? '.cursor' : '.claude', 'autolearn-pending');
+  // Detect platform: running from .cursor/hooks/, .github/hooks/, or .claude/hooks/
+  const _hooksParent = path.basename(path.dirname(__dirname));
+  const isCursor = _hooksParent === '.cursor';
+  const isCopilot = _hooksParent === '.github';
+  const platformDir = isCursor ? '.cursor' : isCopilot ? '.github' : '.claude';
+  const pendingFile = path.join(ROOT_DIR, platformDir, 'autolearn-pending');
   const THRESHOLD = 3;
 
   let scPath = filePath;

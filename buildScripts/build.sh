@@ -19,13 +19,14 @@ echo ""
 # ---------------------------------------------------------------------------
 echo "==> Cleaning ship/..."
 rm -rf "${SHIP_DIR}"
-mkdir -p "${SHIP_DIR}/claude-code" "${SHIP_DIR}/cursor"
+mkdir -p "${SHIP_DIR}/claude-code" "${SHIP_DIR}/cursor" "${SHIP_DIR}/copilot"
 
 # ---------------------------------------------------------------------------
 # Build platforms
 # ---------------------------------------------------------------------------
 CLAUDE_CODE_STATUS=0
 CURSOR_STATUS=0
+COPILOT_STATUS=0
 
 echo "==> Building claude-code platform..."
 export REPO_ROOT
@@ -43,6 +44,15 @@ if bash "${SCRIPT_DIR}/lib/build-cursor.sh"; then
 else
   CURSOR_STATUS=$?
   echo "ERROR: build-cursor.sh failed (exit ${CURSOR_STATUS})"
+fi
+
+echo ""
+echo "==> Building copilot platform..."
+if bash "${SCRIPT_DIR}/lib/build-copilot.sh"; then
+  COPILOT_STATUS=0
+else
+  COPILOT_STATUS=$?
+  echo "ERROR: build-copilot.sh failed (exit ${COPILOT_STATUS})"
 fi
 
 echo ""
@@ -73,12 +83,22 @@ else
   echo "    cursor      : (not built)"
 fi
 
+if [ -d "${SHIP_DIR}/copilot" ]; then
+  COP_COUNT=$(find "${SHIP_DIR}/copilot" -type f | wc -l | tr -d ' ')
+  echo "    copilot     : ${COP_COUNT} files"
+  if [ "${COPILOT_STATUS}" -ne 0 ]; then
+    echo "                  (BUILD FAILED)"
+  fi
+else
+  echo "    copilot     : (not built)"
+fi
+
 echo ""
 
 # ---------------------------------------------------------------------------
-# Exit non-zero if either platform failed
+# Exit non-zero if any platform failed
 # ---------------------------------------------------------------------------
-if [ "${CLAUDE_CODE_STATUS}" -ne 0 ] || [ "${CURSOR_STATUS}" -ne 0 ]; then
+if [ "${CLAUDE_CODE_STATUS}" -ne 0 ] || [ "${CURSOR_STATUS}" -ne 0 ] || [ "${COPILOT_STATUS}" -ne 0 ]; then
   echo "==> Build FAILED"
   exit 1
 fi
@@ -86,6 +106,7 @@ fi
 # Stamp version into each ship target
 echo "${VERSION}" > "${SHIP_DIR}/claude-code/.version"
 echo "${VERSION}" > "${SHIP_DIR}/cursor/.version"
+echo "${VERSION}" > "${SHIP_DIR}/copilot/.version"
 echo "==> Stamped version ${VERSION} into ship targets"
 
 echo "==> Build complete"

@@ -99,7 +99,14 @@ multi-agent workflows for larger work items.
 
 1. Create a task file in `workflows/tasks/` — one file per logical unit of work
 2. Implement the task
-3. Run `/complete` on it before moving to the next task
+3. When done, you MUST do ALL of the following before declaring work complete:
+   - Write the updated file to `workflows/done/FILENAME.md` (status: done, completed date, ## Outcome)
+   - Delete `workflows/tasks/FILENAME.md`
+   - Write out the `.sc` evaluation block explicitly (see Task File Template below)
+   - Only then tell the user the work is done
+
+Saying "all done" without physically moving the file is a violation.
+Promises to do it next time are not acceptable — do it in the same response as the final change.
 
 **What does NOT count as task tracking:**
 - TodoWrite or any in-memory task list

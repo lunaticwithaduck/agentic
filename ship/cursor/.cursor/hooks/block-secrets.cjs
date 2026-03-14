@@ -5,9 +5,12 @@
 //
 // Reads tool input from stdin as JSON. Exits 2 to block, 0 to allow.
 
-// Detect platform: running from .cursor/hooks/ or .claude/hooks/
+// Detect platform: running from .cursor/hooks/, .github/hooks/, or .claude/hooks/
 const path = require('path');
-const isCursor = path.basename(path.dirname(__dirname)) === '.cursor';
+const _hooksParent = path.basename(path.dirname(__dirname));
+const isCursor = _hooksParent === '.cursor';
+// Copilot behaves like claude-code for output format (plain text, not JSON)
+// const isCopilot = _hooksParent === '.github';
 
 function block(reason) {
   if (isCursor) {

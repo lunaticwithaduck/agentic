@@ -42,31 +42,34 @@ process.stdin.on('end', () => {
 
   const parts = [];
 
-  // --- 1. Workflow state check ---
-  const tasksDir = path.join(root, 'workflows', 'tasks');
-  try {
-    if (fs.existsSync(tasksDir)) {
-      const taskFiles = fs.readdirSync(tasksDir).filter(f => !f.startsWith('.'));
-      if (taskFiles.length === 0) {
-        parts.push([
-          '[REQUIRED — Before writing any code or files]',
-          'workflows/tasks/ is empty. You MUST do this first:',
-          '1. Break the work into logical units and create one task .md file per unit in workflows/tasks/',
-          '2. Implement one task at a time',
-          '3. Run /complete after each task before starting the next',
-          'Do not write any implementation files until at least one task file exists in workflows/tasks/',
-        ].join('\n'));
-      } else {
-        const names = taskFiles.join(', ');
-        parts.push(`Open task(s) in workflows/tasks/: ${names}\nRun /complete on any finished tasks before starting new work.`);
-      }
-    }
-  } catch (e) {}
-
-  // --- 2. Autolearn synthesis check ---
+  // --- 2. Autolearn synthesis check (must come first to guard workflow block) ---
   const pendingFile = path.join(root, '.cursor', 'autolearn-pending');
+  const synthesisPending = fs.existsSync(pendingFile);
 
-  if (fs.existsSync(pendingFile)) {
+  // --- 1. Workflow state check (skip when synthesis is pending to avoid conflicting directives) ---
+  if (!synthesisPending) {
+    const tasksDir = path.join(root, 'workflows', 'tasks');
+    try {
+      if (fs.existsSync(tasksDir)) {
+        const taskFiles = fs.readdirSync(tasksDir).filter(f => !f.startsWith('.'));
+        if (taskFiles.length === 0) {
+          parts.push([
+            '[REQUIRED — Before writing any code or files]',
+            'workflows/tasks/ is empty. You MUST do this first:',
+            '1. Break the work into logical units and create one task .md file per unit in workflows/tasks/',
+            '2. Implement one task at a time',
+            '3. Run /complete after each task before starting the next',
+            'Do not write any implementation files until at least one task file exists in workflows/tasks/',
+          ].join('\n'));
+        } else {
+          const names = taskFiles.join(', ');
+          parts.push(`Open task(s) in workflows/tasks/: ${names}\nRun /complete on any finished tasks before starting new work.`);
+        }
+      }
+    } catch (e) {}
+  }
+
+  if (synthesisPending) {
     let domain = '';
     try {
       domain = fs.readFileSync(pendingFile, 'utf8').trim();

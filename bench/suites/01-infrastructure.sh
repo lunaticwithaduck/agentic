@@ -162,5 +162,98 @@ else
   print_skip "validate.sh not found or not executable"
 fi
 
+# ── ship/copilot/ structure ───────────────────────────────────────────────────
+COPILOT_SHIP="$ROOT_DIR/ship/copilot"
+if [ -d "$COPILOT_SHIP" ]; then
+  # Required directories
+  for dir in .github/hooks .github/skills .github/prompts .github/agents .github/instructions; do
+    if [ -d "$COPILOT_SHIP/$dir" ]; then
+      print_pass "copilot: $dir/ exists"
+    else
+      print_fail "copilot: $dir/ missing"
+    fi
+  done
+
+  # hooks.json is valid JSON with required events
+  COPILOT_HOOKS_JSON="$COPILOT_SHIP/.github/hooks/hooks.json"
+  if [ -f "$COPILOT_HOOKS_JSON" ]; then
+    if python3 -m json.tool "$COPILOT_HOOKS_JSON" > /dev/null 2>&1; then
+      print_pass "copilot: hooks.json is valid JSON"
+      for ev in UserPromptSubmit PreToolUse PostToolUse Stop; do
+        if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); h=d.get('hooks',{}); assert '$ev' in h" "$COPILOT_HOOKS_JSON" 2>/dev/null; then
+          print_pass "copilot: hooks.json has $ev"
+        else
+          print_fail "copilot: hooks.json missing $ev"
+        fi
+      done
+    else
+      print_fail "copilot: hooks.json is NOT valid JSON"
+    fi
+  else
+    print_fail "copilot: hooks.json not found"
+  fi
+
+  # Required hook scripts
+  for hook in skill-detector.cjs block-secrets.cjs post-write.cjs post-stop.cjs; do
+    if [ -f "$COPILOT_SHIP/.github/hooks/$hook" ]; then
+      print_pass "copilot: $hook exists"
+    else
+      print_fail "copilot: $hook missing"
+    fi
+  done
+
+  # skill-rules.json is valid JSON
+  COPILOT_RULES="$COPILOT_SHIP/.github/skills/skill-rules.json"
+  if [ -f "$COPILOT_RULES" ]; then
+    if python3 -m json.tool "$COPILOT_RULES" > /dev/null 2>&1; then
+      COPILOT_RULES_COUNT=$(python3 -c "import json; print(len(json.load(open('$COPILOT_RULES'))))")
+      print_pass "copilot: skill-rules.json is valid JSON ($COPILOT_RULES_COUNT skills)"
+    else
+      print_fail "copilot: skill-rules.json is NOT valid JSON"
+    fi
+  else
+    print_fail "copilot: skill-rules.json not found"
+  fi
+
+  # skill-creator skill directory with SKILL.md
+  if [ -f "$COPILOT_SHIP/.github/skills/skill-creator/SKILL.md" ]; then
+    print_pass "copilot: skill-creator/SKILL.md exists"
+  else
+    print_fail "copilot: skill-creator/SKILL.md missing"
+  fi
+
+  # copilot-instructions.md
+  if [ -f "$COPILOT_SHIP/.github/copilot-instructions.md" ]; then
+    print_pass "copilot: copilot-instructions.md exists"
+  else
+    print_fail "copilot: copilot-instructions.md missing"
+  fi
+
+  # workflow-gate.instructions.md
+  if [ -f "$COPILOT_SHIP/.github/instructions/workflow-gate.instructions.md" ]; then
+    print_pass "copilot: workflow-gate.instructions.md exists"
+  else
+    print_fail "copilot: workflow-gate.instructions.md missing"
+  fi
+
+  # Prompt count (commands converted to .prompt.md)
+  copilot_prompt_count=$(find "$COPILOT_SHIP/.github/prompts" -name "*.prompt.md" 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$copilot_prompt_count" -ge 5 ]; then
+    print_pass "copilot: $copilot_prompt_count prompt files found"
+  else
+    print_fail "copilot: only $copilot_prompt_count prompt files (expected >= 5)"
+  fi
+
+  # Agent count
+  copilot_agent_count=$(find "$COPILOT_SHIP/.github/agents" -name "*.agent.md" 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$copilot_agent_count" -ge 5 ]; then
+    print_pass "copilot: $copilot_agent_count agent files found"
+  else
+    print_fail "copilot: only $copilot_agent_count agent files (expected >= 5)"
+  fi
+else
+  print_skip "copilot: ship/copilot/ not built — run bash buildScripts/build.sh first"
+fi
+
 # ── Emit SUITE_JSON ───────────────────────────────────────────────────────────
 SUITE_JSON="{}"

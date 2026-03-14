@@ -13,7 +13,7 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
    - If any are unchecked, ask: "These criteria are not yet checked. Mark as complete anyway?"
    - If the user confirms, check all criteria
 6. Update the file content:
-   - Change `status: task` to `status: done`
+   - Change `status: in-progress` to `status: done`
    - Add `completed: [today's date YYYY-MM-DD]` to frontmatter
    - Add an `## Outcome` section at the bottom:
      ```
@@ -58,6 +58,7 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
         autolearn-pending file (plain text, just the domain name, e.g. `pixi`):
         - `.cursor/autolearn-pending` — if `.cursor/` directory exists at project root
         - `.claude/autolearn-pending` — if `.claude/` directory exists at project root
+        - `.github/autolearn-pending` — if `.github/` directory exists at project root
      4. The next file edit / prompt will then auto-trigger full skill synthesis via the hook
 
    Also evaluate: "Did this task reveal that an *existing* skill gave wrong or misleading guidance?"

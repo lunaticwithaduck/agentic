@@ -1,0 +1,18 @@
+{
+  "skill-creator": {
+    "keywords": [
+      "create skill",
+      "new skill",
+      "add skill",
+      "custom skill",
+      "skill template",
+      "make a skill"
+    ],
+    "filePatterns": [
+      ".claude/skills/**"
+    ],
+    "toolTriggers": [
+      "Write"
+    ]
+  }
+}
