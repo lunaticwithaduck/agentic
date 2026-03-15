@@ -24,14 +24,18 @@ mkdir -p \
   "${DEST}/workflows/problems"
 
 # ---------------------------------------------------------------------------
-# 2. Hooks — copy all .js and .sh files, preserve executable on .sh
+# 2. Hooks — copy CJS hooks (shared, same as cursor/copilot ships)
 # ---------------------------------------------------------------------------
 echo "  [claude-code] Copying hooks..."
-for f in "${REPO_ROOT}/.claude/hooks/"*.js "${REPO_ROOT}/.claude/hooks/"*.sh; do
-  [ -f "${f}" ] || continue
-  cp "${f}" "${DEST}/.claude/hooks/"
+for hook in skill-detector.cjs block-secrets.cjs post-write.cjs post-stop.cjs; do
+  src="${REPO_ROOT}/.claude/hooks/${hook}"
+  if [ -f "${src}" ]; then
+    cp "${src}" "${DEST}/.claude/hooks/${hook}"
+    echo "  [claude-code]   Copied ${hook}"
+  else
+    echo "  [claude-code]   WARNING: ${hook} not found at ${src}"
+  fi
 done
-chmod +x "${DEST}/.claude/hooks/"*.sh
 
 # ---------------------------------------------------------------------------
 # 3. Skills — ONLY skill-creator.md

@@ -4,7 +4,7 @@
 > **Claude: read this file at the start of every session, before CONTEXT.md.**
 > **Claude: replace ## Session Notes before ending a session.**
 
-**Last updated:** 2026-03-15 11:40 UTC
+**Last updated:** 2026-03-15 12:05 UTC
 **Version:** v0.1.2
 
 ---
@@ -17,11 +17,11 @@ _None — workflows/tasks/ is empty._
 
 - `task-pipeline-enforcement.md` — Task pipeline not self-initiated by agents
 - `hook-dual-runtime.md` — Hook dual-runtime maintenance burden
+- `fix-claude-code-ship-hooks.md` — Fix claude-code ship hooks — copy .cjs files in build script
 - `bench-claude-md-guardrail.md` — bench-claude-md-guardrail.md
 - `agentic-versioning.md` — General agentic versioning — user-facing release tracking
 - `2026-03-15-suite01-cursor-checks.md` — Add ship/cursor/ structure checks to Suite 01
 - `2026-03-15-session-continuity.md` — Implement session continuity — Stop hook + SESSION.md + CONTEXT.md refactor
-- `2026-03-15-misc-cleanup.md` — Misc cleanup — skill-rules filePatterns, SUITE_LABELS, CONTEXT.md
 
 ## Session Notes
 
