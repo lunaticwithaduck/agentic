@@ -4,7 +4,7 @@
 > **Claude: read this file at the start of every session, before CONTEXT.md.**
 > **Claude: replace ## Session Notes before ending a session.**
 
-**Last updated:** 2026-03-15 12:05 UTC
+**Last updated:** 2026-03-15 12:12 UTC
 **Version:** v0.1.2
 
 ---
@@ -20,36 +20,17 @@ _None — workflows/tasks/ is empty._
 - `fix-claude-code-ship-hooks.md` — Fix claude-code ship hooks — copy .cjs files in build script
 - `bench-claude-md-guardrail.md` — bench-claude-md-guardrail.md
 - `agentic-versioning.md` — General agentic versioning — user-facing release tracking
+- `add-preserve-command.md` — Add /preserve slash command for session notes
 - `2026-03-15-suite01-cursor-checks.md` — Add ship/cursor/ structure checks to Suite 01
-- `2026-03-15-session-continuity.md` — Implement session continuity — Stop hook + SESSION.md + CONTEXT.md refactor
 
 ## Session Notes
 
-Session 4 (2026-03-15) — context preservation + copilot port work:
+Session 5 (2026-03-15) — claude-code ship hooks alignment + /preserve command:
 
-- **Copilot port fixes**: Created `buildScripts/src/copilot-commands/` (4 files) and
-  `buildScripts/src/copilot-agents/` (6 files). All reference `.claude/` paths replaced with
-  `.github/`. `TaskCreate`/`TaskUpdate`/`TaskList` removed from agent files (Claude Code tools
-  only). `build-copilot.sh` updated with steps 10 + 12 for override merging.
+- **Ship hooks bug fixed**: `build-claude-code.sh` was globbing `*.js *.sh` and missing `.cjs` files. Fixed to explicitly copy `skill-detector.cjs`, `block-secrets.cjs`, `post-write.cjs`, `post-stop.cjs` — matching the cursor/copilot build scripts. Ship `ship/claude-code/.claude/hooks/` now has `.cjs` files; stale `.sh` shims removed from ship.
 
-- **eq09 root cause**: `rate-limiting.md` Output Format was theory-first. Rubric weights
-  implementation_correctness highest; theory-first framing meant working code never appeared.
-  Fixed: Output Format now code-first. `compare.py` hardened: `skipped_tasks[]` tracks and
-  surfaces silent failures in red in summary output.
+- **CLAUDE.md updated**: Hook references changed from `.sh` to `.cjs`; lint command changed from `shellcheck *.sh` to `node --check *.cjs`.
 
-- **Suite 01**: 18 cursor structure checks added. Key discovery: cursor uses different hook
-  events (`sessionStart`/`afterFileEdit`/`beforeShellExecution`/`stop`) vs Claude Code's
-  (`UserPromptSubmit`/`PreToolUse`/`PostToolUse`/`Stop`). No `.sh` shims in cursor ship.
+- **/preserve command added**: `.claude/commands/preserve.md` created and copied to ship. Instructs Claude to write terse session notes (3–6 bullets) to SESSION.md's `## Session Notes` section. Complements the Stop hook's mechanical state writes.
 
-- **Context preservation design decision**: CONTEXT.md is being split into stable (CONTEXT.md,
-  ~150 lines) + volatile (SESSION.md, this file). Stop hook now writes SESSION.md mechanically;
-  Claude writes Session Notes. See `workflows/problems/skill-quality-benchmark-service.md` for
-  the longer-term external benchmark service gap.
-
-- **Still pending**: `bash buildScripts/build.sh` to push all source fixes to ship/.
-  Copilot hook output format (plain text vs JSON) — confirm in VS Code testing.
-  Hook output format is the primary BLOCKER for Copilot port.
-
-- **Core loop discussion**: The loop is passive for users — AI self-completes, .sc files
-  accumulate, synthesis triggers automatically. 28 skills in dev repo are internal benchmarking
-  only; `skill-creator` is what ships. Users grow their own skill library from their project's work.
+- **Still pending from session 4**: `bash buildScripts/build.sh` to fully regenerate all ships from source. Copilot hook output format (plain text vs JSON) — primary BLOCKER for copilot port, needs VS Code testing.
