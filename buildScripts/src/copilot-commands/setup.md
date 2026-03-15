@@ -1,7 +1,4 @@
----
-description: Interactive setup to personalize the agentic infrastructure for a new project.
-mode: agent
----
+Interactive setup to personalize the agentic infrastructure for a new project.
 
 ## Instructions
 

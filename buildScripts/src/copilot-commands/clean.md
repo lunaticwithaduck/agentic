@@ -1,7 +1,4 @@
----
-description: Clean up stale items in the project.
-mode: agent
----
+Clean up stale items in the project.
 
 ## Instructions
 

@@ -132,7 +132,25 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 9. Copy Cursor-specific setup.sh
+# 9. Apply Cursor-specific command overrides from buildScripts/src/cursor-commands/
+# ---------------------------------------------------------------------------
+echo "  [cursor] Applying cursor-specific command overrides..."
+CURSOR_CMDS_SRC="${BUILD_SRC}/cursor-commands"
+if [ -d "${CURSOR_CMDS_SRC}" ]; then
+  override_count=0
+  for override in "${CURSOR_CMDS_SRC}"/*.md; do
+    [ -f "${override}" ] || continue
+    cp "${override}" "${SHIP_DIR}/.cursor/commands/"
+    override_count=$((override_count + 1))
+    echo "  [cursor]   Overrode $(basename "${override}")"
+  done
+  echo "  [cursor]   Applied ${override_count} override(s)"
+else
+  echo "  [cursor]   WARNING: buildScripts/src/cursor-commands/ not found — no overrides applied"
+fi
+
+# ---------------------------------------------------------------------------
+# 10. Copy Cursor-specific setup.sh
 # ---------------------------------------------------------------------------
 echo "  [cursor] Copying setup.sh..."
 if [ -f "${BUILD_SRC}/cursor-setup.sh" ]; then
@@ -144,7 +162,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 10. Create workflow .gitkeep files
+# 11. Create workflow .gitkeep files
 # ---------------------------------------------------------------------------
 echo "  [cursor] Creating workflow .gitkeep files..."
 for dir in ideas tasks done problems; do

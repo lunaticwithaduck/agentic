@@ -1,7 +1,4 @@
----
-description: Invoke a named agent role for a specific task.
-mode: agent
----
+Invoke a named agent role for a specific task.
 
 ## Instructions
 

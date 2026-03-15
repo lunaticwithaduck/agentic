@@ -68,10 +68,17 @@ ensure fair usage, and maintain system stability.
 
 ## Output Format
 
-Provide:
-1. Algorithm choice with justification
-2. Rate limit configuration table (endpoint, limit, window, tier)
-3. Implementation code for the rate limiter
-4. Middleware integration code
-5. Redis/store schema if using distributed limiting
-6. Monitoring and alerting recommendations
+Lead with working code. Always provide:
+1. Implementation code for the rate limiter (complete, runnable)
+2. Middleware integration code showing where it plugs in
+3. Algorithm choice with one-sentence justification (inline with code)
+4. 429 response example with `Retry-After` and `X-RateLimit-*` headers shown
+5. One-paragraph production note (Redis for distributed, X-Forwarded-For spoofing risk, fail-open vs fail-closed)
+
+Do NOT open with theory or algorithm comparison — go straight to code.
+Config tables and monitoring recommendations are optional; include them only if the implementation is complete.
+
+## Failure Modes
+
+- **Theory-first framing** — opening with algorithm comparison tables delays implementation code.
+  Rubrics for implementation tasks weight working code highest; theory adds no score until code is present.

@@ -90,6 +90,18 @@ node -e "
   console.log('  [copilot]   Generated skill-rules.json with skills: ' + Object.keys(shipped).join(', '));
 "
 
+# Rewrite filePatterns entries: .claude/skills/ → .github/skills/ in the copied file only
+python3 -c "
+import json, sys
+path = '${SHIP_DIR}/.github/skills/skill-rules.json'
+rules = json.load(open(path))
+for rule in rules.values():
+    if 'filePatterns' in rule:
+        rule['filePatterns'] = [p.replace('.claude/skills/', '.github/skills/') for p in rule['filePatterns']]
+json.dump(rules, open(path, 'w'), indent=2)
+print('  [copilot]   Rewrote filePatterns .claude/skills/ -> .github/skills/ in skill-rules.json')
+"
+
 # ---------------------------------------------------------------------------
 # 7. Copy copilot-instructions.md
 # ---------------------------------------------------------------------------
@@ -135,7 +147,27 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 10. Convert all agents via convert-to-agent.js -> .github/agents/
+# 10. Apply Copilot-specific command overrides from buildScripts/src/copilot-commands/
+# ---------------------------------------------------------------------------
+echo "  [copilot] Applying copilot-specific command overrides..."
+COPILOT_CMDS_SRC="${BUILD_SRC}/copilot-commands"
+if [ -d "${COPILOT_CMDS_SRC}" ]; then
+  override_count=0
+  for override in "${COPILOT_CMDS_SRC}"/*.md; do
+    [ -f "${override}" ] || continue
+    stem="$(basename "${override}" .md)"
+    out="${SHIP_DIR}/.github/prompts/${stem}.prompt.md"
+    node "${BUILD_LIB}/convert-to-prompt.js" "${override}" "${out}"
+    override_count=$((override_count + 1))
+    echo "  [copilot]   Overrode ${stem}.prompt.md"
+  done
+  echo "  [copilot]   Applied ${override_count} override(s)"
+else
+  echo "  [copilot]   WARNING: buildScripts/src/copilot-commands/ not found — no overrides applied"
+fi
+
+# ---------------------------------------------------------------------------
+# 11. Convert all agents via convert-to-agent.js -> .github/agents/
 # ---------------------------------------------------------------------------
 echo "  [copilot] Converting agents..."
 if [ -d "${CLAUDE_DIR}/agents" ]; then
@@ -154,7 +186,27 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 11. Copy copilot-specific setup.sh
+# 12. Apply Copilot agent overrides from buildScripts/src/copilot-agents/
+# ---------------------------------------------------------------------------
+echo "  [copilot] Applying Copilot agent overrides..."
+COPILOT_AGENTS_SRC="${BUILD_SRC}/copilot-agents"
+if [ -d "${COPILOT_AGENTS_SRC}" ]; then
+  agent_override_count=0
+  for override in "${COPILOT_AGENTS_SRC}"/*.md; do
+    [ -f "${override}" ] || continue
+    stem="$(basename "${override}" .md)"
+    out="${SHIP_DIR}/.github/agents/${stem}.agent.md"
+    node "${BUILD_LIB}/convert-to-agent.js" "${override}" "${out}"
+    agent_override_count=$((agent_override_count + 1))
+    echo "  [copilot]   Overrode ${stem}.agent.md"
+  done
+  echo "  [copilot]   Applied ${agent_override_count} agent override(s)"
+else
+  echo "  [copilot]   WARNING: buildScripts/src/copilot-agents/ not found — no agent overrides applied"
+fi
+
+# ---------------------------------------------------------------------------
+# 13. Copy copilot-specific setup.sh
 # ---------------------------------------------------------------------------
 echo "  [copilot] Copying setup.sh..."
 COPILOT_SETUP="${BUILD_SRC}/copilot-setup.sh"
@@ -168,7 +220,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 12. Create workflow .gitkeep files
+# 14. Create workflow .gitkeep files
 # ---------------------------------------------------------------------------
 echo "  [copilot] Creating workflow .gitkeep files..."
 for dir in ideas tasks done problems; do

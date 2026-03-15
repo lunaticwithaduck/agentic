@@ -31,11 +31,11 @@ mode: agent
 | [title] | [date] | [days from created to completed] |
 
 ### Skill Health
-- Total skills: [count from skill-rules.json]
+- Total skills: [count from .github/skills/skill-rules.json]
 - Active (fired in last 90 days): [count]
 - Stale (no fires in 90+ days): [count]
 - Never fired: [count]
-- (Read `.claude/skill-usage.json` and compare against `.claude/skills/skill-rules.json`)
+- (Read `.github/skill-usage.json` and compare against `.github/skills/skill-rules.json`)
 - (If skill-usage.json doesn't exist, show "No usage data yet — skills will be tracked as they fire")
 
 ### Summary

@@ -255,5 +255,74 @@ else
   print_skip "copilot: ship/copilot/ not built — run bash buildScripts/build.sh first"
 fi
 
+# ── ship/cursor/ structure ────────────────────────────────────────────────────
+CURSOR_SHIP="$ROOT_DIR/ship/cursor"
+if [ -d "$CURSOR_SHIP" ]; then
+  # Required directories
+  for dir in .cursor/hooks .cursor/rules .cursor/commands; do
+    if [ -d "$CURSOR_SHIP/$dir" ]; then
+      print_pass "cursor: $dir/ exists"
+    else
+      print_fail "cursor: $dir/ missing"
+    fi
+  done
+
+  # hooks.json is valid JSON with required Cursor events
+  CURSOR_HOOKS_JSON="$CURSOR_SHIP/.cursor/hooks.json"
+  if [ -f "$CURSOR_HOOKS_JSON" ]; then
+    if python3 -m json.tool "$CURSOR_HOOKS_JSON" > /dev/null 2>&1; then
+      print_pass "cursor: hooks.json is valid JSON"
+      for ev in sessionStart afterFileEdit beforeShellExecution stop; do
+        if python3 -c "import json,sys; d=json.load(open(sys.argv[1])); h=d.get('hooks',{}); assert '$ev' in h" "$CURSOR_HOOKS_JSON" 2>/dev/null; then
+          print_pass "cursor: hooks.json has $ev"
+        else
+          print_fail "cursor: hooks.json missing $ev"
+        fi
+      done
+    else
+      print_fail "cursor: hooks.json is NOT valid JSON"
+    fi
+  else
+    print_fail "cursor: hooks.json not found"
+  fi
+
+  # Required shared hook scripts (.cjs)
+  for hook in block-secrets.cjs post-write.cjs post-stop.cjs; do
+    if [ -f "$CURSOR_SHIP/.cursor/hooks/$hook" ]; then
+      print_pass "cursor: $hook exists"
+    else
+      print_fail "cursor: $hook missing"
+    fi
+  done
+
+  # Required Cursor-specific hook scripts (.cjs)
+  for hook in cursor-skill-injector.cjs cursor-session-start.cjs; do
+    if [ -f "$CURSOR_SHIP/.cursor/hooks/$hook" ]; then
+      print_pass "cursor: $hook exists"
+    else
+      print_fail "cursor: $hook missing"
+    fi
+  done
+
+  # Required .mdc rule files
+  for rule in skill-creator.mdc agent-instructions.mdc workflow-gate.mdc skill-index.mdc; do
+    if [ -f "$CURSOR_SHIP/.cursor/rules/$rule" ]; then
+      print_pass "cursor: rules/$rule exists"
+    else
+      print_fail "cursor: rules/$rule missing"
+    fi
+  done
+
+  # Command count
+  cursor_cmd_count=$(find "$CURSOR_SHIP/.cursor/commands" -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+  if [ "$cursor_cmd_count" -ge 5 ]; then
+    print_pass "cursor: $cursor_cmd_count command files found"
+  else
+    print_fail "cursor: only $cursor_cmd_count command files (expected >= 5)"
+  fi
+else
+  print_skip "cursor: ship/cursor/ not built — run bash buildScripts/build.sh first"
+fi
+
 # ── Emit SUITE_JSON ───────────────────────────────────────────────────────────
 SUITE_JSON="{}"

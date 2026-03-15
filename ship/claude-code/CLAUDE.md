@@ -57,7 +57,7 @@ Hooks in `.claude/settings.json` enforce guardrails automatically:
 - **UserPromptSubmit**: Runs skill auto-detection on every prompt (`skill-detector.sh`)
 - **PreToolUse (Bash)**: Blocks commands that would expose secrets or credentials
 - **PostToolUse (Write/Edit)**: Runs validation after file modifications
-- **Stop**: Post-response hook placeholder for skill usage validation (`post-stop.sh`)
+- **Stop**: Writes `SESSION.md` with mechanical session state (open tasks, recent completions)
 
 ## Multi-Agent System
 
@@ -202,6 +202,22 @@ workflows/
   done/            # Stage 3: Completed work (+ .sc skill candidates)
   problems/        # Open design problems and known issues
 ```
+
+## Session Continuity
+
+**At session start:** Read `SESSION.md` first (current state, open tasks, recent work),
+then `CONTEXT.md` (stable architecture reference). Together they replace the previous
+single CONTEXT.md monolith.
+
+**At session end:** Before finishing, update `SESSION.md` → `## Session Notes` with:
+- What was accomplished this session
+- Key decisions made (with brief rationale)
+- What to pick up next
+- Any open questions or blockers
+
+The Stop hook auto-writes `SESSION.md` mechanical state (tasks, completions, timestamp)
+after every response. Your Session Notes are preserved across hook runs unless you
+explicitly clear them.
 
 ## Getting Started
 

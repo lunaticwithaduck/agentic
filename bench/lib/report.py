@@ -83,11 +83,12 @@ def delta_str(cur: float, prev: float) -> str:
 # ── Suite-specific extra info ──────────────────────────────────────────────────
 
 SUITE_LABELS = {
-    "01-infrastructure":  "01 · Infrastructure  ",
-    "02-skill-detection": "02 · Skill Detection ",
-    "03-hook-security":   "03 · Hook Security   ",
-    "04-task-quality":    "04 · Task Quality    ",
-    "05-keyword-overlap": "05 · Keyword Overlap ",
+    "01-infrastructure":    "01 · Infrastructure  ",
+    "02-skill-detection":   "02 · Skill Detection ",
+    "03-hook-security":     "03 · Hook Security   ",
+    "04-task-quality":      "04 · Task Quality    ",
+    "05-keyword-overlap":   "05 · Keyword Overlap ",
+    "06-token-cost":        "06 · Token Cost      ",
     "07-skill-candidating": "07 · Skill Candidating",
 }
 
@@ -138,6 +139,17 @@ def suite_notes(name: str, suite: dict) -> str:
         n_c    = GREEN if noisy == 0 else (YELLOW if noisy <= 3 else RED)
         return (f"{DIM}{skills} skills  dup:{RESET}{dup_c}{dup:.1%}{RESET}  "
                 f"{DIM}noisy:{RESET}{n_c}{noisy}{RESET}")
+
+    if name == "06-token-cost":
+        if skipped:
+            return f"{YELLOW}skipped{RESET} {DIM}— run from a real terminal{RESET}"
+        ratio   = suite.get("avg_cost_ratio", 0)
+        inp_ovh = suite.get("avg_input_overhead", 0)
+        out_d   = suite.get("avg_output_delta", 0)
+        ratio_c = GREEN if ratio < 5.0 else (YELLOW if ratio < 10.0 else RED)
+        out_sign = "+" if out_d >= 0 else ""
+        return (f"{DIM}ratio:{RESET}{ratio_c}{ratio:.2f}x{RESET}  "
+                f"{DIM}in+{inp_ovh:,}  out{out_sign}{out_d:,}{RESET}")
 
     return ""
 

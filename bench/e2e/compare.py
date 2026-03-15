@@ -457,6 +457,7 @@ def run(args: argparse.Namespace) -> dict:
         print(msg, end=end, flush=True, file=sys.stderr)
 
     results = []
+    skipped_tasks = []
 
     for i, task in enumerate(tasks, 1):
         task_id = task["id"]
@@ -491,8 +492,8 @@ def run(args: argparse.Namespace) -> dict:
                         log("done")
                     except RuntimeError as e:
                         log(f"FAILED")
-                        log(f"    → error: {e}")
-                        log(f"    → skipping task {task_id}")
+                        log(f"    → [TASK SKIPPED] {task_id}: {e}")
+                        skipped_tasks.append({"task_id": task_id, "error": str(e)})
                         continue
                 else:
                     try:
@@ -512,8 +513,8 @@ def run(args: argparse.Namespace) -> dict:
                         log("done")
                     except RuntimeError as e:
                         log(f"FAILED")
-                        log(f"    → error: {e}")
-                        log(f"    → skipping task {task_id}")
+                        log(f"    → [TASK SKIPPED] {task_id}: {e}")
+                        skipped_tasks.append({"task_id": task_id, "error": str(e)})
                         continue
                 if not args.dry_run:
                     save_cache(task_id, with_key, with_resp)
@@ -601,6 +602,7 @@ def run(args: argparse.Namespace) -> dict:
         "tasks":             results,
         "response_model":    response_model,
         "judge_model":       judge_model,
+        "skipped_tasks":     skipped_tasks,
     }
 
     if not args.json:
@@ -608,6 +610,10 @@ def run(args: argparse.Namespace) -> dict:
         print(f"  Infrastructure wins: {infra_wins}/{len(results)} tasks")
         print(f"  Vanilla wins:        {vanilla_wins}/{len(results)} tasks")
         print(f"  Ties:                {ties}/{len(results)} tasks")
+        if skipped_tasks:
+            print(f"  \033[31mSkipped (errors):    {len(skipped_tasks)} tasks\033[0m")
+            for s in skipped_tasks:
+                print(f"    → {s['task_id']}: {s['error'][:80]}")
         print(f"  Avg score (with):    {avg_with:.2f}/5.00  {bar(avg_with)}")
         print(f"  Avg score (without): {avg_without:.2f}/5.00  {bar(avg_without)}")
         sign = "+" if avg_delta >= 0 else ""

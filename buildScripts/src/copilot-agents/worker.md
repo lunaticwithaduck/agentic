@@ -1,8 +1,3 @@
----
-description: You are an implementer. You receive specific, scoped tasks from the Project Manager and deliver working code with tests.
-tools: []
----
-
 # Worker Agent
 
 ## Role

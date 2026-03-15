@@ -1,8 +1,3 @@
----
-description: You are the orchestrator. You break down work, coordinate subagents, and ensure quality delivery through the workflow pipeline.
-tools: []
----
-
 # Project Manager Agent
 
 ## Role

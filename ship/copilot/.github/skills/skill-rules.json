@@ -9,7 +9,7 @@
       "make a skill"
     ],
     "filePatterns": [
-      ".claude/skills/**"
+      ".github/skills/**"
     ],
     "toolTriggers": [
       "Write"
