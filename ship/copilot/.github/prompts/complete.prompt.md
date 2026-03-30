@@ -76,10 +76,11 @@ mode: agent
         c. Append 3-5 fixture prompts to `bench/fixtures/skill-prompts.json`
         d. Scan for any other domain with ≥3 `.sc` files but no skill yet — if found, synthesize it too
         e. Tell the user: "Auto-generated skill: [domain]"
-     4. **Fallback:** Also write `autolearn-pending` so the hook can catch it if synthesis
-        was interrupted or skipped. Write the domain name (plain text) to `.github/autolearn-pending`.
-        Delete the pending file only after synthesis completes successfully.
-     5. If count < 3: no action needed — threshold not yet reached
+        Within this same branch (count ≥ 3), also write `autolearn-pending` as a fallback
+        so the hook can catch it if synthesis was interrupted or skipped:
+        - Write the domain name (plain text) to `.github/autolearn-pending`.
+        - Delete the pending file only after synthesis completes successfully.
+     4. If count < 3: do nothing — threshold not yet reached. Do NOT write `autolearn-pending`.
 
    Also evaluate: "Did this task reveal that an *existing* skill gave wrong or misleading guidance?"
    - If YES: add `## Failure Modes Observed` to the `.sc` (or the done file Outcome section):
