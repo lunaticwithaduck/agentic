@@ -30,7 +30,7 @@ mkdir -p \
 # 2. Copy shared JS hooks from .claude/hooks/
 # ---------------------------------------------------------------------------
 echo "  [cursor] Copying shared hooks..."
-for hook in block-secrets.cjs post-write.cjs post-stop.cjs; do
+for hook in block-secrets.cjs post-write.cjs; do
   src="${CLAUDE_DIR}/hooks/${hook}"
   if [ -f "${src}" ]; then
     cp "${src}" "${SHIP_DIR}/.cursor/hooks/${hook}"
@@ -177,7 +177,7 @@ echo "  [cursor] Verifying output..."
 # Verify hooks.json has required event names
 node -e "
   const h = JSON.parse(require('fs').readFileSync('${SHIP_DIR}/.cursor/hooks.json', 'utf8'));
-  const required = ['sessionStart', 'afterFileEdit', 'beforeShellExecution', 'stop'];
+  const required = ['sessionStart', 'afterFileEdit', 'beforeShellExecution'];
   for (const ev of required) {
     if (!h.hooks[ev]) { console.error('  [cursor] ERROR: missing hook event: ' + ev); process.exit(1); }
   }

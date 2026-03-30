@@ -34,11 +34,6 @@ const hooksConfig = {
       {
         command: 'node .cursor/hooks/block-secrets.cjs'
       }
-    ],
-    stop: [
-      {
-        command: 'node .cursor/hooks/post-stop.cjs'
-      }
     ]
   }
 };

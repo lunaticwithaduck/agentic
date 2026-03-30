@@ -27,7 +27,7 @@ mkdir -p \
 # 2. Hooks — copy CJS hooks (shared, same as cursor/copilot ships)
 # ---------------------------------------------------------------------------
 echo "  [claude-code] Copying hooks..."
-for hook in skill-detector.cjs block-secrets.cjs post-write.cjs post-stop.cjs; do
+for hook in skill-detector.cjs block-secrets.cjs post-write.cjs; do
   src="${REPO_ROOT}/.claude/hooks/${hook}"
   if [ -f "${src}" ]; then
     cp "${src}" "${DEST}/.claude/hooks/${hook}"
@@ -102,14 +102,14 @@ chmod +x "${DEST}/.claude/scripts/validate.sh"
 # ---------------------------------------------------------------------------
 # 8. settings.json
 # ---------------------------------------------------------------------------
-echo "  [claude-code] Copying settings.json..."
-cp "${REPO_ROOT}/.claude/settings.json" "${DEST}/.claude/"
+echo "  [claude-code] Copying settings.json template..."
+cp "${SCRIPT_DIR}/../src/settings.json" "${DEST}/.claude/"
 
 # ---------------------------------------------------------------------------
 # 9. Root files
 # ---------------------------------------------------------------------------
-echo "  [claude-code] Copying CLAUDE.md..."
-cp "${REPO_ROOT}/CLAUDE.md" "${DEST}/"
+echo "  [claude-code] Copying CLAUDE.md template..."
+cp "${SCRIPT_DIR}/../src/CLAUDE.md" "${DEST}/"
 
 if [ -f "${REPO_ROOT}/setup.sh" ]; then
   echo "  [claude-code] Copying setup.sh..."

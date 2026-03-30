@@ -33,12 +33,6 @@ const hooksConfig = {
         type: 'command',
         command: 'node .github/hooks/post-write.cjs'
       }
-    ],
-    Stop: [
-      {
-        type: 'command',
-        command: 'node .github/hooks/post-stop.cjs'
-      }
     ]
   }
 };

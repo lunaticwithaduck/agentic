@@ -32,7 +32,7 @@ mkdir -p \
 # 2. Copy shared JS hooks from .claude/hooks/ (with .github/ platform detection)
 # ---------------------------------------------------------------------------
 echo "  [copilot] Copying shared hooks..."
-for hook in block-secrets.cjs post-write.cjs post-stop.cjs; do
+for hook in block-secrets.cjs post-write.cjs; do
   src="${CLAUDE_DIR}/hooks/${hook}"
   if [ -f "${src}" ]; then
     cp "${src}" "${SHIP_DIR}/.github/hooks/${hook}"
@@ -235,7 +235,7 @@ echo "  [copilot] Verifying output..."
 # Verify hooks.json has required event names
 node -e "
   const h = JSON.parse(require('fs').readFileSync('${SHIP_DIR}/.github/hooks/hooks.json', 'utf8'));
-  const required = ['UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Stop'];
+  const required = ['UserPromptSubmit', 'PreToolUse', 'PostToolUse'];
   for (const ev of required) {
     if (!h.hooks[ev]) { console.error('  [copilot] ERROR: missing hook event: ' + ev); process.exit(1); }
   }
@@ -247,7 +247,6 @@ KEY_FILES=(
   "${SHIP_DIR}/.github/hooks/skill-detector.cjs"
   "${SHIP_DIR}/.github/hooks/block-secrets.cjs"
   "${SHIP_DIR}/.github/hooks/post-write.cjs"
-  "${SHIP_DIR}/.github/hooks/post-stop.cjs"
   "${SHIP_DIR}/.github/hooks/hooks.json"
   "${SHIP_DIR}/.github/skills/skill-creator/SKILL.md"
   "${SHIP_DIR}/.github/skills/skill-rules.json"

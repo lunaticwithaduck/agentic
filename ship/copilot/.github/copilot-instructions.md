@@ -81,7 +81,6 @@ Hooks in `.github/hooks/hooks.json` enforce guardrails automatically:
 - **UserPromptSubmit**: Runs skill auto-detection on every prompt (`skill-detector.cjs`)
 - **PreToolUse**: Blocks commands that would expose secrets or credentials (`block-secrets.cjs`)
 - **PostToolUse**: Runs validation after file modifications (`post-write.cjs`)
-- **Stop**: Post-response hook placeholder for skill usage validation (`post-stop.cjs`)
 
 ## Agents
 
@@ -183,7 +182,6 @@ The human manages their work in external tools (JIRA, Linear, etc.). `workflows/
     skill-detector.cjs   # UserPromptSubmit: skill auto-injection
     block-secrets.cjs    # PreToolUse: secrets blocking
     post-write.cjs       # PostToolUse: file validation + autolearn
-    post-stop.cjs        # Stop: post-response placeholder
   skills/
     skill-creator/
       SKILL.md           # Skill definition
