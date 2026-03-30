@@ -3,7 +3,7 @@
   "git_sha": "2f5628f",
   "git_branch": "develop",
   "git_dirty": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "platforms": ["claude-code", "cursor", "copilot"],
   "file_counts": {
     "claude-code": 34,
