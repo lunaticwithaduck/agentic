@@ -18,7 +18,7 @@ process.stdin.on('end', () => {
   try {
     const d = JSON.parse(input);
     const payload = d.tool_input || d;
-    filePath = payload.file_path || '';
+    filePath = payload.file_path || payload.filePath || payload.path || '';
   } catch (e) {
     process.exit(0);
   }

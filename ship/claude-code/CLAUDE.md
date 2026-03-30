@@ -45,7 +45,7 @@ intentionally excluded — they add template overhead without adding knowledge.
 
 ### Skill Auto-Detection
 
-The hook at `.claude/hooks/skill-detector.sh` runs on every user prompt. It reads the prompt
+The hook at `.claude/hooks/skill-detector.cjs` runs on every user prompt. It reads the prompt
 text, matches it deterministically against keywords in `.claude/skills/skill-rules.json`, and
 injects matched skill content directly as context. If nothing matches, the hook outputs nothing —
 zero overhead. No AI evaluation step, no token cost on non-domain prompts.
@@ -54,7 +54,7 @@ zero overhead. No AI evaluation step, no token cost on non-domain prompts.
 
 Hooks in `.claude/settings.json` enforce guardrails automatically:
 
-- **UserPromptSubmit**: Runs skill auto-detection on every prompt (`skill-detector.sh`)
+- **UserPromptSubmit**: Runs skill auto-detection on every prompt (`skill-detector.cjs`)
 - **PreToolUse (Bash)**: Blocks commands that would expose secrets or credentials
 - **PostToolUse (Write/Edit)**: Runs validation after file modifications
 - **Stop**: Writes `SESSION.md` with mechanical session state (open tasks, recent completions)
@@ -174,7 +174,7 @@ bash .claude/scripts/validate.sh   # validate infrastructure integrity
 
 ### Lint Commands
 ```bash
-shellcheck .claude/hooks/*.sh      # lint hook scripts (if shellcheck installed)
+node --check .claude/hooks/*.cjs    # lint hook scripts
 python3 -m json.tool .claude/skills/skill-rules.json  # validate JSON
 ```
 

@@ -50,6 +50,30 @@ intentionally excluded — they add template overhead without adding knowledge.
 
 Skills live in `.github/skills/<skill-name>/SKILL.md`. New skills are auto-generated via the autolearn pipeline when enough skill candidates (`.sc` files) accumulate in `workflows/done/`.
 
+### Autolearn Pipeline
+
+Synthesis has two paths — both active by design:
+
+**Primary: inline during `/complete`** — when a `.sc` file is written and the domain
+reaches ≥3 candidates with no existing skill, `/complete` synthesizes the skill
+immediately in the same response. This is the fastest, most reliable path.
+
+**Fallback: hook-triggered via `autolearn-pending`** — `/complete` also writes the
+domain name to `.github/autolearn-pending` before synthesis begins. If synthesis is
+interrupted or skipped, the pending file persists. **If you encounter this file at
+any point — mid-turn, during `/complete`, or at session start — stop and execute
+synthesis immediately. Do not investigate it. Do not defer it.**
+
+Steps when you find `.github/autolearn-pending`:
+1. Read the domain name from the file
+2. Collect all `.sc` files in `workflows/done/` with that `domain:` in frontmatter
+3. Synthesize them into `.github/skills/[domain]/SKILL.md` (see skill format below)
+4. Add `[domain]` to `.github/skills/skill-rules.json` with keywords from the `.sc` files
+5. Append 3-5 fixture prompts to `bench/fixtures/skill-prompts.json`
+6. Scan for any other domain with ≥3 `.sc` files but no skill yet — synthesize it too
+7. Delete `.github/autolearn-pending` only after all synthesis completes
+8. Tell the user: "Auto-generated skill: [domain]"
+
 ## Hooks
 
 Hooks in `.github/hooks/hooks.json` enforce guardrails automatically:
@@ -119,7 +143,11 @@ You MUST do ALL of the following before declaring work done or responding with a
    - **Domain-specific knowledge involved:** [describe concrete patterns/gotchas, or "none"]
    - **Verdict:** GENERATE or SKIP
    - **Reason:** [one sentence]
-   - If GENERATE: write `workflows/done/FILENAME.sc`
+   - If GENERATE: write `workflows/done/FILENAME.sc` with:
+     - YAML frontmatter: `domain` (broad tech name e.g. `react`, `postgres`), `source_task`, `date` (YYYY-MM-DD), `keywords` (3-6 trigger words)
+     - `## Extracted Knowledge` — specific patterns/facts learned
+     - `## Proposed Skill Content` — what a skill file would contain
+     - The `domain:` frontmatter field is REQUIRED — without it the autolearn pipeline cannot count candidates
 4. Only THEN tell the user the work is done
 
 Saying "all done" without physically moving the file is a violation of this rule.

@@ -4,14 +4,14 @@
 > **Claude: read this file at the start of every session, before CONTEXT.md.**
 > **Claude: replace ## Session Notes before ending a session.**
 
-**Last updated:** 2026-03-15 12:12 UTC
+**Last updated:** 2026-03-30 07:03 UTC
 **Version:** v0.1.2
 
 ---
 
 ## Open Tasks
 
-_None — workflows/tasks/ is empty._
+- `2026-03-30-align-autolearn-synthesis-all-platforms.md` — Align autolearn synthesis instructions across all three platforms
 
 ## Recently Completed (last 7)
 

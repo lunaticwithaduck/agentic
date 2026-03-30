@@ -24,7 +24,15 @@ You MUST do ALL of the following before declaring work done or responding with a
    - GENERATE if the task touched a named technology AND involved non-obvious patterns or gotchas specific to it
    - SKIP only for pure methodology (renaming, restructuring, process) — this should be rare
    - When in doubt, GENERATE — a weak `.sc` is better than a missing one
-   - If GENERATE: write `workflows/done/FILENAME.sc` with `## Extracted Knowledge` and `## Proposed Skill Content`
+   - If GENERATE: write `workflows/done/FILENAME.sc` with:
+     - YAML frontmatter: `domain` (broad tech name), `source_task`, `date` (YYYY-MM-DD), `keywords` (3-6 trigger words)
+     - `## Extracted Knowledge` — specific patterns/facts learned
+     - `## Proposed Skill Content` — what a skill file would contain
+     - The `domain:` frontmatter field is REQUIRED — without it the autolearn pipeline cannot count candidates
+   - After writing the `.sc` file, check the synthesis threshold:
+     - Count `.sc` files in `workflows/done/` with the same `domain:` value
+     - If count ≥ 3 AND no `.cursor/rules/[domain].mdc` exists: synthesize inline NOW
+     - Also write domain to `.cursor/autolearn-pending` as fallback (delete after synthesis succeeds)
 4. Only THEN tell the user the work is done
 
 Saying "all done" without physically moving the file is a violation of this rule.

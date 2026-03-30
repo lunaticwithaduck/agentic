@@ -1,14 +1,14 @@
 {
-  "built_at": "2026-03-15T11:40:03Z",
-  "git_sha": "047f1f2",
+  "built_at": "2026-03-30T07:03:05Z",
+  "git_sha": "2f5628f",
   "git_branch": "develop",
   "git_dirty": true,
   "version": "0.1.2",
   "platforms": ["claude-code", "cursor", "copilot"],
   "file_counts": {
-    "claude-code": 33,
-    "cursor": 26,
-    "copilot": 33
+    "claude-code": 34,
+    "cursor": 27,
+    "copilot": 34
   },
-  "bench_run": "2026-03-14_20-50-40"
+  "bench_run": "2026-03-15_12-27-37"
 }

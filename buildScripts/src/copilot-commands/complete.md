@@ -1,7 +1,4 @@
----
-description: Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
-mode: agent
----
+Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
 
 ## Instructions
 

@@ -51,12 +51,30 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
      - Frontmatter: `domain`, `source_task`, `date`, `keywords` (3-6 trigger words)
      - `## Extracted Knowledge` — specific patterns/facts learned
      - `## Proposed Skill Content` — what a skill file would contain
-   - After writing the `.sc` file, arm the synthesis trigger:
+   - After writing the `.sc` file, check the synthesis threshold:
      1. Count all `.sc` files in `workflows/done/` that share the same `domain:` value
      2. Check whether `.cursor/rules/[domain].mdc` already exists
-     3. If count ≥ 3 AND no skill file exists yet: write the domain name to `.cursor/autolearn-pending`
-        (plain text, just the domain name, e.g. `pixi`)
-     4. The next file edit / prompt will then auto-trigger full skill synthesis via the hook
+     3. If count ≥ 3 AND no skill file exists yet: **synthesize the skill now, in this response**
+        — you already have the `.sc` content in context. Proceed immediately:
+        a. Create `.cursor/rules/[domain].mdc` using the rule format:
+           ```
+           ---
+           description: One-line description of what this skill covers
+           globs: ["relevant/file/patterns/**"]
+           alwaysApply: false
+           ---
+           ## Purpose
+           ## [Section per major topic from .sc files]
+           ## Failure Modes  ← only if .sc files contain observed failures
+           ```
+        b. Add `[domain]` to `.cursor/skills/skill-rules.json` with keywords from the `.sc` files
+        c. Append 3-5 fixture prompts to `bench/fixtures/skill-prompts.json`
+        d. Scan for any other domain with ≥3 `.sc` files but no skill yet — if found, synthesize it too
+        e. Tell the user: "Auto-generated skill: [domain]"
+     4. **Fallback:** Also write `autolearn-pending` so the hook can catch it if synthesis
+        was interrupted or skipped. Write the domain name (plain text) to `.cursor/autolearn-pending`.
+        Delete the pending file only after synthesis completes successfully.
+     5. If count < 3: no action needed — threshold not yet reached
 
    Also evaluate: "Did this task reveal that an *existing* skill gave wrong or misleading guidance?"
    - If YES: add `## Failure Modes Observed` to the `.sc` (or the done file Outcome section):
@@ -66,4 +84,5 @@ Mark a task as complete and move it from workflows/tasks/ to workflows/done/.
    - Task title
    - Time from creation to completion (if dates are available)
    - Whether a `.sc` skill candidate was generated (and for which domain)
+   - Whether a skill was synthesized
    - Suggest: "Use `status` to see the current pipeline overview."
