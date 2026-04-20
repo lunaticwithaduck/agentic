@@ -221,3 +221,9 @@ Platform support:
 
 agentic is designed to improve itself. If you build something useful, the `.sc` candidating
 system is meant to eventually surface it as a skill for everyone. For now, PRs welcome.
+
+## License
+
+agentic is licensed under the <a href="https://polyformproject.org/licenses/noncommercial/1.0.0/">Polyform Noncommercial License 1.0.0</a>.
+You may use, modify, and share it for any non-commercial purpose.
+For commercial use, contact [your email].
