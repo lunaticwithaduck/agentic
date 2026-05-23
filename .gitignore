@@ -40,6 +40,7 @@ bench/results/e2e/
 # Autolearn runtime state (regenerable, machine-specific)
 .claude/skill-usage.json
 .claude/autolearn-pending
+.claude/scheduled_tasks.lock
 
 # Sandbox projects (local experiments, not part of the repo)
 temp/

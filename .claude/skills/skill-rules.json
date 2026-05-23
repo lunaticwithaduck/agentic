@@ -1,4 +1,91 @@
 {
+  "twitter-api": {
+    "keywords": [
+      "x api",
+      "twitter api",
+      "twitter-api-v2",
+      "tweet",
+      "tweetThread",
+      "x rate limit",
+      "403 forbidden tweet",
+      "OAuth 1.0a",
+      "X consumer key",
+      "x access token",
+      "invalid_grant tweet",
+      "x ERR"
+    ],
+    "filePatterns": [
+      "**/x.js",
+      "**/twitter*",
+      "**/*tweet*"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash"
+    ]
+  },
+  "seo-indexing": {
+    "keywords": [
+      "google search console",
+      "GSC",
+      "sitemap",
+      "sitemap.xml",
+      "crawled but not indexed",
+      "crawled currently not indexed",
+      "url inspection",
+      "noindex",
+      "meta robots",
+      "canonical",
+      "www apex",
+      "duplicate content",
+      "search snippet",
+      "meta description",
+      "programmatic SEO",
+      "thin content",
+      "indexing api",
+      "site verification"
+    ],
+    "filePatterns": [
+      "**/sitemap.xml",
+      "**/robots.txt",
+      "**/feed.xml"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write"
+    ]
+  },
+  "google-oauth": {
+    "keywords": [
+      "google oauth",
+      "refresh token",
+      "invalid_grant",
+      "redirect_uri_mismatch",
+      "InstalledAppFlow",
+      "google-auth-oauthlib",
+      "blogger api",
+      "gmail api",
+      "google drive api",
+      "oauth consent screen",
+      "reauth blogger",
+      "prompt=consent"
+    ],
+    "filePatterns": [
+      "**/oauth*",
+      "**/reauth*",
+      "**/blogger*",
+      "**/google_auth*",
+      "**/credentials*.json"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Write",
+      "Bash"
+    ]
+  },
   "e2e-evaluation": {
     "keywords": [
       "suite 04",
@@ -621,6 +708,274 @@
     "toolTriggers": [
       "Read",
       "Write"
+    ]
+  },
+  "claude-code-hooks": {
+    "keywords": [
+      "claude code hook",
+      "settings.json hook",
+      "post-stop",
+      "pre-tool-use",
+      "user-prompt-submit",
+      "post-write",
+      "MODULE_NOT_FOUND",
+      "stop hook",
+      ".cjs hook",
+      "hook command",
+      "PostToolUse",
+      "PreToolUse"
+    ],
+    "filePatterns": [
+      ".claude/settings.json",
+      ".claude/hooks/**",
+      "**/.claude/hooks/**"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Write",
+      "Edit"
+    ]
+  },
+  "nextjs": {
+    "keywords": [
+      "nextjs",
+      "next.js",
+      "next 16",
+      "next.js 16",
+      "app router",
+      "app-router",
+      "create-next-app",
+      "middleware",
+      "proxy.ts",
+      "params",
+      "searchparams",
+      "generatestaticparams",
+      "generatemetadata",
+      "ImageResponse",
+      "next/og",
+      "metadatabase",
+      "app/icon",
+      "next-font",
+      "PageProps",
+      "LayoutProps"
+    ],
+    "filePatterns": [
+      "next.config.*",
+      "app/**/page.tsx",
+      "app/**/layout.tsx",
+      "app/**/route.tsx",
+      "app/**/route.ts",
+      "app/icon.tsx",
+      "app/not-found.tsx",
+      "middleware.ts",
+      "proxy.ts"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write"
+    ]
+  },
+  "satori": {
+    "keywords": [
+      "satori",
+      "vercel-og",
+      "vercel og",
+      "next-og",
+      "next/og",
+      "ImageResponse",
+      "image response",
+      "og image",
+      "og:image",
+      "og card",
+      "social share image",
+      "opengraph image",
+      "cannot read 256",
+      "inline-block satori"
+    ],
+    "filePatterns": [
+      "app/og/**/route.tsx",
+      "app/og/**/route.ts",
+      "app/icon.tsx",
+      "app/opengraph-image.*",
+      "app/twitter-image.*",
+      "**/og/**/*.tsx",
+      "**/og-card*",
+      "**/OgCard*"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write"
+    ]
+  },
+  "defi-data": {
+    "keywords": [
+      "etherscan",
+      "etherscan v2",
+      "basescan",
+      "geckoterminal",
+      "evm chain data",
+      "on-chain",
+      "tokentx",
+      "txlist",
+      "token supply",
+      "wallet balance",
+      "tx classifier",
+      "classify transfer",
+      "snapshot history",
+      "atomic json write",
+      "time series store",
+      "7d delta",
+      "sparkline data",
+      "erc-20 transfer",
+      "chainid 8453",
+      "defi data"
+    ],
+    "filePatterns": [
+      "**/chain/*.ts",
+      "**/etherscan*",
+      "**/geckoterminal*",
+      "**/snapshots-store*",
+      "**/actions-feed*"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash"
+    ]
+  },
+  "defi-liquidations": {
+    "keywords": [
+      "liquidation",
+      "liquidator",
+      "liquidate",
+      "morpho",
+      "morpho blue",
+      "morpho graphql",
+      "blue-api.morpho.org",
+      "bend",
+      "beraborrow",
+      "blur",
+      "blend",
+      "silo",
+      "silo v2",
+      "stoken",
+      "sTokenRequired",
+      "flash loan",
+      "flashloan",
+      "health factor",
+      "lltv",
+      "lif",
+      "oracle price",
+      "race bot",
+      "mev",
+      "lending protocol",
+      "liquity",
+      "dolomite",
+      "aave liquidation",
+      "borrower indexer",
+      "liquidation bot",
+      "false fire",
+      "stale state",
+      "live read",
+      "ramses",
+      "shadow",
+      "tickspacing",
+      "router-agnostic",
+      "swap path",
+      "best pool",
+      "multicall3",
+      "anvil_setCode",
+      "seizedAssets",
+      "chain expansion",
+      "morpho overflow",
+      "uniswap v4",
+      "universalrouter",
+      "permit2",
+      "v4 quoter",
+      "poolkey",
+      "slipstream",
+      "tydro",
+      "aave v3 custom error",
+      "HealthFactorNotBelowThreshold",
+      "partial liquidation",
+      "cascade fire",
+      "debug_traceTransaction",
+      "callTracer",
+      "setAssetSources",
+      "revert decoder",
+      "live-rpc dry-run",
+      "empty pool",
+      "v4 swap encoding",
+      "velodrome",
+      "slipstream",
+      "tydro",
+      "ink",
+      "setassetsources",
+      "aaveoracle",
+      "anvil_impersonateaccount",
+      "anvil_setcode",
+      "calltracer",
+      "int24",
+      "0xa026383e",
+      "0x414bf389",
+      "swapfailed",
+      "oracle crash",
+      "aclAdmin",
+      "poolAddressesProvider"
+    ],
+    "filePatterns": [
+      "**/bend/**",
+      "**/sonic-silo/**",
+      "**/hyperlend/**",
+      "**/hypurrfi/**",
+      "**/felix/**",
+      "**/liquidator*",
+      "**/indexer.js",
+      "**/monitor.js",
+      "**/executor.js",
+      "**/seed-from-morpho.js",
+      "**/morpho*.sol",
+      "**/BendLiquidator.sol"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash"
+    ]
+  },
+  "hyperevm": {
+    "keywords": [
+      "hyperevm",
+      "hyperliquid",
+      "hyperlend",
+      "hypurrfi",
+      "hyperswap",
+      "rpc.hyperliquid.xyz",
+      "stakely.io",
+      "purroofgroup",
+      "big block",
+      "small block",
+      "alchemy hyperliquid",
+      "hyperevm liquidation",
+      "chainId 999",
+      "race-bot hyperevm"
+    ],
+    "filePatterns": [
+      "**/hyperlend/**",
+      "**/hypurrfi/**",
+      "**/AaveV3Liquidator*",
+      "**/HyperLendLiquidator*",
+      "**/swap-path.js"
+    ],
+    "toolTriggers": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash"
     ]
   }
 }

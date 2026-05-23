@@ -332,7 +332,7 @@
   },
   {
     "id": "e2e-evaluation-p01",
-    "prompt": "suite 04 is showing a loss on eq07 but I didn't change anything \u2014 is this just judge variance?",
+    "prompt": "suite 04 is showing a loss on eq07 but I didn't change anything — is this just judge variance?",
     "expected": [
       "e2e-evaluation"
     ],
@@ -348,7 +348,7 @@
   },
   {
     "id": "e2e-evaluation-p03",
-    "prompt": "infra lost on the refactoring bench task even though the response looked good \u2014 what should I check first?",
+    "prompt": "infra lost on the refactoring bench task even though the response looked good — what should I check first?",
     "expected": [
       "e2e-evaluation"
     ],
@@ -364,10 +364,531 @@
   },
   {
     "id": "e2e-evaluation-p05",
-    "prompt": "the judge gave vanilla a win because it 'fixed a latent bug' during refactoring \u2014 is that expected behavior?",
+    "prompt": "the judge gave vanilla a win because it 'fixed a latent bug' during refactoring — is that expected behavior?",
     "expected": [
       "e2e-evaluation"
     ],
     "notes": "autolearn-generated"
+  },
+  {
+    "id": "sd-cch-01",
+    "prompt": "My Stop hook keeps failing with MODULE_NOT_FOUND when I switch projects mid-session — how do I fix it?",
+    "expected": [
+      "claude-code-hooks"
+    ],
+    "notes": "Stop hook + MODULE_NOT_FOUND across projects = claude-code-hooks"
+  },
+  {
+    "id": "sd-cch-02",
+    "prompt": "Should I use absolute or relative paths for the command in my settings.json hook entries?",
+    "expected": [
+      "claude-code-hooks"
+    ],
+    "notes": "settings.json hook command path choice = claude-code-hooks"
+  },
+  {
+    "id": "sd-cch-03",
+    "prompt": "Why is my SESSION.md being overwritten every turn by the post-stop hook?",
+    "expected": [
+      "claude-code-hooks"
+    ],
+    "notes": "Stop hook clobbering manual content = claude-code-hooks"
+  },
+  {
+    "id": "sd-cch-04",
+    "prompt": "My ship build copies hooks via *.js glob but my hooks are .cjs — they don't end up in the shipped settings.",
+    "expected": [
+      "claude-code-hooks"
+    ],
+    "notes": ".cjs packaging gotcha = claude-code-hooks"
+  },
+  {
+    "id": "sd-cch-05",
+    "prompt": "How do I make a PreToolUse hook block a Bash command and tell Claude why?",
+    "expected": [
+      "claude-code-hooks"
+    ],
+    "notes": "PreToolUse blocking pattern = claude-code-hooks"
+  },
+  {
+    "id": "sd-go-01",
+    "prompt": "My Blogger bot just started failing with 'invalid_grant: Token has been expired or revoked' — this is the third time in a month.",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "invalid_grant + recurring = Testing-mode 7-day TTL"
+  },
+  {
+    "id": "sd-go-02",
+    "prompt": "Google consent screen gives me Error 400: redirect_uri_mismatch when I run reauth_blogger.py — what do I check first?",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "redirect_uri_mismatch with InstalledAppFlow"
+  },
+  {
+    "id": "sd-go-03",
+    "prompt": "I ran the OAuth helper, the browser tab said success, but the next API call still fails with no refresh_token in credentials.",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "missing prompt='consent' → no refresh_token returned"
+  },
+  {
+    "id": "sd-go-04",
+    "prompt": "How do I run a Google OAuth InstalledAppFlow from a TTY where xdg-open does not work and I cannot select the printed URL?",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "headless re-auth escape hatch"
+  },
+  {
+    "id": "sd-go-05",
+    "prompt": "Should I move my Google Cloud Console OAuth client from Testing to In production for a personal bot that uses Blogger API?",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "Testing vs Production publishing status"
+  },
+  {
+    "id": "google-oauth-p01",
+    "prompt": "I changed OAUTH_LOOPBACK_PORT in my reauth helper from 8765 to 8080 — what should I check before assuming the edit is complete?",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "google-oauth-p02",
+    "prompt": "There are two OAuth re-auth helpers in this project pinned to different ports. Which one should I align to which?",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "google-oauth-p03",
+    "prompt": "How do I structure the OAuth loopback port constant so changing it is a one-line edit instead of a grep-and-replace exercise?",
+    "expected": [
+      "google-oauth"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p01",
+    "prompt": "Google Search Console says my sitemap submitted 107 URLs but indexed 0. Most pages show 'Crawled - currently not indexed'. What's going on and how do I fix it?",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p02",
+    "prompt": "Both www.example.com and example.com return HTTP 200 with the same content. How do I configure a 301 redirect from www to apex on Vercel?",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p03",
+    "prompt": "My meta descriptions accidentally include internal workflow state like 'Status: PENDING.' at the end. Strip these only from published statuses across hundreds of HTML files, leaving drafts untouched.",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p04",
+    "prompt": "I have internal paper-trade pages in my sitemap that Google shouldn't index. What's the defense-in-depth pattern — sitemap removal, noindex, both?",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p01",
+    "prompt": "GSC shows 1500 URLs submitted from my sitemap but 0 indexed — what do I check first?",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p02",
+    "prompt": "I added noindex to my draft pages but Google still indexes them via internal links from the homepage — how do I lock them out?",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p03",
+    "prompt": "My programmatic signal pages have Status: PENDING. in the meta description and CTR is terrible — should I strip it?",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "seo-indexing-p04",
+    "prompt": "My hand-edits to robots meta keep getting wiped by the next deploy. The pages live in deployed-repo/, but I can't find the generator there.",
+    "expected": [
+      "seo-indexing"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "twitter-api-p01",
+    "prompt": "My twitter-api-v2 v2.tweet() returns 403 \"You are not permitted to perform this action\" on most ticks, with occasional successes. What is happening?",
+    "expected": [
+      "twitter-api"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "twitter-api-p02",
+    "prompt": "How do I post a thread of 10 tweets in one API call using twitter-api-v2?",
+    "expected": [
+      "twitter-api"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "twitter-api-p03",
+    "prompt": "How do I budget characters for a tweet with header, source, headline, and URL while ensuring it fits in 280 chars?",
+    "expected": [
+      "twitter-api"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "twitter-api-p04",
+    "prompt": "I am about to switch my X digest from one tweet to a thread. What rate-cap risks should I worry about?",
+    "expected": [
+      "twitter-api"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "nextjs-p01",
+    "prompt": "I'm getting 'params is not iterable' on my /agent/[slug] page in Next.js 16. What changed?",
+    "expected": [
+      "nextjs"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "nextjs-p02",
+    "prompt": "My build fails with 'Cannot read properties of undefined (reading 256)' on app/icon.tsx — how do I fix it?",
+    "expected": [
+      "nextjs"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "nextjs-p03",
+    "prompt": "Next.js says 'middleware' file convention is deprecated — how do I migrate to proxy?",
+    "expected": [
+      "nextjs"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "nextjs-p04",
+    "prompt": "How do I render a 1200x630 OG image with custom fonts in a Next.js 16 route handler?",
+    "expected": [
+      "nextjs"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "satori-p01",
+    "prompt": "My next/og route returns 200 + image/png in tests but crashes in production with 'Cannot read properties of undefined (reading 256)'. What's wrong?",
+    "expected": [
+      "satori"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "satori-p02",
+    "prompt": "Satori complains 'Invalid value for CSS property display. Received: inline-block'. How do I make a circular dot indicator?",
+    "expected": [
+      "satori"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "satori-p03",
+    "prompt": "I want a progress bar with a threshold tick overlay in my OG image — but position:absolute crashes satori. How do I structure it?",
+    "expected": [
+      "satori"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "satori-p04",
+    "prompt": "Where should I put TTF font files for my Vercel OG ImageResponse routes? public/ or somewhere else?",
+    "expected": [
+      "satori"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "satori-p05",
+    "prompt": "My imported React component crashes ImageResponse with 'Cannot read trim of undefined', but the same JSX inlined in the route handler renders fine. What's going on?",
+    "expected": [
+      "satori"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "satori-p06",
+    "prompt": "Is it safe to do { height: isOg ? 630 : undefined } in a React.CSSProperties object for an OG image component?",
+    "expected": [
+      "satori"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "sd_defi_data_001",
+    "prompt": "I need to fetch token balance and transfer history from Etherscan v2 for a wallet on Base chain.",
+    "expected": [
+      "defi-data"
+    ],
+    "notes": "Etherscan v2 multichain — direct defi-data trigger"
+  },
+  {
+    "id": "sd_defi_data_002",
+    "prompt": "Build a classifier that takes Etherscan txlist + tokentx and produces a CLAIM/STAKE/LP/SWAP action feed for a wallet.",
+    "expected": [
+      "defi-data"
+    ],
+    "notes": "Tx classifier domain knowledge — txlist/tokentx union, functionName regex"
+  },
+  {
+    "id": "sd_defi_data_003",
+    "prompt": "I want a JSON file based time-series store for hourly snapshots, with atomic writes and 7d delta derivation.",
+    "expected": [
+      "defi-data"
+    ],
+    "notes": "Snapshot-history time-series store from x10"
+  },
+  {
+    "id": "sd_defi_data_004",
+    "prompt": "Get a token price from GeckoTerminal for a Base-chain ERC-20 — what's the endpoint?",
+    "expected": [
+      "defi-data"
+    ],
+    "notes": "GeckoTerminal free price source"
+  },
+  {
+    "id": "sd_defi_data_005",
+    "prompt": "Walk me through how to ingest on-chain data hourly with a cron and write derived metrics back to the UI.",
+    "expected": [
+      "defi-data"
+    ],
+    "notes": "Indexer-lite pattern: gated live/mock + throttled records + sparkline trail"
+  },
+  {
+    "id": "defi-liquidations-p01",
+    "prompt": "Help me build a liquidation bot for Morpho Blue — what's the LIF formula and how do I compute health factor for each position?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "defi-liquidations-p02",
+    "prompt": "Is the Blend (Blur) NFT lending protocol worth racing for liquidations? Need permissionless seize and atomic exit.",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "defi-liquidations-p03",
+    "prompt": "How do I write a flash loan callback contract that does liquidate + swap + repay atomically using Morpho's free flashloan?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "defi-liquidations-p04",
+    "prompt": "Setting up a borrower indexer for Bend on Berachain — should I derive position state from event deltas or read on-chain?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "defi-liquidations-p05",
+    "prompt": "My liquidation monitor keeps firing FIRE alerts but the executor logs 'HF healed' with a constant fresh-HF value across every poll. What's wrong?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — stale indexer/false-fire diagnostic (felix 2026-05-21)"
+  },
+  {
+    "id": "defi-liquidations-p06",
+    "prompt": "Bootstrapping a Morpho liquidator lane on Monad but the public RPC caps eth_getLogs at 100 blocks — how do I avoid scanning from genesis?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — Morpho GraphQL bootstrap pattern"
+  },
+  {
+    "id": "defi-liquidations-p07",
+    "prompt": "My Sonic Silo V2 executor keeps skipping fires with sTokenRequired=true. Is there a way to actually capture these or is it a structural block?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — Silo V2 sToken atomic-liquidation ceiling"
+  },
+  {
+    "id": "defi-liquidations-p08",
+    "prompt": "I have 5 Uniswap V3 forks on HyperEVM and my findBestPool returns a pool that quotes 15x worse than another at the real trade size. How should I pick the swap router?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — multi-DEX best-quote with real amountIn"
+  },
+  {
+    "id": "defi-liquidations-p09",
+    "prompt": "Routing a liquidator through UniversalRouter on Monad V4 — my IERC20.approve(swapTarget, amount) goes through but the swap reverts. What's the Permit2 dance?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — UR/Permit2 token-pull (v4 encoding)"
+  },
+  {
+    "id": "defi-liquidations-p10",
+    "prompt": "My Slipstream V3 SwapRouter call reverts with no return data even though factory.getPool returns a non-zero address. What am I missing?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — int24 tickSpacing selector + empty-pool check"
+  },
+  {
+    "id": "defi-liquidations-p11",
+    "prompt": "Tydro liquidator on a new chain — my revert decoder shows 'unknown error 0x930bb771' for every skip. Modern Aave V3 fork — how do I classify these?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — modern Aave V3 typed custom errors"
+  },
+  {
+    "id": "defi-liquidations-p12",
+    "prompt": "I have a $16M wstETH whale on Monad but every V4 swap reverts with OOG inside PoolManager. How do I capture the position with partial liquidations?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — partial-liq cascade + V4 OOG diagnosis"
+  },
+  {
+    "id": "hyperevm-p01",
+    "prompt": "My HyperEVM indexer scans eth_getLogs for 1000-block windows on Alchemy and gets nothing back. Why?",
+    "expected": [
+      "hyperevm"
+    ],
+    "notes": "autolearn-generated — Alchemy free-tier 10-block cap silent failure"
+  },
+  {
+    "id": "hyperevm-p02",
+    "prompt": "Building a liquidation race bot on HyperEVM — should I use the big-block opt-in for higher gas limit?",
+    "expected": [
+      "hyperevm"
+    ],
+    "notes": "autolearn-generated — 60s big-block fatal for racing"
+  },
+  {
+    "id": "hyperevm-p03",
+    "prompt": "ethers v6 throwing 'bad address checksum' on my HypurrFi Pool address — how do I fix without redeploying anything?",
+    "expected": [
+      "hyperevm"
+    ],
+    "notes": "autolearn-generated — EIP-55 strict + lowercase-then-getAddress normalization"
+  },
+  {
+    "id": "hyperevm-p04",
+    "prompt": "I want to backtest historical Aave V3 liquidations on HyperLend — which RPC do I use and what's the catchability heuristic?",
+    "expected": [
+      "hyperevm",
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — historical state + HF<1 prior block"
+  },
+  {
+    "id": "hyperevm-p05",
+    "prompt": "My HyperEVM liquidator pre-flight reverts with selector 0x930bb771 — what does that mean?",
+    "expected": [
+      "hyperevm"
+    ],
+    "notes": "autolearn-generated — HyperLend custom selector for HEALTH_FACTOR_NOT_BELOW_THRESHOLD"
+  },
+  {
+    "id": "defi-liquidations-p10",
+    "prompt": "Why is my Slipstream swap reverting with no data when calling exactInputSingle?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — int24 tickSpacing selector gotcha"
+  },
+  {
+    "id": "defi-liquidations-p11",
+    "prompt": "How do I force HF<1 on an anvil fork when the protocol uses a Chaos Labs adapter oracle?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — setAssetSources strategy for Aave V3 forks"
+  },
+  {
+    "id": "defi-liquidations-p12",
+    "prompt": "Tydro liquidator on Ink — what selector does Velodrome Slipstream SwapRouter expect for exactInputSingle?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "defi-liquidations-p13",
+    "prompt": "callTracer output shows selector 0xff9fa595 propagating up — what does that mean and how do I diagnose deeper?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — custom-error selector decoding"
+  },
+  {
+    "id": "defi-liquidations-p14",
+    "prompt": "Right-size the debt chunk in a smoke test after oracle crash so the seize fits Slipstream pool depth",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated"
+  },
+  {
+    "id": "defi-liquidations-p15",
+    "prompt": "Should we onboard Somnia network to our liquidation fleet? It has an Aave V3 fork.",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — chain-screening / small-chain disqualifier"
+  },
+  {
+    "id": "defi-liquidations-p16",
+    "prompt": "Top DEX on this chain has $700k TVL. What slippage do I face liquidating a $50k position?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — DEX depth wipes liquidation bonus"
+  },
+  {
+    "id": "defi-liquidations-p17",
+    "prompt": "Voltiq advertises a keeperless reactive liquidation engine — is this a viable race target?",
+    "expected": [
+      "defi-liquidations"
+    ],
+    "notes": "autolearn-generated — keeperless reactive = disqualifying category"
   }
 ]

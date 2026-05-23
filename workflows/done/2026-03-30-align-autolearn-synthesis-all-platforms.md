@@ -1,7 +1,8 @@
 ---
 title: Align autolearn synthesis instructions across all three platforms
 created: 2026-03-30
-status: in-progress
+completed: 2026-05-08
+status: done
 ---
 
 ## Goal
@@ -41,3 +42,11 @@ All platforms should say the same thing, platform-adapted:
 ## Completion
 When all steps above are done:
 Run `/complete workflows/tasks/2026-03-30-align-autolearn-synthesis-all-platforms.md` before starting any new work.
+
+## Outcome
+
+Closed on 2026-05-08 as **not applicable**. The user confirmed this project is used with claude-code only — copilot and cursor are not in active use, so cross-platform alignment of autolearn synthesis is unnecessary.
+
+No work was performed; acceptance criteria are intentionally left unchecked. If the user later starts using copilot or cursor, this task can be reopened — the analysis of current state and the alignment target above remain valid as a starting point.
+
+A project memory was saved at `~/.claude/projects/-home-jojo-agentic/memory/project_platform_scope.md` so future sessions don't propose cross-platform work by default.
