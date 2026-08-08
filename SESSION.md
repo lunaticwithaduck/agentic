@@ -4,7 +4,7 @@
 > **Claude: read this file at the start of every session, before CONTEXT.md.**
 > **Claude: replace ## Session Notes before ending a session.**
 
-**Last updated:** 2026-05-23 16:07 UTC
+**Last updated:** 2026-08-08 13:44 UTC
 **Version:** v0.1.3
 
 ---
