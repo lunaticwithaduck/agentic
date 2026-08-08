@@ -4,14 +4,14 @@
 > **Claude: read this file at the start of every session, before CONTEXT.md.**
 > **Claude: replace ## Session Notes before ending a session.**
 
-**Last updated:** 2026-05-23 16:07 UTC
+**Last updated:** 2026-03-30 19:49 UTC
 **Version:** v0.1.3
 
 ---
 
 ## Open Tasks
 
-_None — workflows/tasks/ is empty._
+- `2026-03-30-align-autolearn-synthesis-all-platforms.md` — Align autolearn synthesis instructions across all three platforms
 
 ## Recently Completed (last 7)
 
@@ -21,7 +21,7 @@ _None — workflows/tasks/ is empty._
 - `bench-claude-md-guardrail.md` — bench-claude-md-guardrail.md
 - `agentic-versioning.md` — General agentic versioning — user-facing release tracking
 - `add-preserve-command.md` — Add /preserve slash command for session notes
-- `2026-05-23-sonic-stoken-investigation.md` — Investigate atomic liquidation path for Sonic Silo V2 sTokenRequired positions
+- `2026-03-15-suite01-cursor-checks.md` — Add ship/cursor/ structure checks to Suite 01
 
 ## Session Notes
 
